@@ -313,3 +313,54 @@ export const getSharedClip = cache(async (token: string) => {
   ]);
   return { clip, meeting, participants: people, segments };
 });
+
+// ---------- global search ----------
+
+/** ts_headline markers: control characters can't appear in transcript text, so snippets are split safely (no HTML). */
+export const HIT_START = "\u0001";
+export const HIT_END = "\u0002";
+
+export type SearchResult = Awaited<ReturnType<typeof searchTranscripts>>;
+
+/**
+ * Full-text search over every transcript (GIN index on the generated tsvector). Supports web-search syntax:
+ * "exact phrase", OR, -exclude. Results are grouped by meeting, best meetings first.
+ */
+export async function searchTranscripts(q: string, limit = 200) {
+  await connection();
+  const query = q.trim().slice(0, 200);
+  if (!query) return { total: 0, meetings: [] };
+  const tsq = sql`websearch_to_tsquery('english', ${query})`;
+  const s = schema.transcriptSegments;
+  const rows = await db()
+    .select({
+      meetingId: s.meetingId,
+      idx: s.idx,
+      startMs: s.startMs,
+      rank: sql<number>`ts_rank(${s.tsv}, ${tsq})`,
+      snippet: sql<string>`ts_headline('english', ${s.text}, ${tsq}, ${`StartSel=${HIT_START}, StopSel=${HIT_END}, MaxWords=35, MinWords=15, MaxFragments=2, FragmentDelimiter=" … "`})`,
+      speaker: schema.participants.displayName,
+      color: schema.participants.color,
+      title: schema.meetings.title,
+      startedAt: schema.meetings.startedAt,
+      durationMs: schema.meetings.durationMs,
+    })
+    .from(s)
+    .innerJoin(schema.participants, eq(schema.participants.id, s.participantId))
+    .innerJoin(schema.meetings, eq(schema.meetings.id, s.meetingId))
+    .where(sql`${s.tsv} @@ ${tsq}`)
+    .orderBy(sql`ts_rank(${s.tsv}, ${tsq}) desc`)
+    .limit(limit);
+
+  const groups = new Map<string, { id: string; title: string; startedAt: Date; durationMs: number | null; score: number; hits: typeof rows }>();
+  for (const r of rows) {
+    const g = groups.get(r.meetingId) ?? { id: r.meetingId, title: r.title, startedAt: r.startedAt, durationMs: r.durationMs, score: 0, hits: [] };
+    g.score += r.rank;
+    g.hits.push(r);
+    groups.set(r.meetingId, g);
+  }
+  const meetings = [...groups.values()]
+    .sort((a, b) => b.score - a.score)
+    .map((g) => ({ ...g, hits: g.hits.sort((a, b) => a.startMs - b.startMs) }));
+  return { total: rows.length, meetings };
+}

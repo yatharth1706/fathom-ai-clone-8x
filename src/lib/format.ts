@@ -37,3 +37,11 @@ export function parseTimestamp(text: string) {
   if (parts.length > 3 || parts.some((p) => !/^\d+(\.\d+)?$/.test(p))) return null;
   return Math.round(parts.reduce((acc, p) => acc * 60 + Number(p), 0) * 1000);
 }
+
+/**
+ * `?t=` value that lands inside the line starting at `ms`: seconds rounded *up* to 0.1 s, since flooring (33126 →
+ * "33") would start playback just before the line and highlight the previous one.
+ */
+export function tParam(ms: number) {
+  return String(Math.ceil(ms / 100) / 10);
+}

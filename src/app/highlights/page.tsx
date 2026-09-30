@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AudioLines, Globe, Highlighter, Video } from "lucide-react";
 import { ClipActions } from "@/components/clip-actions";
-import { formatDate, formatTimestamp } from "@/lib/format";
+import { formatDate, formatTimestamp, tParam } from "@/lib/format";
 import { listHighlights, type HighlightListItem } from "@/lib/queries";
 
 export const metadata = { title: "Highlights · Notetaker" };
@@ -38,7 +38,7 @@ export default async function HighlightsPage() {
 }
 
 function ClipCard({ clip: c }: { clip: HighlightListItem }) {
-  const href = `/meetings/${c.meetingId}?t=${Math.floor(c.startMs / 1000)}`;
+  const href = `/meetings/${c.meetingId}?t=${tParam(c.startMs)}`;
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border">
       <Link href={href} className="relative block aspect-video bg-muted">

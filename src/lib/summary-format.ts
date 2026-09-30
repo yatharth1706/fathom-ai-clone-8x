@@ -1,4 +1,4 @@
-import { formatTimestamp } from "@/lib/format";
+import { formatTimestamp, tParam } from "@/lib/format";
 import type { SummaryContent } from "@/lib/providers/types";
 
 // Summary → Markdown / HTML for copy-paste. Pure, so it runs on the server (stored markdown) and in the browser (copy).
@@ -14,7 +14,7 @@ function stamps(segIds: number[], o: Opts) {
   // One timestamp per bullet keeps pasted notes readable; the first citation is where the point is made.
   const ms = segIds.map(o.startMs).find((v) => v != null);
   if (ms == null) return null;
-  return { label: formatTimestamp(ms), href: o.link ? `${o.link}?t=${Math.floor(ms / 1000)}` : null };
+  return { label: formatTimestamp(ms), href: o.link ? `${o.link}?t=${tParam(ms)}` : null };
 }
 
 export function summaryToMarkdown(content: SummaryContent, o: Opts) {
