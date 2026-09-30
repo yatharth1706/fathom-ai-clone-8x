@@ -12,7 +12,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "prepare-media": "tsx scripts/prepare-media.ts",
-    "check-services": "tsx scripts/check-services.ts"
+    "check-services": "tsx scripts/check-services.ts",
+    "build-fixtures": "tsx scripts/build-fixtures.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1143.0",

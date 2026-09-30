@@ -1,3 +1,4 @@
+import { AssemblyAiProvider } from "./assemblyai";
 import type { AsrProvider, LlmProvider } from "./types";
 
 export * from "./types";
@@ -7,6 +8,11 @@ export * from "./types";
 export function getAsr(): AsrProvider {
   const name = process.env.ASR_PROVIDER ?? "assemblyai";
   switch (name) {
+    case "assemblyai": {
+      const key = process.env.ASSEMBLYAI_API_KEY;
+      if (!key) throw new Error("ASSEMBLYAI_API_KEY is not set");
+      return new AssemblyAiProvider(key);
+    }
     default:
       throw new Error(`ASR provider "${name}" is not implemented`);
   }

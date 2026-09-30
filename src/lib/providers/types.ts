@@ -22,6 +22,7 @@ export interface AsrProvider {
   transcribe(input: {
     audioUrl: string;
     speakersExpected?: number;
+    speakerRange?: [min: number, max: number];
     webhookUrl?: string;
     webhookSecret?: string;
   }): Promise<{ jobId: string }>;

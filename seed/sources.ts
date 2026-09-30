@@ -11,6 +11,7 @@ export type SeedSource = {
   attribution: string;
   asr: "assemblyai" | "ami";
   speakersExpected?: number;
+  speakerRange?: [number, number];
 };
 
 export const SEED_SOURCES: SeedSource[] = [
@@ -25,5 +26,6 @@ export const SEED_SOURCES: SeedSource[] = [
     license: "CC BY-SA 3.0",
     attribution: "Wikimedia Foundation, via Wikimedia Commons (CC BY-SA 3.0). Transcoded to H.264.",
     asr: "assemblyai",
+    speakerRange: [3, 12],
   },
 ];
