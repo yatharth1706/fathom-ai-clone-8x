@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, TriangleAlert } from "lucide-react";
 import { MeetingNotes } from "@/components/meeting/meeting-notes";
 import { MeetingPlayer } from "@/components/meeting/meeting-player";
 import { PlayerProvider } from "@/components/meeting/player-context";
@@ -55,6 +55,11 @@ export function MeetingView({
 
         <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
           <div className="min-h-0 space-y-6 overflow-y-auto p-4 md:p-6">
+            {meeting.error && !readOnly && (
+              <p role="status" className="flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
+                <TriangleAlert className="mt-0.5 size-4 shrink-0" /> {meeting.error}
+              </p>
+            )}
             {meeting.mediaUrl ? (
               <MeetingPlayer src={meeting.mediaUrl} poster={meeting.posterUrl} />
             ) : (

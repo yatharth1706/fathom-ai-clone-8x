@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { MeetingActions } from "@/components/meeting/meeting-actions";
 import { MeetingView, parseStartParam } from "@/components/meeting/meeting-view";
+import { ProcessingView } from "@/components/meeting/processing-view";
 import { ShareButton } from "@/components/meeting/share-button";
 import { getMeeting } from "@/lib/queries";
 
@@ -17,6 +18,14 @@ export default async function MeetingPage(props: PageProps<"/meetings/[id]">) {
   const data = await getMeeting(id);
   if (!data) notFound();
   const { meeting } = data;
+
+  if (meeting.status !== "ready")
+    return (
+      <ProcessingView
+        meeting={meeting}
+        actions={<MeetingActions meetingId={meeting.id} title={meeting.title} isProtected={meeting.isProtected} />}
+      />
+    );
 
   return (
     <MeetingView

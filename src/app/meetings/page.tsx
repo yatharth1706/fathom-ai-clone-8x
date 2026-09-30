@@ -3,8 +3,11 @@ import Link from "next/link";
 import { AudioLines, Loader2, TriangleAlert, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ParticipantStack } from "@/components/participant-stack";
+import { StatusPoller } from "@/components/status-poller";
+import { UploadDialog } from "@/components/upload-dialog";
 import { formatDate, formatDuration } from "@/lib/format";
 import { listMeetings, type MeetingListItem } from "@/lib/queries";
+import { dailyUploadLimit } from "@/lib/uploads";
 
 export const metadata = { title: "My meetings · Notetaker" };
 
@@ -13,6 +16,7 @@ export default async function MeetingsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
+      <StatusPoller meetings={meetings} />
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">My meetings</h1>
@@ -20,6 +24,7 @@ export default async function MeetingsPage() {
             {meetings.length} {meetings.length === 1 ? "recording" : "recordings"}
           </p>
         </div>
+        <UploadDialog dailyLimit={dailyUploadLimit()} />
       </div>
 
       {meetings.length === 0 ? (
@@ -27,7 +32,7 @@ export default async function MeetingsPage() {
           <Video className="size-8 text-muted-foreground" />
           <p className="font-medium">No meetings yet</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Recorded meetings will appear here with transcripts, summaries and action items.
+            Upload a recording and it will appear here with a transcript, summary and action items.
           </p>
         </div>
       ) : (
