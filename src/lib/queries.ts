@@ -66,6 +66,7 @@ export const getMeeting = cache(async (id: string) => {
         color: schema.participants.color,
         talkMs: schema.participants.talkMs,
         segmentCount: schema.participants.segmentCount,
+        isNameGuessed: schema.participants.isNameGuessed,
       })
       .from(schema.participants)
       .where(eq(schema.participants.meetingId, id))

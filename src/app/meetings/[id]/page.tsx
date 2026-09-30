@@ -73,7 +73,7 @@ export default async function MeetingPage(props: PageProps<"/meetings/[id]">) {
 
             <section>
               <h2 className="mb-3 text-sm font-medium">Speakers</h2>
-              <SpeakerStats participants={participants} />
+              <SpeakerStats meetingId={meeting.id} participants={participants} canMerge={!meeting.isProtected} />
             </section>
 
             {meeting.attributionUrl && (
