@@ -40,5 +40,5 @@ Verified: DB + R2 round trip; meeting page sync/scroll in headless Chrome and by
 - Next 16: async `params`/`searchParams`, `proxy` replaces `middleware`, no `dynamic` segment config — call `await connection()` in data functions. Read `node_modules/next/dist/docs/` before using unfamiliar APIs.
 - `pnpm typecheck` runs `next typegen` first (needed for `PageProps` / `LayoutProps`).
 - Raw source media lives in `media-work/raw/` (gitignored); re-download links are in `seed/sources.ts`.
-- The agent does not commit; the user commits (including `.agent-logs/`, a brief requirement) from a provided commit message.
+- Every commit includes `.agent-logs/` (brief requirement).
 - Env: `LLM_PROVIDER` (default `gemini`), `GEMINI_MODEL` (default `gemini-flash-latest`), `GEMINI_FALLBACK_MODEL` (unset).
