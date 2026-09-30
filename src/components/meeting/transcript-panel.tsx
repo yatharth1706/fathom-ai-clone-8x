@@ -15,7 +15,7 @@ export function TranscriptPanel({
   segments: Segment[];
   participants: Participant[];
 }) {
-  const { activeIdx, playing, seekTo } = usePlayer();
+  const { activeIdx, playing, seekCount, seekTo } = usePlayer();
   const containerRef = useRef<HTMLDivElement>(null);
   const [follow, setFollow] = useState(true);
   const byId = new Map(participants.map((p) => [p.id, p]));
@@ -25,7 +25,10 @@ export function TranscriptPanel({
     const row = container?.querySelector<HTMLElement>(`[data-idx="${idx}"]`);
     if (!container || !row) return;
     // Keep the active line about a third of the way down, so upcoming lines stay visible.
-    container.scrollTo({ top: row.offsetTop - container.clientHeight / 3, behavior });
+    const top = row.offsetTop - container.clientHeight / 3;
+    // Animate short moves only; long jumps (e.g. scrubbing across the meeting) would take seconds to animate.
+    const far = Math.abs(top - container.scrollTop) > container.clientHeight * 2;
+    container.scrollTo({ top, behavior: far ? "instant" : behavior });
   }, []);
 
   // Jump straight to the ?t= position on first render.
@@ -37,6 +40,14 @@ export function TranscriptPanel({
   useEffect(() => {
     if (follow && activeIdx >= 0) scrollToIdx(activeIdx, "smooth");
   }, [activeIdx, follow, scrollToIdx]);
+
+  // Any seek (player scrubber, keyboard, or a timestamp link) is explicit navigation, so resume following;
+  // the effect above then scrolls to the new line. Adjusting state during render avoids an extra effect pass.
+  const [seenSeekCount, setSeenSeekCount] = useState(seekCount);
+  if (seekCount !== seenSeekCount) {
+    setSeenSeekCount(seekCount);
+    setFollow(true);
+  }
 
   // Only real user input pauses following; our own programmatic scrolls don't fire these.
   const stopFollowing = useCallback(() => setFollow(false), []);

@@ -9,6 +9,8 @@ type PlayerState = {
   /** Index into the segments array of the line being spoken, or -1 before the first line. */
   activeIdx: number;
   playing: boolean;
+  /** Increments on every completed seek (scrubber or seekTo), so views can react to explicit navigation. */
+  seekCount: number;
   /** Seek to a time and start playing. Every timestamp link in the app goes through this. */
   seekTo: (ms: number) => void;
   currentMs: () => number;
@@ -49,6 +51,7 @@ export function PlayerProvider({
   const mediaRef = useRef<HTMLVideoElement | null>(null);
   const [activeIdx, setActiveIdx] = useState(() => (initialMs ? findActive(segments, initialMs) : -1));
   const [playing, setPlaying] = useState(false);
+  const [seekCount, setSeekCount] = useState(0);
 
   const currentMs = useCallback(() => (mediaRef.current?.currentTime ?? 0) * 1000, []);
   // setState bails out when the value is unchanged, so this only re-renders on segment boundaries.
@@ -83,6 +86,10 @@ export function PlayerProvider({
       cancelAnimationFrame(raf);
       sync();
     };
+    const onSeeked = () => {
+      sync();
+      setSeekCount((n) => n + 1);
+    };
     const onLoaded = () => {
       if (initialMs && el.currentTime === 0) el.currentTime = initialMs / 1000;
     };
@@ -90,7 +97,7 @@ export function PlayerProvider({
     el.addEventListener("play", onPlay);
     el.addEventListener("pause", onPause);
     el.addEventListener("ended", onPause);
-    el.addEventListener("seeked", sync);
+    el.addEventListener("seeked", onSeeked);
     el.addEventListener("loadedmetadata", onLoaded);
     if (el.readyState >= 1) onLoaded();
     return () => {
@@ -98,14 +105,14 @@ export function PlayerProvider({
       el.removeEventListener("play", onPlay);
       el.removeEventListener("pause", onPause);
       el.removeEventListener("ended", onPause);
-      el.removeEventListener("seeked", sync);
+      el.removeEventListener("seeked", onSeeked);
       el.removeEventListener("loadedmetadata", onLoaded);
     };
   }, [sync, initialMs]);
 
   const value = useMemo(
-    () => ({ mediaRef, activeIdx, playing, seekTo, currentMs }),
-    [activeIdx, playing, seekTo, currentMs],
+    () => ({ mediaRef, activeIdx, playing, seekCount, seekTo, currentMs }),
+    [activeIdx, playing, seekCount, seekTo, currentMs],
   );
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }
