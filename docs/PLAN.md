@@ -131,7 +131,7 @@ Other templates generate on demand (`POST /api/meetings/[id]/summaries/[template
 
 | Slot | Source | Transcript | License |
 |---|---|---|---|
-| Long meeting (~45–60 min, 6–8+ speakers, video) | CC-BY public Zoom recording (candidates chosen in hour 0–1, see below) | AssemblyAI | CC BY — attribution on meeting page |
+| Long meeting (51 min, 5+ named speakers, video) | [Community Board seats call for feedback, 2021-02-20](https://commons.wikimedia.org/wiki/File:Call_for_feedback_Community_Board_seats_2021-02-20_-_First_meeting.webm) — open Zoom discussion, clean audio; chosen over two presentation-style CC BY calls | AssemblyAI | CC BY-SA 3.0 — attribution on meeting page; our transcode carries the same license |
 | 4 audio-only meetings | AMI Corpus ES2002a–d (same 4-person team across a project) | **AMI human annotations** (words + speaker segments) parsed into our segment format — no ASR | CC BY 4.0 |
 | 1–2 short meetings | Another CC-BY clip or self-recorded | AssemblyAI | own / CC BY |
 
