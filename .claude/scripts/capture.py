@@ -31,6 +31,7 @@ CACHE_DIR = os.path.join(tempfile.gettempdir(), "agent-capture")
 
 ENTRY_RE = re.compile(r"^\[LOG_ENTRY type=(PROMPT|RESPONSE) num=(\d+) session=\S+\]$", re.M)
 FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.S)
+TITLE_RE = re.compile(r"^Session: `[^`]*` \| Project: `[^`]*` \| Author: `[^`]*`$", re.M)
 
 
 def now_iso():
@@ -204,6 +205,10 @@ def append_entry(session_id, kind, num, timestamp, model, text):
         with open(path, encoding="utf-8") as f:
             body = FRONTMATTER_RE.sub("", f.read(), count=1)
     body_before = body
+    # Keep the generated title line in sync with capture.json (only the first match,
+    # which sits above every entry, so logged text is never touched).
+    body = TITLE_RE.sub("Session: `%s` | Project: `%s` | Author: `%s`"
+                        % (short, cfg["project"], cfg["author"]), body, count=1)
 
     body = body.rstrip("\n") + "\n\n" + (
         "[LOG_ENTRY type={kind} num={num} session={short}]\n"
