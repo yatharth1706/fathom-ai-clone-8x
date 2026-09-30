@@ -1,0 +1,116 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "analysis": {
+  "title": "CiviWiki Weekly Sync — May 14, 2018",
+  "speakerNames": [
+   {
+    "label": "A",
+    "name": "Briley Christopher Oxley"
+   },
+   {
+    "label": "B",
+    "name": "Mitchell West"
+   },
+   {
+    "label": "C",
+    "name": "Gordon Candler"
+   },
+   {
+    "label": "D",
+    "name": "Joe Grassel"
+   }
+  ],
+  "chapters": [
+   {
+    "title": "Meeting Kickoff and Gordon's Progress Update",
+    "summary": "Gordon shares his updates on bug fixes and explains an issue with Git commits and home internet connectivity.",
+    "startSegId": 0
+   },
+   {
+    "title": "PR Organization and Assigning Next Tasks",
+    "summary": "Briley advises Gordon to split large changes into smaller, focused pull requests and self-assign next tasks from the Waffle board.",
+    "startSegId": 17
+   },
+   {
+    "title": "Social Sharing Dropdown and Privacy Considerations",
+    "summary": "Joe reviews progress on the sharing thread feature, prompting a discussion on using local, privacy-friendly share buttons without third-party tracking scripts.",
+    "startSegId": 44
+   },
+   {
+    "title": "About Us Page Updates and Profile Assets",
+    "summary": "Mitchell requests team members to supply profile pictures and contact emails for the updated About Us contributor blocks.",
+    "startSegId": 65
+   },
+   {
+    "title": "Net Neutrality and External Advocacy",
+    "summary": "Briley shares an update regarding the Congressional net neutrality vote, prompting a brief discussion on relevant legislation and CiviWiki coverage.",
+    "startSegId": 82
+   },
+   {
+    "title": "Social Share Links and Meeting Wrap-Up",
+    "summary": "The group discusses which social platforms to support in the sharing menu before concluding the meeting.",
+    "startSegId": 97
+   }
+  ],
+  "actionItems": [
+   {
+    "text": "Open separate pull requests for the docstrings fix, the browser apostrophe rendering fix, and the Python 2 to 3 refactor",
+    "ownerLabel": "C",
+    "ownerText": "Gordon",
+    "dueText": null,
+    "segId": 25
+   },
+   {
+    "text": "Filter issues on the Waffle board by Next Up and self-assign one or two small tasks",
+    "ownerLabel": "C",
+    "ownerText": "Gordon",
+    "dueText": "by Tuesday or something, someday in the next couple of days",
+    "segId": 38
+   },
+   {
+    "text": "Research a privacy-respecting JavaScript share button library that does not load third-party scripts",
+    "ownerLabel": "D",
+    "ownerText": "Joe",
+    "dueText": null,
+    "segId": 57
+   },
+   {
+    "text": "Upload contributor profile pictures to the images directory and send contact emails to Mitchell",
+    "ownerLabel": null,
+    "ownerText": null,
+    "dueText": null,
+    "segId": 71
+   },
+   {
+    "text": "Email Juhi to get an update on the About Us page edits and progress",
+    "ownerLabel": "B",
+    "ownerText": "Mitchell",
+    "dueText": "after this call",
+    "segId": 75
+   }
+  ],
+  "insights": [
+   {
+    "kind": "decision",
+    "text": "Pull requests should remain focused on a single type of task rather than combining multiple unrelated bug fixes into one large PR.",
+    "segId": 17
+   },
+   {
+    "kind": "decision",
+    "text": "Avoid using official third-party social share scripts from companies like Facebook or Google due to tracking and privacy concerns.",
+    "segId": 49
+   },
+   {
+    "kind": "key_point",
+    "text": "Gordon's ProPublica integration code is finished and ready to be pushed once his internet service is restored.",
+    "segId": 77
+   },
+   {
+    "kind": "open_question",
+    "text": "Which specific social network buttons and email share methods should be supported by the thread sharing menu once a library is selected?",
+    "segId": 98
+   }
+  ]
+ }
+}

@@ -134,6 +134,683 @@
      ]
     }
    ]
+  },
+  "sales": {
+   "sections": [
+    {
+     "heading": "Prospect context",
+     "bullets": [
+      {
+       "text": "Juhe Lee and Briley Christopher Oxley met for the weekly sync on the CiviWiki project to review assigned development tasks and ongoing pull requests [0, 2, 4].",
+       "segIds": [
+        0,
+        2,
+        4
+       ]
+      },
+      {
+       "text": "The wider engineering team includes contributors Joe, who is preparing to depart due to school, and Gordon, who is tackling backend bugs for milestone 0.2 [32].",
+       "segIds": [
+        32
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Pain points",
+     "bullets": [
+      {
+       "text": "The existing backend architecture concentrates all domain logic into a single Django API app rather than modularized components [7, 9, 14].",
+       "segIds": [
+        7,
+        9,
+        14
+       ]
+      },
+      {
+       "text": "The front-end codebase follows outdated design conventions from around 2011, creating confusion for onboarding developers [23, 24].",
+       "segIds": [
+        23,
+        24
+       ]
+      },
+      {
+       "text": "A backlog of approximately 25 issues remains in milestone 0.2, including vote counters and deprecated API issues [35, 39].",
+       "segIds": [
+        35,
+        39
+       ]
+      },
+      {
+       "text": "A spell checker inadvertently changed CiviWiki text to lowercase on the About Us page, and the page task was mistakenly assigned to Mitchell instead of Juhe [41].",
+       "segIds": [
+        41
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Budget, authority & timeline",
+     "bullets": [
+      {
+       "text": "Budget was not discussed during the meeting [0].",
+       "segIds": [
+        0
+       ]
+      },
+      {
+       "text": "Briley approved the Django REST framework pull request and assigned the review of pull request 197 to Juhe [5, 18, 44, 45].",
+       "segIds": [
+        5,
+        18,
+        44,
+        45
+       ]
+      },
+      {
+       "text": "Juhe scheduled front-end componentization for completion by tonight or early tomorrow morning [3].",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "The team plans to defer selected milestone 0.2 issues into milestone 0.3 to keep the release timeline manageable [39].",
+       "segIds": [
+        39
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Objections",
+     "bullets": [
+      {
+       "text": "Juhe pushed back against an immediate backend architectural refactor, noting that a single API structure simplifies clearing their current cleanup backlog [11].",
+       "segIds": [
+        11
+       ]
+      },
+      {
+       "text": "Juhe advised holding off on merging the Django REST framework pull request until newly introduced merge conflicts are resolved [52].",
+       "segIds": [
+        52
+       ]
+      },
+      {
+       "text": "Juhe deferred approving pull request 197 until front-end tests are executed to verify that features work properly [42, 43].",
+       "segIds": [
+        42,
+        43
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Juhe will finalize and push the front-end componentization work by tonight or early the following morning [3].",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Juhe will resolve merge conflicts on the Django REST framework branch prior to merging [52, 53].",
+       "segIds": [
+        52,
+        53
+       ]
+      },
+      {
+       "text": "Juhe will run front-end functional tests and finalize the review for pull request 197 [42, 43, 44, 45].",
+       "segIds": [
+        42,
+        43,
+        44,
+        45
+       ]
+      },
+      {
+       "text": "Juhe will address documentation issues tied to milestone 0.2 over the coming week [48].",
+       "segIds": [
+        48
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "customer_success": {
+   "sections": [
+    {
+     "heading": "Customer goals",
+     "bullets": [
+      {
+       "text": "Juhe Lee aims to finalize and push the front-end code componentization by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "The team aims to merge the Django REST framework endpoints pull request to close out issue 120 and ongoing threads tasks.",
+       "segIds": [
+        4,
+        5,
+        29,
+        30
+       ]
+      },
+      {
+       "text": "Juhe Lee intends to tackle and resolve documentation issues associated with milestone 0.2 over the coming week.",
+       "segIds": [
+        48
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Wins & value delivered",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley reviewed and approved the pull request introducing initial Django REST framework endpoints.",
+       "segIds": [
+        4,
+        5,
+        18
+       ]
+      },
+      {
+       "text": "Gordon has taken ownership of several milestone 0.2 tasks and is resolving backend bugs including vote counters and deprecated APIs.",
+       "segIds": [
+        32,
+        34,
+        35,
+        36
+       ]
+      },
+      {
+       "text": "Juhe Lee confirmed that contributor information has been added to the About Us page.",
+       "segIds": [
+        40,
+        41
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Risks & blockers",
+     "bullets": [
+      {
+       "text": "The Django REST framework pull request has merge conflicts from recent updates that must be resolved before merging.",
+       "segIds": [
+        52,
+        54,
+        55
+       ]
+      },
+      {
+       "text": "Joe indicated an intention to leave development due to school and other life commitments.",
+       "segIds": [
+        32
+       ]
+      },
+      {
+       "text": "Milestone 0.2 contains roughly 25 remaining issues, creating a backlog that will require deferring some items to milestone 0.3.",
+       "segIds": [
+        11,
+        39
+       ]
+      },
+      {
+       "text": "An automated spell checker erroneously lowercased CiviWiki on the About Us page, and the ticket assignment requires correction.",
+       "segIds": [
+        41
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Feature requests & feedback",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley suggested considering a future refactor to break the single API app into modular, domain-driven Django apps.",
+       "segIds": [
+        7,
+        9,
+        14,
+        16,
+        17
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley recommended aligning ongoing front-end componentization toward web component patterns as browser standards evolve.",
+       "segIds": [
+        18,
+        19,
+        21,
+        26
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley requested that Juhe Lee review pull request 197 for the sharing button to ensure compatibility with front-end component changes.",
+       "segIds": [
+        42,
+        44
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Juhe Lee will finish and push the front-end componentization work by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Juhe Lee will resolve merge conflicts on the Django REST framework branch prior to merging.",
+       "segIds": [
+        52,
+        53
+       ]
+      },
+      {
+       "text": "Juhe Lee will conduct front-end code testing and finalize the review for pull request 197.",
+       "segIds": [
+        43,
+        44,
+        45
+       ]
+      },
+      {
+       "text": "Juhe Lee will work on documenting issues associated with the 0.2 milestone during the week.",
+       "segIds": [
+        48
+       ]
+      },
+      {
+       "text": "The team will update the version number to address the reported psycopg bug as a low-hanging fruit task.",
+       "segIds": [
+        37,
+        38,
+        39
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "demo": {
+   "sections": [
+    {
+     "heading": "What was shown",
+     "bullets": [
+      {
+       "text": "Juhe described progress on front-end code componentization and checked the status of the approved Django REST framework endpoints pull request.",
+       "segIds": [
+        3,
+        4
+       ]
+      },
+      {
+       "text": "Briley described an architectural proposal to restructure the single API app into multiple domain-oriented Django apps.",
+       "segIds": [
+        7,
+        9,
+        14
+       ]
+      },
+      {
+       "text": "Juhe outlined the status of new contributors, noting Joe is taking leave for school and Gordon is working on backend bugs for milestone 0.2.",
+       "segIds": [
+        32,
+        34
+       ]
+      },
+      {
+       "text": "Juhe reviewed updates to the About Us page, mentioning that an automated spell check incorrectly lowercased the project name and task assignments need updating.",
+       "segIds": [
+        41
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Questions asked",
+     "bullets": [
+      {
+       "text": "Juhe asked if the approved Django REST framework pull request should be merged now or wait for more work, and Briley agreed it is ready to merge.",
+       "segIds": [
+        4,
+        5,
+        18
+       ]
+      },
+      {
+       "text": "Briley asked if refactoring backend apps would be difficult in the future, and Juhe replied that the current simple structure is easier for addressing the cleanup backlog first.",
+       "segIds": [
+        10,
+        11
+       ]
+      },
+      {
+       "text": "Briley asked if issue 120 and the Django REST Framework issue will both be closed, and Juhe confirmed they are linked to the pull request and will close on merge.",
+       "segIds": [
+        29,
+        30
+       ]
+      },
+      {
+       "text": "Briley asked if the reported psycopg bug is low-hanging fruit, and Juhe confirmed it just requires updating the version number.",
+       "segIds": [
+        37,
+        38
+       ]
+      },
+      {
+       "text": "Briley asked whether Juhe could finalize the review on pull request 197 for the sharing button, and Juhe explained that front-end testing still needs to be run first.",
+       "segIds": [
+        42,
+        43
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Reactions & feedback",
+     "bullets": [
+      {
+       "text": "Briley commended the initial Django REST Framework work and expressed support for componentizing the front-end code.",
+       "segIds": [
+        5,
+        18
+       ]
+      },
+      {
+       "text": "Juhe and Briley agreed that modernizing the front-end architecture away from older standards will make the project much clearer for new developers.",
+       "segIds": [
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Juhe agreed that modularizing the application around domain models is a concept worth exploring in the future.",
+       "segIds": [
+        16,
+        17
+       ]
+      },
+      {
+       "text": "Briley noted that the vote counter and deprecated API bugs being handled by Gordon are substantial and valuable tasks.",
+       "segIds": [
+        35,
+        36
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Follow-ups",
+     "bullets": [
+      {
+       "text": "Juhe will complete and push the front-end componentization work by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Juhe will resolve newly pulled update conflicts on the Django REST Framework pull request before merging it.",
+       "segIds": [
+        52
+       ]
+      },
+      {
+       "text": "Juhe will run front-end tests and finish the review for pull request 197.",
+       "segIds": [
+        43,
+        44
+       ]
+      },
+      {
+       "text": "Juhe will address documentation issues designated under milestone 0.2.",
+       "segIds": [
+        48
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "sections": [
+    {
+     "heading": "Questions & answers",
+     "bullets": [
+      {
+       "text": "Q: Juhe Lee asked if the approved pull request for the Django REST framework endpoints should be merged or held for further pull requests — A: Briley Christopher Oxley approved merging it, though Juhe Lee subsequently suggested holding off until branch merge conflicts are resolved.",
+       "segIds": [
+        4,
+        5,
+        52
+       ]
+      },
+      {
+       "text": "Q: Briley Christopher Oxley asked whether both issue 120 and the Django REST Framework issue would be closed — A: Juhe Lee confirmed that both are tied to the pull request and will be closed once it is merged.",
+       "segIds": [
+        29,
+        30
+       ]
+      },
+      {
+       "text": "Q: Briley Christopher Oxley asked if fixing the reported PsychoPG bug was a low-hanging fruit — A: Juhe Lee confirmed it was an easy task that only requires updating the version number.",
+       "segIds": [
+        37,
+        38
+       ]
+      },
+      {
+       "text": "Q: Briley Christopher Oxley asked if Juhe Lee could finalize the review for pull request 197 regarding the sharing button — A: Juhe Lee agreed to take on the review after running frontend tests to verify the functionality.",
+       "segIds": [
+        42,
+        43,
+        44,
+        45
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Unanswered questions",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley asked whether modularizing the backend into multiple Django apps in the future would be difficult or require migrating data between tables, which was left open for later exploration.",
+       "segIds": [
+        10,
+        15,
+        17
+       ]
+      },
+      {
+       "text": "No other unresolved questions were raised during the meeting.",
+       "segIds": [
+        47
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Notable quotes",
+     "bullets": [
+      {
+       "text": "\"Well, I think having it a simple API structure makes it a little easier to kind of do housekeeping for now, just because we have so much backlog of cleaning up stuff to do.\" — Juhe Lee",
+       "segIds": [
+        11
+       ]
+      },
+      {
+       "text": "\"It's kind of a tricky thing to rebase these PRs. We end up sometimes having to create a merge commit.\" — Briley Christopher Oxley",
+       "segIds": [
+        55
+       ]
+      },
+      {
+       "text": "\"If you mention me on GitHub, I'll be able to respond pretty quick.\" — Briley Christopher Oxley",
+       "segIds": [
+        57
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "retrospective": {
+   "sections": [
+    {
+     "heading": "What went well",
+     "bullets": [
+      {
+       "text": "Juhe Lee reported steady progress on front-end code componentization and expects to push the completed work by early the next morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley confirmed the Django REST framework endpoints pull request is reviewed and approved, which will close issue 120 upon merging.",
+       "segIds": [
+        5,
+        29,
+        30
+       ]
+      },
+      {
+       "text": "Juhe Lee noted that new contributor Gordon has actively taken on several milestone 0.2 tasks, including backend issues with vote counters and deprecated APIs.",
+       "segIds": [
+        32,
+        34,
+        35,
+        36
+       ]
+      },
+      {
+       "text": "Juhe Lee confirmed that her details were correctly added to the About Us page.",
+       "segIds": [
+        40,
+        41
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "What didn't go well",
+     "bullets": [
+      {
+       "text": "Juhe Lee reported that contributor Joe shared intentions to leave the project to focus on school and other life commitments.",
+       "segIds": [
+        32
+       ]
+      },
+      {
+       "text": "Juhe Lee noted that an automated spell checker incorrectly converted CiviWiki to lowercase on the About Us page, and the corresponding issue had been assigned to the wrong contributor.",
+       "segIds": [
+        41
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley and Juhe Lee reflected that the repository has historically followed an outdated structure from around 2011, causing confusion for new developers.",
+       "segIds": [
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Juhe Lee pointed out that new updates created merge conflicts on the Django REST framework pull request, which Briley Christopher Oxley noted can make clean rebasing difficult.",
+       "segIds": [
+        52,
+        54,
+        55
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Ideas & improvements",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley proposed restructuring the backend from a single generic API app into multiple domain-driven Django apps, which Juhe Lee agreed to explore after current cleanup work.",
+       "segIds": [
+        7,
+        9,
+        14,
+        15,
+        16,
+        17
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley recommended aiming front-end refactoring toward emerging Web Components standards to ensure long-term architectural longevity.",
+       "segIds": [
+        19,
+        21,
+        26
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley suggested postponing several of the approximately 25 open issues in milestone 0.2 to milestone 0.3.",
+       "segIds": [
+        39
+       ]
+      },
+      {
+       "text": "Juhe Lee suggested that updating the version number for psycopg is an easy low-hanging fruit bug fix for developers.",
+       "segIds": [
+        37,
+        38
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Action items",
+     "bullets": [
+      {
+       "text": "Juhe Lee will finish and push the front-end componentization work by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Juhe Lee will resolve the merge conflicts on the Django REST framework pull request before merging it.",
+       "segIds": [
+        52,
+        53
+       ]
+      },
+      {
+       "text": "Juhe Lee will run front-end test verification and complete the review for pull request 197.",
+       "segIds": [
+        42,
+        43,
+        45
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley will assign Juhe Lee to the pull request review for issue 197 and close the related duplicate issue.",
+       "segIds": [
+        44,
+        46
+       ]
+      },
+      {
+       "text": "Juhe Lee will address documentation tasks associated with milestone 0.2 during the week.",
+       "segIds": [
+        48
+       ]
+      }
+     ]
+    }
+   ]
   }
  }
 }

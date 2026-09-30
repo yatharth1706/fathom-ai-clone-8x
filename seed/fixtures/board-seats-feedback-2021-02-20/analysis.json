@@ -1,0 +1,124 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "analysis": {
+  "title": "Community Board Seats Call for Feedback",
+  "speakerNames": [
+   {
+    "label": "A",
+    "name": "Andrew"
+   },
+   {
+    "label": "B",
+    "name": "James Heilman"
+   },
+   {
+    "label": "C",
+    "name": "Chuck Rosloff"
+   },
+   {
+    "label": "D",
+    "name": null
+   },
+   {
+    "label": "E",
+    "name": "Gideon"
+   },
+   {
+    "label": "F",
+    "name": null
+   },
+   {
+    "label": "G",
+    "name": "Christophe"
+   },
+   {
+    "label": "H",
+    "name": null
+   }
+  ],
+  "chapters": [
+   {
+    "title": "Trustee Evaluation Form and Rubric Usage",
+    "summary": "Andrew asks how the board evaluation rubric is applied and whether it creates an intimidating barrier for community candidates.",
+    "startSegId": 0
+   },
+   {
+    "title": "Board Professionalization and Quotas",
+    "summary": "Participants debate whether the rubric drives an overly corporate board and discuss the utility of quotas versus skill requirements.",
+    "startSegId": 26
+   },
+   {
+    "title": "Affiliate Perspective and Organizational Scale",
+    "summary": "Speaker F shares local chapter election experiences, while Christophe highlights the governance demands of a large-scale global NGO.",
+    "startSegId": 50
+   },
+   {
+    "title": "Fiduciary Duties to Foundation versus Movement",
+    "summary": "A debate emerges over whether trustees are legally bound strictly to the Wikimedia Foundation entity or to the wider movement.",
+    "startSegId": 62
+   },
+   {
+    "title": "Governance Expectations and Communication Gaps",
+    "summary": "The discussion examines regional differences in board perception, trustee time commitments, and the need for clearer governance communication.",
+    "startSegId": 88
+   },
+   {
+    "title": "Leadership Development and Historical Shifts",
+    "summary": "Participants consider board leadership training at conferences and trace the root of fiduciary tensions to the 2011 Haifa decision.",
+    "startSegId": 121
+   }
+  ],
+  "actionItems": [
+   {
+    "text": "Include community feedback regarding quotas and board selection into the consultation report.",
+    "ownerLabel": "D",
+    "ownerText": null,
+    "dueText": null,
+    "segId": 42
+   }
+  ],
+  "insights": [
+   {
+    "kind": "decision",
+    "text": "The Board approved the trustee evaluation rubric by a 9 to 1 vote prior to defining its specific implementation details.",
+    "segId": 3
+   },
+   {
+    "kind": "open_question",
+    "text": "How the trustee evaluation rubric will be operationalized within the different proposed board seat selection pathways remains undefined.",
+    "segId": 4
+   },
+   {
+    "kind": "key_point",
+    "text": "The trustee evaluation form does not have a preset minimum passing threshold but is intended to illustrate the range of qualifications sought for the board.",
+    "segId": 16
+   },
+   {
+    "kind": "key_point",
+    "text": "Trustees possess a legal fiduciary duty specifically to the Wikimedia Foundation rather than to the wider movement or individual affiliates.",
+    "segId": 63
+   },
+   {
+    "kind": "key_point",
+    "text": "Fiduciary obligations to the corporate entity can fundamentally conflict with movement-wide desires when making global organizational decisions.",
+    "segId": 70
+   },
+   {
+    "kind": "key_point",
+    "text": "Much of the community assumes board members act as stewards for the broader movement rather than corporate directors of a specific non-profit entity.",
+    "segId": 113
+   },
+   {
+    "kind": "key_point",
+    "text": "Participants consistently request structured training programs to build community governance skills and prepare volunteers for board leadership.",
+    "segId": 129
+   },
+   {
+    "kind": "key_point",
+    "text": "The 2011 Haifa resolution restricting affiliate fundraising marked the pivotal shift where the board distinctly prioritized corporate protection over movement consensus.",
+    "segId": 144
+   }
+  ]
+ }
+}

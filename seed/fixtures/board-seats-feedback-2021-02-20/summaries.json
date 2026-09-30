@@ -1,0 +1,916 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "summaries": {
+  "general": {
+   "sections": [
+    {
+     "heading": "Meeting purpose",
+     "bullets": [
+      {
+       "text": "The session was held to gather community feedback and address questions regarding board selection proposals, the trustee evaluation rubric, and the role of the Wikimedia Foundation Board of Trustees.",
+       "segIds": [
+        0,
+        6,
+        41,
+        44
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Key takeaways",
+     "bullets": [
+      {
+       "text": "The trustee evaluation rubric has no preset minimum qualification thresholds, and its specific application remains undecided pending feedback on selection proposals.",
+       "segIds": [
+        3,
+        4,
+        16,
+        23
+       ]
+      },
+      {
+       "text": "Participants highlighted an ongoing tension between the board legal fiduciary duty to the Wikimedia Foundation entity and perceived accountability to the wider movement.",
+       "segIds": [
+        63,
+        65,
+        70,
+        73,
+        146
+       ]
+      },
+      {
+       "text": "Concerns were expressed that high professional skill requirements in the rubric could exclude traditional community volunteers from serving on the board.",
+       "segIds": [
+        2,
+        26,
+        27,
+        141,
+        142
+       ]
+      },
+      {
+       "text": "Board proposals such as geographic quotas are exploratory ideas open for consultation rather than finalized decisions.",
+       "segIds": [
+        41,
+        42,
+        44
+       ]
+      },
+      {
+       "text": "There was broad agreement on the need for increased transparency around board responsibilities and dedicated training to build governance capacity among community members.",
+       "segIds": [
+        38,
+        107,
+        108,
+        121,
+        129,
+        131
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Topics discussed",
+     "bullets": [
+      {
+       "text": "Andrew questioned the lack of defined metrics and usage guidelines for the trustee evaluation rubric, while Chuck Rosloff clarified that it is intended as a guiding framework rather than a rigid screening tool.",
+       "segIds": [
+        0,
+        2,
+        10,
+        11,
+        16
+       ]
+      },
+      {
+       "text": "James Heilman and participants reviewed how the rubric features in four of eight proposed board selection pathways, prompting debate on whether professionalization goals conflict with community elections.",
+       "segIds": [
+        6,
+        9,
+        26,
+        28
+       ]
+      },
+      {
+       "text": "Gideon and Speaker D debated geographic quotas and representation, with Speaker D confirming that quota proposals are prompts to assess varied regional opinions.",
+       "segIds": [
+        32,
+        33,
+        41,
+        43,
+        44
+       ]
+      },
+      {
+       "text": "Christophe and Speaker F discussed whether community volunteers grasp the governance needs of a major multinational non-profit and considered balancing external professional expertise with local capacity building.",
+       "segIds": [
+        46,
+        48,
+        50,
+        53,
+        57
+       ]
+      },
+      {
+       "text": "Participants engaged in an in-depth discussion about fiduciary responsibilities, debating whether the board can reconcile legal obligations to the foundation with the interests of the broader movement.",
+       "segIds": [
+        62,
+        63,
+        65,
+        70,
+        71,
+        74,
+        144,
+        146
+       ]
+      },
+      {
+       "text": "Speaker H inquired about trustee weekly time commitments and board boundaries, with James Heilman stating that the board sets strategic direction rather than handling operational management.",
+       "segIds": [
+        98,
+        99,
+        100,
+        102,
+        104
+       ]
+      },
+      {
+       "text": "Attendees discussed the demand for governance training at events like the Berlin conference, while Chuck Rosloff noted that the 2017 board handbook requires an update.",
+       "segIds": [
+        121,
+        127,
+        129,
+        131,
+        135,
+        136
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Community feedback gathered across regional consultations will be compiled into a report to inform future board selection processes.",
+       "segIds": [
+        42,
+        44,
+        130
+       ]
+      },
+      {
+       "text": "The Wikimedia Foundation team will work on refreshing the outdated board handbook.",
+       "segIds": [
+        136
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "sales": {
+   "sections": [
+    {
+     "heading": "Prospect context",
+     "bullets": [
+      {
+       "text": "Community stakeholders and affiliate representatives joined an office hours consultation to discuss the Board of Trustees selection pathways and the proposed trustee evaluation rubric.",
+       "segIds": [
+        0,
+        6,
+        9
+       ]
+      },
+      {
+       "text": "The community is navigating broader movement strategy transitions, including the upcoming Movement Charter, the interim Global Council, and regional hubs alongside foundation governance.",
+       "segIds": [
+        49,
+        116
+       ]
+      },
+      {
+       "text": "Stakeholders range from long-standing movement contributors in Western Europe and North America to newer participants from emerging communities in Asia, Africa, and Latin America.",
+       "segIds": [
+        92,
+        93,
+        95
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Pain points",
+     "bullets": [
+      {
+       "text": "Stakeholders find the evaluation rubric overly complex and intimidating, noting that it lacks clear scoring metrics, baseline thresholds, or defined application rules.",
+       "segIds": [
+        1,
+        2,
+        14,
+        15
+       ]
+      },
+      {
+       "text": "Community members report a severe lack of visibility and transparency into the board day-to-day operations and specific skill needs, leaving voters uninformed during elections.",
+       "segIds": [
+        30,
+        38,
+        84,
+        108
+       ]
+      },
+      {
+       "text": "Tension exists over whether the board fiduciary duties belong strictly to the Wikimedia Foundation as a legal corporate entity or to the broader global movement.",
+       "segIds": [
+        62,
+        70,
+        71,
+        73
+       ]
+      },
+      {
+       "text": "The movement currently lacks structured training pipelines to nurture community members and prepare them with the professional skills required for board service.",
+       "segIds": [
+        121,
+        122,
+        126,
+        131
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Budget, authority & timeline",
+     "bullets": [
+      {
+       "text": "The board approved the evaluation rubric by a 9-to-1 vote, but the exact mechanism for applying it across the proposed selection pathways remains undecided.",
+       "segIds": [
+        3,
+        4,
+        24
+       ]
+      },
+      {
+       "text": "The board operates as the ultimate corporate authority with legal fiduciary duty over the Foundation multimillion-dollar budget and global staff.",
+       "segIds": [
+        21,
+        46,
+        63,
+        73
+       ]
+      },
+      {
+       "text": "A trustee selection process is planned for the current year, though comprehensive board training curricula will require longer-term development beyond the immediate cycle.",
+       "segIds": [
+        130,
+        131
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Objections",
+     "bullets": [
+      {
+       "text": "Andrew objected that approving an evaluation rubric without first defining its operational use, thresholds, or selection pathways is backward and discourages potential candidates.",
+       "segIds": [
+        14,
+        24
+       ]
+      },
+      {
+       "text": "Christophe warned that the rubric prioritizes corporate professional backgrounds that would disqualify most past and current community-elected trustees, urging the board to be honest if corporate professionalization is the actual goal.",
+       "segIds": [
+        26,
+        27,
+        28,
+        141
+       ]
+      },
+      {
+       "text": "Gideon objected to geographic diversity quotas, arguing that tokenized single seats cannot effectively represent hundreds of distinct languages, cultures, and nations.",
+       "segIds": [
+        32,
+        33,
+        35
+       ]
+      },
+      {
+       "text": "Speaker H raised concerns that existing foundation governance handbooks are severely outdated and reflect a centralized control dynamic rather than servant leadership with affiliate partners.",
+       "segIds": [
+        133,
+        134,
+        135
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "The facilitator team will compile community feedback from this session and regional discussions into a comprehensive report for the board consideration.",
+       "segIds": [
+        42,
+        44
+       ]
+      },
+      {
+       "text": "Community members are encouraged to continue submitting input regarding how the rubric should be utilized within the proposed selection pathways.",
+       "segIds": [
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Chuck Rosloff and the governance team plan to refresh the Board Handbook to ensure current governance standards and role definitions are accessible.",
+       "segIds": [
+        136
+       ]
+      },
+      {
+       "text": "Discussions on movement strategy, regional hubs, and the Global Council will continue to address broader governance scope and communications alignment.",
+       "segIds": [
+        116,
+        118
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "customer_success": {
+   "sections": [
+    {
+     "heading": "Customer goals",
+     "bullets": [
+      {
+       "text": "Understand how the trustee evaluation rubric will be applied, including any bare minimum thresholds or metrics required for candidates to qualify.",
+       "segIds": [
+        0,
+        1,
+        2
+       ]
+      },
+      {
+       "text": "Ensure community board seat selection pathways remain accessible to movement volunteers rather than disqualifying experienced community members.",
+       "segIds": [
+        2,
+        14,
+        89
+       ]
+      },
+      {
+       "text": "Gain transparency into the day-to-day work, scope, and expectations of the Board of Trustees to help voters identify suitable candidates.",
+       "segIds": [
+        30,
+        38,
+        84
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Wins & value delivered",
+     "bullets": [
+      {
+       "text": "Chuck Rosloff confirmed that the evaluation rubric does not contain preset minimum thresholds and is intended as a guiding tool rather than a strict checklist.",
+       "segIds": [
+        12,
+        16
+       ]
+      },
+      {
+       "text": "Speaker D clarified that the board proposals, including quotas and rubric applications, are open questions for community discussion rather than finalized plans.",
+       "segIds": [
+        41,
+        42,
+        44
+       ]
+      },
+      {
+       "text": "Participants established shared clarity that the Board's legal fiduciary responsibility is specifically to the Wikimedia Foundation entity rather than to the entire movement.",
+       "segIds": [
+        63,
+        71,
+        74,
+        113
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Risks & blockers",
+     "bullets": [
+      {
+       "text": "The approved evaluation rubric heavily emphasizes corporate experience, which Andrew and Christophe warned could intimidate volunteer candidates and disqualify current community trustees.",
+       "segIds": [
+        2,
+        14,
+        26,
+        27,
+        141
+       ]
+      },
+      {
+       "text": "The Board formally approved the evaluation rubric before clarifying its scoring metrics, parameters, or how selection committees will apply it.",
+       "segIds": [
+        3,
+        4,
+        24
+       ]
+      },
+      {
+       "text": "A widespread lack of community understanding regarding the Board's fiduciary limits creates misaligned expectations during elections and strategic decisions.",
+       "segIds": [
+        38,
+        47,
+        85,
+        107
+       ]
+      },
+      {
+       "text": "Gideon raised concerns that geographic or identity quotas could become tokenistic rather than genuinely representing diverse, complex global populations.",
+       "segIds": [
+        32,
+        33
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Feature requests & feedback",
+     "bullets": [
+      {
+       "text": "Gideon and Speaker F recommended building a training and capacity-building curriculum, utilizing venues like WikiConference Berlin, to prepare community members for board governance.",
+       "segIds": [
+        53,
+        121,
+        124,
+        128
+       ]
+      },
+      {
+       "text": "Andrew suggested allowing community members to observe open board meetings to demystify board deliberations and governance tensions.",
+       "segIds": [
+        84
+       ]
+      },
+      {
+       "text": "Christophe urged the Foundation to state transparently if the goal is to shift toward a professional corporate board while leaving community representation to the Global Council.",
+       "segIds": [
+        28,
+        29,
+        49
+       ]
+      },
+      {
+       "text": "Speaker H requested an updated Board Handbook, pointing out that the current version appears unrevised since 2017.",
+       "segIds": [
+        133,
+        135
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Speaker D and the facilitation team will compile the call feedback, including perspectives on quotas and training priorities, into a summary report for board selection planning.",
+       "segIds": [
+        42,
+        44,
+        129
+       ]
+      },
+      {
+       "text": "Community members and board representatives will continue discussions to define how the evaluation rubric should be utilized across upcoming election pathways.",
+       "segIds": [
+        23,
+        24
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "demo": {
+   "sections": [
+    {
+     "heading": "What was shown",
+     "bullets": [
+      {
+       "text": "Andrew and James Heilman reviewed the trustee evaluation rubric and eight proposed pathways from the board for selecting community board seats.",
+       "segIds": [
+        0,
+        6
+       ]
+      },
+      {
+       "text": "Chuck Rosloff presented the evaluation rubric as a guiding framework to understand candidate skills and experience across the body, rather than a rigid scoring system.",
+       "segIds": [
+        10,
+        11,
+        12
+       ]
+      },
+      {
+       "text": "James Heilman provided a link to the Wikimedia Foundation Board Handbook, which outlines the formal responsibilities and governance duties of trustees.",
+       "segIds": [
+        119,
+        120
+       ]
+      },
+      {
+       "text": "Speaker D outlined forthcoming governance structures from Movement Strategy, including the interim Global Council, the movement charter, and regional hubs.",
+       "segIds": [
+        116,
+        117
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Questions asked",
+     "bullets": [
+      {
+       "text": "Andrew asked how the evaluation rubric would be applied and whether a minimum threshold exists for candidates. James Heilman and Chuck Rosloff responded that its exact implementation remains undefined and that no preset minimum threshold is built into the form.",
+       "segIds": [
+        1,
+        4,
+        16
+       ]
+      },
+      {
+       "text": "Gideon asked why geographic diversity quotas are considered if board members do not represent specific regions. James Heilman replied that diverse life experiences help the board make sound movement decisions, and Speaker D clarified that quotas are an open question for community discussion rather than a finalized plan.",
+       "segIds": [
+        32,
+        35,
+        40,
+        41
+       ]
+      },
+      {
+       "text": "Andrew asked whether a trustee's fiduciary responsibility is to the Foundation as a legal corporation or to the wider movement. James Heilman stated that legally it is to the Foundation while functionally aligned with the movement, whereas Christophe argued the legal duty strictly belongs to the Foundation and can conflict with broader movement interests.",
+       "segIds": [
+        62,
+        63,
+        65,
+        70,
+        71
+       ]
+      },
+      {
+       "text": "Speaker H asked how many hours per week a trustee spends on board duties. James Heilman replied that the time requirement is variable and largely depends on specific committee assignments and seasonal workloads.",
+       "segIds": [
+        103,
+        104,
+        105
+       ]
+      },
+      {
+       "text": "Speaker H relayed a question from chat asking if affiliates are considered partners or subjects of the Wikimedia Foundation. James Heilman answered that the Foundation and affiliates are independent organizations bound by mutual agreements regarding roles and responsibilities.",
+       "segIds": [
+        133,
+        139,
+        140
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Reactions & feedback",
+     "bullets": [
+      {
+       "text": "Andrew expressed concern that the rubric's complex grid could intimidate potential community candidates, pointing out that many historically elected trustees would not meet its criteria.",
+       "segIds": [
+        2,
+        14,
+        141,
+        142
+       ]
+      },
+      {
+       "text": "Christophe noted that the rubric heavily leans toward corporate management backgrounds, arguing that the Foundation needs to state clearly if its objective is to professionalize the board.",
+       "segIds": [
+        26,
+        28,
+        47
+       ]
+      },
+      {
+       "text": "Gideon expressed frustration with the board's lack of transparency, stating that volunteer voters cannot evaluate candidate qualifications when they do not know what the board does.",
+       "segIds": [
+        30,
+        38,
+        39
+       ]
+      },
+      {
+       "text": "Speaker F shared Wikimedia Indonesia's success in appointing outside domain experts and urged the Foundation to publish needed skill sets while nurturing community capacity over time.",
+       "segIds": [
+        50,
+        52,
+        53
+       ]
+      },
+      {
+       "text": "Andrew suggested that holding open board meetings for community observation would help volunteers understand ongoing institutional tensions and strategic decisions.",
+       "segIds": [
+        84,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Follow-ups",
+     "bullets": [
+      {
+       "text": "Speaker D affirmed that community feedback regarding quotas and election proposals will be compiled into a report to inform future board decisions.",
+       "segIds": [
+        42,
+        44
+       ]
+      },
+      {
+       "text": "Speaker D reported that community requests for governance and board preparation training are being shared with leadership to develop future volunteer development curricula.",
+       "segIds": [
+        129,
+        130,
+        131
+       ]
+      },
+      {
+       "text": "Chuck Rosloff noted that the Foundation Board Handbook is due for a comprehensive refresh.",
+       "segIds": [
+        136
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "sections": [
+    {
+     "heading": "Questions & answers",
+     "bullets": [
+      {
+       "text": "Q: Andrew asked how the trustee evaluation form (rubric) is intended to be used and what the minimum threshold requirements are. — A: James Heilman noted that its exact usage remains to be defined across the proposals, while Chuck Rosloff clarified that the rubric is intended as a non-mandatory framework rather than an evaluation tool with a preset minimum threshold.",
+       "segIds": [
+        0,
+        1,
+        3,
+        4,
+        11,
+        16
+       ]
+      },
+      {
+       "text": "Q: Andrew asked whether the fiduciary responsibility of Wikimedia Foundation board members is to the Foundation as a corporate authority, to the movement, or to both. — A: James Heilman explained that legally the responsibility is to the Foundation but argued the Foundation and movement are inseparable, whereas Christophe countered that legal fiduciary duties inherently prioritize the Foundation over the broader movement.",
+       "segIds": [
+        62,
+        63,
+        65,
+        66,
+        70,
+        71
+       ]
+      },
+      {
+       "text": "Q: Speaker H asked whether the board is overly involved in operational details and how many hours trustees spend on work weekly. — A: James Heilman explained that the board remains strategic rather than involved in day-to-day operations, and noted that weekly time commitments are difficult to quantify as they vary widely based on committee assignments and seasonal workloads.",
+       "segIds": [
+        99,
+        100,
+        101,
+        102,
+        104,
+        105
+       ]
+      },
+      {
+       "text": "Q: Gideon asked why the Foundation does not identify and train prospective board members from within the affiliates at gatherings like the WikiConference in Berlin. — A: Speaker D replied that feedback on the need for training curricula has been consistently heard and acknowledged, though Christophe noted that many required corporate board skills cannot easily be acquired solely within the Wikimedia movement.",
+       "segIds": [
+        121,
+        122,
+        125,
+        126,
+        129,
+        131
+       ]
+      },
+      {
+       "text": "Q: Speaker H brought up a question from Melissa regarding whether chapters and affiliates are treated as peers and partners or as subjects controlled by the Foundation. — A: James Heilman responded that the Wikimedia Foundation and affiliates are legally independent entities that establish roles and mutual expectations through bilateral agreements.",
+       "segIds": [
+        133,
+        134,
+        139,
+        140
+       ]
+      },
+      {
+       "text": "Q: Andrew asked Christophe when the inflection point occurred where board expectations shifted toward running large-scale organizations. — A: Christophe identified the 2011 Haifa letter restricting affiliate fundraising as the moment the board explicitly prioritized its fiduciary duty to protect the Foundation over serving the broader movement.",
+       "segIds": [
+        141,
+        142,
+        143,
+        144,
+        145,
+        146
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Unanswered questions",
+     "bullets": [
+      {
+       "text": "Andrew questioned why the board chose to formally approve the evaluation rubric before defining its explicit parameters, scoring metrics, or exact use in the selection process.",
+       "segIds": [
+        24
+       ]
+      },
+      {
+       "text": "Christophe asked Foundation leadership to state plainly whether the explicit institutional goal is to transition toward an entirely professionalized board.",
+       "segIds": [
+        28,
+        29
+       ]
+      },
+      {
+       "text": "Gideon asked how a single individual selected for a regional quota could practically represent hundreds of distinct languages, countries, and cultures.",
+       "segIds": [
+        32,
+        33
+       ]
+      },
+      {
+       "text": "Speaker H asked if there is active consideration around transitioning specific Foundation board decisions to the proposed Global Council.",
+       "segIds": [
+        99
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Notable quotes",
+     "bullets": [
+      {
+       "text": "\"I don't see enough clarity at this point in time with respect to how that rubric is gonna be used to feel comfortable supporting it being rolled out.\" — James Heilman",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "\"I think the main point I wanted to make is there is no, like, preset minimum threshold. Like, that's not built into the evaluation form.\" — Chuck Rosloff",
+       "segIds": [
+        16
+       ]
+      },
+      {
+       "text": "\"You chop one from the other and it doesn't work very well. You know, you cannot separate what is good for, you know, our movement as a whole from what is good for the Wikimedia Foundation, in my opinion.\" — James Heilman",
+       "segIds": [
+        65
+       ]
+      },
+      {
+       "text": "\"No, I somewhat disagree in the sense that by design, because of your fiduciary duty to the organization, you will have to make decisions that are not okay for the rest of the movement.\" — Christophe",
+       "segIds": [
+        70
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "retrospective": {
+   "sections": [
+    {
+     "heading": "What went well",
+     "bullets": [
+      {
+       "text": "Participants engaged in an open and constructive dialogue addressing long-standing structural tensions around board governance, community representation, and fiduciary duties.",
+       "segIds": [
+        84,
+        87
+       ]
+      },
+      {
+       "text": "Chuck Rosloff clarified that the trustee evaluation rubric is designed as a guiding tool to assess qualifications across the whole board, rather than an exclusionary barrier with preset minimum thresholds.",
+       "segIds": [
+        11,
+        12,
+        16
+       ]
+      },
+      {
+       "text": "Speaker D clarified that the proposals regarding selection pathways and quotas were put forward to gather genuine community feedback rather than as finalized decisions.",
+       "segIds": [
+        41,
+        42,
+        44
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "What didn't go well",
+     "bullets": [
+      {
+       "text": "Andrew and Christophe voiced concern that the approved rubric pushes heavily for professionalized corporate qualifications that past and current community-elected trustees would not satisfy.",
+       "segIds": [
+        2,
+        26,
+        27,
+        141
+       ]
+      },
+      {
+       "text": "Andrew and James Heilman pointed out that the board approved the evaluation rubric despite its practical use, scoring metrics, and election integration remaining undefined.",
+       "segIds": [
+        3,
+        4,
+        24
+       ]
+      },
+      {
+       "text": "Gideon criticized the board's lack of transparency regarding its day-to-day work, noting that volunteers are forced to vote blindly without understanding the board's actual needs.",
+       "segIds": [
+        30,
+        38,
+        39
+       ]
+      },
+      {
+       "text": "Christophe noted that the board's strict legal fiduciary duty to the Wikimedia Foundation rather than the wider movement creates an unresolved, decade-long friction in governance.",
+       "segIds": [
+        63,
+        70,
+        144,
+        146
+       ]
+      },
+      {
+       "text": "Speaker H pointed out that the official Wikimedia Foundation Board Handbook shared during the call has not seen substantial updates since 2017.",
+       "segIds": [
+        133,
+        135
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Ideas & improvements",
+     "bullets": [
+      {
+       "text": "Andrew suggested opening board meetings for community observation to help volunteers understand governance tensions and align expectations.",
+       "segIds": [
+        84
+       ]
+      },
+      {
+       "text": "Gideon and Speaker F recommended using existing affiliate gatherings like the Berlin conference to offer structured governance training and nurture future board candidates.",
+       "segIds": [
+        53,
+        121,
+        128
+       ]
+      },
+      {
+       "text": "Speaker D suggested using the broader Movement Strategy rollout to educate volunteers movement-wide on foundational Wikimedia governance before introducing new bodies like regional hubs and the Global Council.",
+       "segIds": [
+        116,
+        117,
+        118
+       ]
+      },
+      {
+       "text": "Speaker F proposed designating specific required skill sets or regional expertise for individual board seats so communities understand what profile is being sought in an election.",
+       "segIds": [
+        52,
+        55
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Action items",
+     "bullets": [
+      {
+       "text": "Speaker D and the facilitation team will record and include community feedback from the discussion, including input on diversity quotas and candidate training needs, into the final consultation report.",
+       "segIds": [
+        42,
+        129,
+        130
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

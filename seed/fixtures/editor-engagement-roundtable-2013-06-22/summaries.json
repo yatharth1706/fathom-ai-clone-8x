@@ -1,0 +1,780 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "summaries": {
+  "general": {
+   "sections": [
+    {
+     "heading": "Meeting purpose",
+     "bullets": [
+      {
+       "text": "The purpose of the meeting was to discuss various Talk page workflows, user onboarding experiences, and editor interaction tools before breaking into small working groups.",
+       "segIds": [
+        0,
+        6,
+        25,
+        38,
+        92
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Key takeaways",
+     "bullets": [
+      {
+       "text": "Welcome messages are most effective when kept simple and signed by an active user who can promptly answer questions, rather than using complex boilerplate templates.",
+       "segIds": [
+        26,
+        27,
+        31,
+        32,
+        36
+       ]
+      },
+      {
+       "text": "Editors handling vandal warnings and reversions need more targeted notification options so they only receive alerts when a user provides a substantive reply.",
+       "segIds": [
+        39,
+        40,
+        45,
+        52
+       ]
+      },
+      {
+       "text": "Workflows often stem from passively monitoring other user Talk pages or using the New Pages feed to discover articles needing collaborative improvements or translations.",
+       "segIds": [
+        23,
+        24,
+        56,
+        57,
+        87,
+        89
+       ]
+      },
+      {
+       "text": "There is a desire to expand acknowledgment features like Thanks, WikiLove, and Barnstars, as well as replace Edward's Bot for project newsletters and invitations.",
+       "segIds": [
+        75,
+        76,
+        78,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Topics discussed",
+     "bullets": [
+      {
+       "text": "The group discussed how users perceive welcome messages, noting that tests show editors often cannot distinguish between automated bots and real humans unless messages are kept simple and conversational.",
+       "segIds": [
+        4,
+        7,
+        10,
+        14,
+        27,
+        32
+       ]
+      },
+      {
+       "text": "Speaker A shared personal experiences on the value of early human connections and mobilizing a global network of editors to collaborate on complex article topics.",
+       "segIds": [
+        16,
+        18,
+        23,
+        24,
+        26
+       ]
+      },
+      {
+       "text": "Speaker D detailed the workflow of reverting vandalism, noting that automated watchlists create noise when editors only want notifications if a user provides a thoughtful response.",
+       "segIds": [
+        39,
+        45,
+        49,
+        52,
+        64,
+        70
+       ]
+      },
+      {
+       "text": "Participants analyzed passive Talk page monitoring, where editors discover and improve articles simply by observing conversations on other editors' pages.",
+       "segIds": [
+        56,
+        57,
+        60,
+        66
+       ]
+      },
+      {
+       "text": "Jake proposed enhancements to recognition tools such as the Thanks feature, Barn-O-Meters, and Barnstars, and called for an improved alternative to Edward's Bot for bulk notifications.",
+       "segIds": [
+        75,
+        76,
+        78,
+        85
+       ]
+      },
+      {
+       "text": "Speaker F described utilizing the New Pages feed to find newly created articles, locate relevant sources, and coordinate with original creators on translations.",
+       "segIds": [
+        87,
+        88,
+        89
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "The facilitator will read through the summarized list of discussed workflows shown on the board.",
+       "segIds": [
+        92,
+        97
+       ]
+      },
+      {
+       "text": "Attendees will divide into small breakout groups to select and examine specific workflows.",
+       "segIds": [
+        92,
+        97
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "sales": {
+   "sections": [
+    {
+     "heading": "Prospect context",
+     "bullets": [
+      {
+       "text": "The participants are experienced wiki editors and contributors discussing editor onboarding, community collaboration, and talk page communications.",
+       "segIds": [
+        0,
+        4,
+        16,
+        27
+       ]
+      },
+      {
+       "text": "The community has deployed and tested several tools to manage interactions, including automated welcome bots, Twinkle for reversions, and the New Pages feed.",
+       "segIds": [
+        27,
+        70,
+        87
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Pain points",
+     "bullets": [
+      {
+       "text": "Welcome messages often feel devoid of social cues, leaving new editors unable to tell if they are interacting with a human or a bot.",
+       "segIds": [
+        4,
+        5,
+        10,
+        30
+       ]
+      },
+      {
+       "text": "Editors performing manual reversions and leaving warning templates must watch entire talk pages to catch genuine replies, flooding their watchlists with unwanted notifications.",
+       "segIds": [
+        39,
+        45,
+        49
+       ]
+      },
+      {
+       "text": "Global outreach tools like Edward's Bot are low-tech, difficult to use, and widely perceived by the community as spam.",
+       "segIds": [
+        78,
+        85
+       ]
+      },
+      {
+       "text": "Recognition mechanisms like Barnstars and thanks lack intuitive workflows for aggregating acknowledgments or sending quick reciprocal thank-yous.",
+       "segIds": [
+        75,
+        76,
+        77
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Budget, authority & timeline",
+     "bullets": [
+      {
+       "text": "Budget, authority, and timeline were not discussed.",
+       "segIds": []
+      }
+     ]
+    },
+    {
+     "heading": "Objections",
+     "bullets": [
+      {
+       "text": "Participants raised concerns that automated welcome templates feel impersonal and overwhelming compared to authentic human connections.",
+       "segIds": [
+        5,
+        26,
+        30
+       ]
+      },
+      {
+       "text": "Speaker D objected to automatic talk page watchlisting, noting that it produces an unmanageable stream of notifications for unrelated user activities.",
+       "segIds": [
+        45,
+        49
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Mariana will summarize the discussed workflow topics on the board for the group.",
+       "segIds": [
+        92,
+        97
+       ]
+      },
+      {
+       "text": "Participants will divide into small breakout groups to select specific editor workflows and analyze them in detail.",
+       "segIds": [
+        92,
+        97
+       ]
+      },
+      {
+       "text": "Speaker E is continuing development work on an initiative to replace Edward's Bot.",
+       "segIds": [
+        79
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "customer_success": {
+   "sections": [
+    {
+     "heading": "Customer goals",
+     "bullets": [
+      {
+       "text": "Guide and welcome both new and experienced editors into the community through effective onboarding interactions.",
+       "segIds": [
+        0,
+        14,
+        26
+       ]
+      },
+      {
+       "text": "Facilitate organic collaboration and content handoffs across international contributors on specialized topics.",
+       "segIds": [
+        20,
+        22,
+        24
+       ]
+      },
+      {
+       "text": "Manage manual reversions and warning notices efficiently without cluttering editor watchlists.",
+       "segIds": [
+        39,
+        45,
+        49
+       ]
+      },
+      {
+       "text": "Express gratitude and acknowledge editor contributions more easily through positive reinforcement mechanisms.",
+       "segIds": [
+        75,
+        76
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Wins & value delivered",
+     "bullets": [
+      {
+       "text": "Wikidata's simplified automated welcome messages signed by recently active users have successfully initiated positive communication with newcomers.",
+       "segIds": [
+        27,
+        28,
+        31,
+        36
+       ]
+      },
+      {
+       "text": "Direct collaborative outreach enabled an article initiated in Japan to be rapidly expanded and translated across multiple regions.",
+       "segIds": [
+        21,
+        23,
+        24
+       ]
+      },
+      {
+       "text": "The New Pages feed tool has proven useful for identifying new articles, adding sources, and coordinating translations with original authors.",
+       "segIds": [
+        87,
+        88,
+        91
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Risks & blockers",
+     "bullets": [
+      {
+       "text": "Impersonal or overly complex welcome templates create confusion and lack social cues, making new users uncertain if they are interacting with humans or bots.",
+       "segIds": [
+        4,
+        5,
+        30
+       ]
+      },
+      {
+       "text": "Editors tracking manual reversions risk overwhelming their watchlists with unwanted page updates when they only care about direct replies.",
+       "segIds": [
+        45,
+        49
+       ]
+      },
+      {
+       "text": "Community outreach and newsletters rely on Edward's Bot, which is perceived as a spam bot and a difficult, low-tech messaging mechanism.",
+       "segIds": [
+        78,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Feature requests & feedback",
+     "bullets": [
+      {
+       "text": "Provide clear indications on whether welcome messages are automated while including interest-based starting recommendations.",
+       "segIds": [
+        7,
+        14
+       ]
+      },
+      {
+       "text": "Implement thread-level notifications on user talk pages so editors receive alerts only when a thoughtful reply is posted.",
+       "segIds": [
+        45,
+        52
+       ]
+      },
+      {
+       "text": "Enhance acknowledgment features by adding thank counters, easier display tools for Barnstars, and thank buttons on received awards.",
+       "segIds": [
+        75,
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Develop a modern replacement for Edward's Bot to support global messaging for newsletters, real-life events, and project notices.",
+       "segIds": [
+        78,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Mariana will read aloud a summary of the discussed workflows recorded on the board.",
+       "segIds": [
+        92,
+        97
+       ]
+      },
+      {
+       "text": "Participants will split into small groups to each focus on a selected workflow.",
+       "segIds": [
+        92,
+        97
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "demo": {
+   "sections": [
+    {
+     "heading": "What was shown",
+     "bullets": [
+      {
+       "text": "Speaker A shared early editing experiences involving a personal welcome from user Polly Frog and a collaborative workflow coordinating editors across multiple countries on a math article.",
+       "segIds": [
+        18,
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Speaker G described Wikidata's automated welcome bot workflow, which delivers simple greetings signed by recently active users to open communication channels.",
+       "segIds": [
+        27,
+        28,
+        31
+       ]
+      },
+      {
+       "text": "Speaker D detailed workflows for manual vandalism reversions using templated talk page warnings, as well as tracking other users' talk pages via watchlists to find editing tasks.",
+       "segIds": [
+        39,
+        40,
+        56,
+        57
+       ]
+      },
+      {
+       "text": "Jake outlined recognition workflows including Thanks, WikiLove, Barnstars, and the Barn-O-Meter, alongside mass participation messages like newsletters and Geo notices.",
+       "segIds": [
+        75,
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Speaker F described using the New Pages feed to monitor new articles, find sources, and reach out to page creators for translations.",
+       "segIds": [
+        87,
+        88,
+        89
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Questions asked",
+     "bullets": [
+      {
+       "text": "Speaker B asked what kind of workflow could address confusion about welcome messages, and Speaker C suggested clearly indicating whether a message is automated or from a real person.",
+       "segIds": [
+        6,
+        7
+       ]
+      },
+      {
+       "text": "Speaker C asked where thoughtful responses to revert notices typically occur, and Speaker D answered that they happen on the other user's talk page.",
+       "segIds": [
+        42,
+        43
+       ]
+      },
+      {
+       "text": "Speaker E and Jake asked how Speaker D tracks replies without watching entire talk pages, prompting Speaker C to point out that the response-to-threads feature resolves this issue.",
+       "segIds": [
+        47,
+        48,
+        49,
+        52
+       ]
+      },
+      {
+       "text": "Speaker A asked for clarification on what EdwardsBot is, and Speaker D and Jake explained it is a low-tech global messaging bot used to send newsletters and event announcements.",
+       "segIds": [
+        80,
+        82,
+        84,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Reactions & feedback",
+     "bullets": [
+      {
+       "text": "Speaker C noted that initial welcome messages felt alien and confusing due to a lack of social cues about whether they came from a human or an automated bot.",
+       "segIds": [
+        4,
+        5
+       ]
+      },
+      {
+       "text": "Speaker E and Speaker F pointed out that user tests show an even 50/50 split in distinguishing human from bot welcomes, with Speaker E favoring fully automated onboarding messages.",
+       "segIds": [
+        10,
+        14
+       ]
+      },
+      {
+       "text": "Speaker B reflected that a simple, direct welcome message from Speaker G made them feel valued and at home upon joining.",
+       "segIds": [
+        33,
+        34
+       ]
+      },
+      {
+       "text": "Jake advocated for enhanced acknowledgment features, including a thank counter and interactive thanks buttons on Barnstars.",
+       "segIds": [
+        75,
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Speaker F praised the New Pages feed as an effective replacement for the previous new pages tool for monitoring and improving articles.",
+       "segIds": [
+        87,
+        91
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Follow-ups",
+     "bullets": [
+      {
+       "text": "Speaker C and Speaker E agreed to return to the response-to-threads feature and talk page watchlisting later in the session.",
+       "segIds": [
+        52,
+        53
+       ]
+      },
+      {
+       "text": "Speaker E noted that development work is currently underway to replace EdwardsBot for mass messaging.",
+       "segIds": [
+        78,
+        79
+       ]
+      },
+      {
+       "text": "Speaker B arranged for the group to review the summarized workflows on the board and split into small breakout groups to examine individual workflows.",
+       "segIds": [
+        92,
+        97
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "sections": [
+    {
+     "heading": "Questions & answers",
+     "bullets": [
+      {
+       "text": "Q: Speaker B asked what kind of workflow could address the lack of social cues in talk page welcomes. — A: Speaker C suggested providing a clear indication of whether a welcome message is automated or from a real person.",
+       "segIds": [
+        6,
+        7
+       ]
+      },
+      {
+       "text": "Q: Speaker C asked where a thoughtful response from an editor actually occurs during a manual reversion workflow. — A: Speaker D clarified that the reply occurs on that user's talk page.",
+       "segIds": [
+        42,
+        43
+       ]
+      },
+      {
+       "text": "Q: Speaker E asked how Speaker D knows when a reverted editor responds to a warning message. — A: Speaker D stated they do not know, explaining they avoid keeping a watchlist that updates all day long.",
+       "segIds": [
+        48,
+        49
+       ]
+      },
+      {
+       "text": "Q: Speaker A asked what Edward's Bot is. — A: Jake and Speaker D explained that it is a global messaging tool, often called a spam bot, used to deliver mass notices like newsletters and event invitations.",
+       "segIds": [
+        80,
+        83,
+        84,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Unanswered questions",
+     "bullets": [
+      {
+       "text": "Speaker C wondered early in their editing experience whether the welcome message left on their talk page originated from an automated bot or a real contributor.",
+       "segIds": [
+        4
+       ]
+      },
+      {
+       "text": "Speaker D raised the question of how an editor can be alerted strictly to a thoughtful reply after issuing a warning, without watchlisting the entire user talk page and receiving unwanted updates.",
+       "segIds": [
+        45,
+        49,
+        53
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Notable quotes",
+     "bullets": [
+      {
+       "text": "Speaker C: \"I think I did go to that person's top page and thank them, but it was like devoid of a lot of social cues that I think really makes the whole place kind of alien.\"",
+       "segIds": [
+        5
+       ]
+      },
+      {
+       "text": "Speaker A: \"The content was not what I contributed to that article. It was more the collaboration and connection.\"",
+       "segIds": [
+        24
+       ]
+      },
+      {
+       "text": "Speaker D: \"The thing is, I don't want to have a watch list that just goes on right freaking day.\"",
+       "segIds": [
+        49
+       ]
+      },
+      {
+       "text": "Jake: \"I would like it to be easier to give and thank and have those interactions where gratitude is expressed.\"",
+       "segIds": [
+        75
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "retrospective": {
+   "sections": [
+    {
+     "heading": "What went well",
+     "bullets": [
+      {
+       "text": "Speaker A shared positive experiences where personalized outreach from editor Polly Frog and cross-border collaboration across Japan, California, the UK, and Gaza fostered editor engagement and community connection.",
+       "segIds": [
+        18,
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Speaker G highlighted that Wikidata successfully opened communication with new editors by using simple welcome messages signed by recently active users who actively answer questions.",
+       "segIds": [
+        27,
+        28,
+        36,
+        37
+       ]
+      },
+      {
+       "text": "Speaker F found the New Pages feed tool highly effective for discovering new articles to improve and collaborating with original authors on translations.",
+       "segIds": [
+        87,
+        88,
+        89
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "What didn't go well",
+     "bullets": [
+      {
+       "text": "Speaker C noted that initial welcome messages felt alienating and lacked social cues to distinguish whether they came from real users or automated bots.",
+       "segIds": [
+        4,
+        5,
+        7
+       ]
+      },
+      {
+       "text": "Speaker F and Speaker E stated that user testing showed editors could only tell whether a welcome message was human or automated half of the time.",
+       "segIds": [
+        10,
+        14
+       ]
+      },
+      {
+       "text": "Speaker D reported that leaving templated warning messages on talk pages after manual reversions results in an overcrowded watchlist with irrelevant notifications.",
+       "segIds": [
+        39,
+        40,
+        49
+       ]
+      },
+      {
+       "text": "Jake noted that Edward's Bot, used for delivering newsletters and community notices, is low-tech, difficult to operate, and widely regarded as spam.",
+       "segIds": [
+        78,
+        85
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Ideas & improvements",
+     "bullets": [
+      {
+       "text": "Speaker E proposed making automated welcome messages explicit and customizing them with starter recommendations based on user interests.",
+       "segIds": [
+        14
+       ]
+      },
+      {
+       "text": "Speaker G suggested keeping welcome greetings short and simple rather than overloading new editors with complex templates and links.",
+       "segIds": [
+        30,
+        32
+       ]
+      },
+      {
+       "text": "Speaker D and Speaker C supported thread response features so editors only receive notifications when an editor directly replies to a warning rather than watching an entire talk page.",
+       "segIds": [
+        45,
+        52
+       ]
+      },
+      {
+       "text": "Jake proposed enhancing appreciation features by adding a thank counter, placing thank buttons on Barnstars, and making it easier to collect and display badges.",
+       "segIds": [
+        75,
+        76,
+        77
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Action items",
+     "bullets": [
+      {
+       "text": "Speaker E is working on a replacement for Edward's Bot to handle global and group messaging.",
+       "segIds": [
+        79,
+        85
+       ]
+      },
+      {
+       "text": "Mariana (Speaker A) was asked to read and summarize the discussed workflows on the board before the group splits into breakout sessions.",
+       "segIds": [
+        92,
+        97
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

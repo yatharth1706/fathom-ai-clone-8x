@@ -1,0 +1,772 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "summaries": {
+  "general": {
+   "sections": [
+    {
+     "heading": "Meeting purpose",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley and Mitchell West met for the weekly sync to review recent pull requests, discuss testing and continuous integration, and plan development goals for Milestone 2.",
+       "segIds": [
+        0,
+        2
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Key takeaways",
+     "bullets": [
+      {
+       "text": "Peter completed the automated test framework pull request, which Briley merged after reviewing.",
+       "segIds": [
+        11,
+        15
+       ]
+      },
+      {
+       "text": "The team identified the need for better HTML IDs and classes across the codebase to simplify automated UI testing, which will serve as good first issues for new developers.",
+       "segIds": [
+        21,
+        22
+       ]
+      },
+      {
+       "text": "Briley opened an initiative to implement continuous integration via Travis or Jenkins to run test suites automatically against branch merges.",
+       "segIds": [
+        24,
+        25,
+        28
+       ]
+      },
+      {
+       "text": "Mitchell and Briley aligned on moving toward Milestone 2 by connecting solutions to legislative bills and designing a structured relational data model for problems, causes, and solutions.",
+       "segIds": [
+        36,
+        38,
+        44,
+        50
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Topics discussed",
+     "bullets": [
+      {
+       "text": "Briley reviewed recently merged pull requests, including code cleanup by Juhi and an About Us update from new contributor Stephen Hitchcock.",
+       "segIds": [
+        4,
+        7,
+        8
+       ]
+      },
+      {
+       "text": "Mitchell and Briley evaluated Peter's newly merged automated testing framework and discussed adding HTML IDs and classes to simplify test selectors.",
+       "segIds": [
+        15,
+        19,
+        21,
+        22
+       ]
+      },
+      {
+       "text": "The participants discussed requirements for setting up continuous integration, and Mitchell noted that Darius had previously set up a basic Jenkins system.",
+       "segIds": [
+        24,
+        27,
+        28,
+        33
+       ]
+      },
+      {
+       "text": "Mitchell presented goals for Milestone 2, focusing on linking solution civis to external bill text, capturing government action levels, and generating datasets of voting activity.",
+       "segIds": [
+        36,
+        38,
+        40
+       ]
+      },
+      {
+       "text": "Briley and Mitchell explored data modeling, agreeing that problems, causes, and solutions should be stored in distinct tables with strict foreign key relationships.",
+       "segIds": [
+        44,
+        48,
+        50,
+        54
+       ]
+      },
+      {
+       "text": "Briley emphasized maintaining marketing efforts by tagging good first issues, posting contributor appreciation tweets, and uploading weekly meeting videos.",
+       "segIds": [
+        60,
+        61
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Briley will create a GitHub issue outlining the specifications for setting up continuous integration.",
+       "segIds": [
+        25
+       ]
+      },
+      {
+       "text": "Mitchell will reach out to Juhi on Thursday and consider contacting Darius regarding Jenkins assistance.",
+       "segIds": [
+        33,
+        35
+       ]
+      },
+      {
+       "text": "Mitchell will design a model for displaying data and linking solution policies to present during the next meeting.",
+       "segIds": [
+        56,
+        58
+       ]
+      },
+      {
+       "text": "The team will continue labeling good first issues on GitHub, tweeting contributor recognition, and publishing meeting recordings.",
+       "segIds": [
+        60,
+        61
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "sales": {
+   "sections": [
+    {
+     "heading": "Prospect context",
+     "bullets": [
+      {
+       "text": "Mitchell West joined Briley Christopher Oxley for the weekly CiviWiki sync to review recent pull requests and plan upcoming development.",
+       "segIds": [
+        0,
+        2
+       ]
+      },
+      {
+       "text": "The CiviWiki project recently merged maintenance pull requests from Juhi and pull request 145 from first-time contributor Stephen Hitchcock updating the About Us page.",
+       "segIds": [
+        4,
+        7,
+        8
+       ]
+      },
+      {
+       "text": "Contract developer Peter completed an initial automated testing suite and offered ongoing long-term maintenance support as testing needs expand.",
+       "segIds": [
+        13,
+        15,
+        16
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Pain points",
+     "bullets": [
+      {
+       "text": "Automated test cases must traverse complex DOM paths because the application interface lacks consistent HTML IDs and CSS classes.",
+       "segIds": [
+        20,
+        21
+       ]
+      },
+      {
+       "text": "The repository lacks continuous integration tooling to automatically run test suites when code changes are merged into branches like dev or test.",
+       "segIds": [
+        24,
+        28
+       ]
+      },
+      {
+       "text": "The platform currently lacks functionality to link solution civis to external bill texts and designate the required level of government action.",
+       "segIds": [
+        36,
+        38
+       ]
+      },
+      {
+       "text": "The backend is not yet structured to generate printable voting reports or structured datasets tracking user support across issue threads.",
+       "segIds": [
+        39,
+        40
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Budget, authority & timeline",
+     "bullets": [
+      {
+       "text": "Briley suggested allocating budget to hire a developer to implement continuous integration, noting that completing the work within days or weeks is preferred.",
+       "segIds": [
+        25,
+        30
+       ]
+      },
+      {
+       "text": "Mitchell noted he would explore re-engaging Darius for Jenkins assistance and plans to coordinate with Juhi on Thursday.",
+       "segIds": [
+        33,
+        35
+       ]
+      },
+      {
+       "text": "Mitchell set a timeline to push through to Milestone 2 during the upcoming week's meeting.",
+       "segIds": [
+        36
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Objections",
+     "bullets": [
+      {
+       "text": "Mitchell objected to altering the core problem-cause-solution structure until the platform supports linking solution policies and extracting dataset reporting.",
+       "segIds": [
+        58
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Briley will create a GitHub issue outlining the specifications and technical skills required to implement continuous integration.",
+       "segIds": [
+        25,
+        27
+       ]
+      },
+      {
+       "text": "Mitchell will reach out to Darius to assess his availability to assist with Jenkins configuration.",
+       "segIds": [
+        33
+       ]
+      },
+      {
+       "text": "Mitchell will contact Juhi on Thursday to prepare for discussions on Milestone 2 at the next meeting.",
+       "segIds": [
+        35,
+        36
+       ]
+      },
+      {
+       "text": "Mitchell will draft a visual data model illustrating issue thread relationships and reporting for presentation at next week's meeting.",
+       "segIds": [
+        56,
+        58
+       ]
+      },
+      {
+       "text": "The team will continue community engagement by labeling beginner-friendly issues, posting on Twitter, and releasing meeting videos.",
+       "segIds": [
+        60,
+        61
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "customer_success": {
+   "sections": [
+    {
+     "heading": "Customer goals",
+     "bullets": [
+      {
+       "text": "Push through to Milestone 2 by delivering a simplified issue thread that connects users from problems down to solutions.",
+       "segIds": [
+        36,
+        38
+       ]
+      },
+      {
+       "text": "Establish a continuous integration pipeline with GitHub so automated test suites run against branches like dev and test to maintain product stability.",
+       "segIds": [
+        24,
+        28
+       ]
+      },
+      {
+       "text": "Enable tracking of community support on solutions and allow extraction of issue thread data into reportable formats.",
+       "segIds": [
+        40
+       ]
+      },
+      {
+       "text": "Grow the open-source contributor base by labeling accessible tasks and engaging community members through social media and project videos.",
+       "segIds": [
+        22,
+        60,
+        61
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Wins & value delivered",
+     "bullets": [
+      {
+       "text": "Resolved merge conflicts and merged maintenance pull requests, including Juhi's cleanup of unidentified variables and reorganized imports.",
+       "segIds": [
+        4,
+        5
+       ]
+      },
+      {
+       "text": "Merged pull request 145 from first-time contributor Stephen Hitchcock, updating the About Us page and adding a repository link.",
+       "segIds": [
+        7,
+        8,
+        11
+       ]
+      },
+      {
+       "text": "Integrated Peter's automated testing framework, addressing several identified bugs and securing his offer for ongoing maintenance.",
+       "segIds": [
+        11,
+        15,
+        16
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Risks & blockers",
+     "bullets": [
+      {
+       "text": "Automated tests currently rely on fragile, low-level DOM navigation because pages lack sufficient HTML IDs and class annotations.",
+       "segIds": [
+        20,
+        21
+       ]
+      },
+      {
+       "text": "Code changes pushed to development branches are not yet protected by automated test runs due to the absence of a continuous integration setup.",
+       "segIds": [
+        24,
+        28
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Feature requests & feedback",
+     "bullets": [
+      {
+       "text": "Add HTML IDs and classes throughout front-end code to make automated UI testing cleaner and more reliable.",
+       "segIds": [
+        21,
+        22
+       ]
+      },
+      {
+       "text": "Implement continuous integration using Travis or Jenkins to automatically trigger builds and block merges when tests fail.",
+       "segIds": [
+        27,
+        28
+       ]
+      },
+      {
+       "text": "Add functionality for linking external bill texts and specifying target levels of government action on solution civvies.",
+       "segIds": [
+        38
+       ]
+      },
+      {
+       "text": "Support exporting voting and support metrics from issue threads into printable or HTML5 spreadsheet formats.",
+       "segIds": [
+        40
+       ]
+      },
+      {
+       "text": "Model problems, causes, and solutions in distinct tables linked by foreign keys to enforce directional hierarchy in the database and user interface.",
+       "segIds": [
+        44,
+        48,
+        50
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley will create a GitHub issue defining the requirements for setting up continuous integration.",
+       "segIds": [
+        25
+       ]
+      },
+      {
+       "text": "Mitchell West will reach out to Darius to check if he is available to help with Jenkins CI configuration.",
+       "segIds": [
+        33
+       ]
+      },
+      {
+       "text": "Mitchell West will reach out to Juhi on Thursday ahead of the next team meeting.",
+       "segIds": [
+        35
+       ]
+      },
+      {
+       "text": "Mitchell West will draft a simple model for data display and problem-cause-solution relationships to present next week.",
+       "segIds": [
+        56,
+        58
+       ]
+      },
+      {
+       "text": "The team will continue tagging good first issues and maintaining marketing outreach via Twitter and video releases.",
+       "segIds": [
+        60,
+        61
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "demo": {
+   "sections": [
+    {
+     "heading": "What was shown",
+     "bullets": [
+      {
+       "text": "Briley shared pull request 145 on screen, demonstrating changes to the About Us page and the addition of a link to the GitHub repository submitted by contributor Stephen Hitchcock.",
+       "segIds": [
+        7,
+        8
+       ]
+      },
+      {
+       "text": "Briley and Mitchell reviewed the newly merged automated testing framework built by Peter, which helps detect bugs to ensure product stability.",
+       "segIds": [
+        11,
+        15
+       ]
+      },
+      {
+       "text": "Briley highlighted how Peter's test cases often had to traverse complex element paths because the HTML lacked explicit IDs and classes.",
+       "segIds": [
+        19,
+        21
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Questions asked",
+     "bullets": [
+      {
+       "text": "Mitchell asked what development skills would be required for someone to implement continuous integration. Briley explained that the developer must be familiar with CI tools like Travis or Jenkins and their integration with GitHub to run test suites on commits and branches.",
+       "segIds": [
+        26,
+        27,
+        28
+       ]
+      },
+      {
+       "text": "Mitchell asked how difficult it would be with the current backend to create exportable voting datasets from issue threads. Briley replied that backend data display is flexible once wireframed, recommending that problems, causes, and solutions each reside in their own tables linked by foreign keys.",
+       "segIds": [
+        40,
+        41,
+        44
+       ]
+      },
+      {
+       "text": "Mitchell asked if there were any other topics to cover before concluding the meeting. Briley answered that they should keep focusing on marketing, labeling beginner-friendly issues, and engaging the community through tweets and videos.",
+       "segIds": [
+        59,
+        60,
+        61
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Reactions & feedback",
+     "bullets": [
+      {
+       "text": "Mitchell praised Peter's work on the automated testing suite and appreciated that Peter offered ongoing maintenance if testing needs expand.",
+       "segIds": [
+        15,
+        16
+       ]
+      },
+      {
+       "text": "Mitchell noted that adding HTML IDs and classes across the site provides good entry-level tasks for first-time open-source contributors.",
+       "segIds": [
+        22
+       ]
+      },
+      {
+       "text": "Briley responded positively to Mitchell's relational structure for problems, causes, and solutions, suggesting it be visually diagrammed like cards and twine on a corkboard before database implementation.",
+       "segIds": [
+        44,
+        53,
+        54
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Follow-ups",
+     "bullets": [
+      {
+       "text": "Briley will create a GitHub issue outlining the specifications for setting up a continuous integration pipeline.",
+       "segIds": [
+        25
+       ]
+      },
+      {
+       "text": "Mitchell will reach out to Darius to see if he is available to help configure Jenkins for CI.",
+       "segIds": [
+        33
+       ]
+      },
+      {
+       "text": "Mitchell will contact Juhi on Thursday ahead of next week's discussion on Milestone 2.",
+       "segIds": [
+        35
+       ]
+      },
+      {
+       "text": "Mitchell will draft a data and display model for linking problems, causes, and solutions to present at the next meeting.",
+       "segIds": [
+        56,
+        58
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "sections": [
+    {
+     "heading": "Questions & answers",
+     "bullets": [
+      {
+       "text": "Q: Briley Christopher Oxley asked Mitchell West if he had any comments on the pull request from contributor Stephen Hitchcock. — A: Mitchell West replied that it looked good and mentioned he had already commented on the issue.",
+       "segIds": [
+        8,
+        9,
+        10
+       ]
+      },
+      {
+       "text": "Q: Mitchell West asked Briley Christopher Oxley what development skills would be required for a developer to implement continuous integration. — A: Briley Christopher Oxley explained that the developer must be familiar with CI tools like Travis or Jenkins and understand how to integrate them with GitHub to trigger builds and run automated tests.",
+       "segIds": [
+        26,
+        27,
+        28,
+        30
+       ]
+      },
+      {
+       "text": "Q: Mitchell West asked Briley Christopher Oxley how difficult it would be to generate printable HTML5 spreadsheets or datasets of solution voting from the backend. — A: Briley Christopher Oxley replied that displaying data is flexible if organized properly, but they would first need visual designs or wireframe mockups.",
+       "segIds": [
+        40,
+        41,
+        42
+       ]
+      },
+      {
+       "text": "Q: Mitchell West asked Briley Christopher Oxley if there were any other topics that needed to be covered before ending the meeting. — A: Briley Christopher Oxley answered not specifically, but emphasized continuing incremental marketing by labeling beginner issues, tweeting, and posting videos.",
+       "segIds": [
+        59,
+        60,
+        61
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Unanswered questions",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley questioned why the newly merged test framework was not appearing in the top-level folder as expected.",
+       "segIds": [
+        19
+       ]
+      },
+      {
+       "text": "Mitchell West questioned whether Darius would be available to help configure continuous integration using Jenkins.",
+       "segIds": [
+        33
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Notable quotes",
+     "bullets": [
+      {
+       "text": "\"And so that can easily be resolved by just better annotating our code using HTML IDs and classes where appropriate.\" — Briley Christopher Oxley",
+       "segIds": [
+        21
+       ]
+      },
+      {
+       "text": "\"It gives them a chance to dig around through, you know, the functionality of the website and help clean it up.\" — Mitchell West",
+       "segIds": [
+        22
+       ]
+      },
+      {
+       "text": "\"We don't have to have a big marketing push, but taking note of what other open source projects are doing to build their communities.\" — Briley Christopher Oxley",
+       "segIds": [
+        61
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "retrospective": {
+   "sections": [
+    {
+     "heading": "What went well",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley resolved conflicts and merged several maintenance pull requests, including code cleanup and import reorganization by Juhi.",
+       "segIds": [
+        4,
+        5
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley and Mitchell West acknowledged a new contribution from first-time contributor Stephen Hitchcock on the About Us page.",
+       "segIds": [
+        7,
+        8,
+        10
+       ]
+      },
+      {
+       "text": "Mitchell West reported that Peter completed and merged the automated testing framework, which uncovered existing bugs, and noted that Peter agreed to provide ongoing maintenance if needed.",
+       "segIds": [
+        11,
+        15,
+        16
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "What didn't go well",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley noted that meeting attendance was low due to a holiday and conflicting schedules, leaving only two attendees.",
+       "segIds": [
+        2
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley experienced initial confusion when looking for the newly merged test framework files in the repository structure.",
+       "segIds": [
+        19
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley noted that the automated test suite had to rely on complex, low-level DOM paths because frontend elements lacked adequate HTML IDs and classes.",
+       "segIds": [
+        20,
+        21
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Ideas & improvements",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley and Mitchell West suggested adding proper HTML IDs and classes across the frontend to simplify testing, noting these would make good starter issues for new contributors.",
+       "segIds": [
+        21,
+        22
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley proposed introducing a continuous integration environment using tools like Travis or Jenkins to run automated tests on branch merges.",
+       "segIds": [
+        24,
+        27,
+        28
+       ]
+      },
+      {
+       "text": "Mitchell West proposed targeting Milestone 2 by adding functionality to link solutions directly to bill text and designate government action levels.",
+       "segIds": [
+        36,
+        38,
+        39
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley recommended defining strict foreign key relationships in the database for problems, causes, and solutions to enable structured data extraction and voting reports.",
+       "segIds": [
+        41,
+        44,
+        54
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley suggested sustaining steady marketing and open-source engagement by labeling beginner-friendly issues, tweeting, and posting meeting recordings.",
+       "segIds": [
+        60,
+        61
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Action items",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley will create a GitHub issue for setting up a continuous integration pipeline.",
+       "segIds": [
+        25,
+        30
+       ]
+      },
+      {
+       "text": "Mitchell West will reach out to Darius to see if he can assist with continuous integration and Jenkins setup.",
+       "segIds": [
+        33
+       ]
+      },
+      {
+       "text": "Mitchell West will reach out to Juhi on Thursday to coordinate project tasks.",
+       "segIds": [
+        35
+       ]
+      },
+      {
+       "text": "Mitchell West will draw up a data model diagram for causes, solutions, and policy links to present at the next meeting.",
+       "segIds": [
+        56,
+        58
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

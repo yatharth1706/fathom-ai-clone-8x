@@ -1,0 +1,909 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "summaries": {
+  "general": {
+   "sections": [
+    {
+     "heading": "Meeting purpose",
+     "bullets": [
+      {
+       "text": "Review weekly engineering progress on CiviWiki, address pull request organization, and plan upcoming development tasks.",
+       "segIds": [
+        0,
+        5,
+        43
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Key takeaways",
+     "bullets": [
+      {
+       "text": "Gordon Candler will separate pull request 193 into smaller, focused pull requests for the docstrings, apostrophe rendering fix, and Python 2-to-3 refactor after his internet service is restored.",
+       "segIds": [
+        12,
+        15,
+        18,
+        25,
+        29,
+        32
+       ]
+      },
+      {
+       "text": "Joe Grassel is nearly finished with issue 150 for thread sharing, and the team agreed to find a lightweight JavaScript library that does not load third-party tracking scripts.",
+       "segIds": [
+        44,
+        47,
+        49,
+        57
+       ]
+      },
+      {
+       "text": "Mitchell West is finalizing updates to the About Us page and asked active contributors to upload profile pictures and provide email addresses if desired.",
+       "segIds": [
+        68,
+        70,
+        71,
+        72
+       ]
+      },
+      {
+       "text": "Gordon's work on ProPublica integration is completed and isolated, ready to be pushed once his internet is back online.",
+       "segIds": [
+        76,
+        77
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Topics discussed",
+     "bullets": [
+      {
+       "text": "Gordon Candler shared that he addressed login and rendering bugs, added docstrings, but had to reset his branch after an accidental merge collision, with pushing delayed by an internet outage.",
+       "segIds": [
+        6,
+        7,
+        8,
+        10,
+        12
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley advised splitting Gordon's changes into three or four modular pull requests for easier review and instructed him to pick upcoming tasks from the Next Up column on Waffle.",
+       "segIds": [
+        18,
+        25,
+        29,
+        38
+       ]
+      },
+      {
+       "text": "Joe Grassel provided an update on dropdown sharing for thread civvies and discussed avoiding tracking iframes from social platforms by using self-contained JavaScript sharing solutions.",
+       "segIds": [
+        44,
+        47,
+        48,
+        51,
+        57
+       ]
+      },
+      {
+       "text": "Mitchell West detailed updates to the About Us page structure to categorize active and resting contributors, while offering to follow up with Juhi regarding her contributions.",
+       "segIds": [
+        68,
+        70,
+        71,
+        75
+       ]
+      },
+      {
+       "text": "Gordon confirmed that his ProPublica integration code was kept separate from other updates and is ready to push once his network connection is restored.",
+       "segIds": [
+        76,
+        77
+       ]
+      },
+      {
+       "text": "The team discussed the upcoming congressional vote regarding net neutrality, state-level actions, and the potential to expand relevant advocacy writing on CiviWiki.",
+       "segIds": [
+        82,
+        84,
+        88,
+        93
+       ]
+      },
+      {
+       "text": "Joe and Mitchell evaluated which platforms to support in the share menu, clarifying differences between Google+ sharing and generic email or Gmail links.",
+       "segIds": [
+        97,
+        98,
+        109,
+        110,
+        111
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Gordon Candler will cherry-pick his changes into clean, separate pull requests once his internet is restored and notify Briley on GitHub for review.",
+       "segIds": [
+        15,
+        18,
+        32
+       ]
+      },
+      {
+       "text": "Gordon Candler will self-assign one or two small tasks from the Next Up column on the Waffle board.",
+       "segIds": [
+        38,
+        40
+       ]
+      },
+      {
+       "text": "Joe Grassel and Briley Christopher Oxley will research client-side JavaScript sharing libraries that do not depend on third-party scripts.",
+       "segIds": [
+        57,
+        58,
+        98
+       ]
+      },
+      {
+       "text": "Joe Grassel will finish issue 150 and transition next to open ad ID issues.",
+       "segIds": [
+        60
+       ]
+      },
+      {
+       "text": "Contributors wanting their profiles updated on the About Us page will upload image files to GitHub and coordinate email details with Mitchell West.",
+       "segIds": [
+        71,
+        72
+       ]
+      },
+      {
+       "text": "Mitchell West will email Juhi to obtain a status update on her recent work.",
+       "segIds": [
+        75,
+        113
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "sales": {
+   "sections": [
+    {
+     "heading": "Prospect context",
+     "bullets": [
+      {
+       "text": "Gordon Candler and Joe Grassel are contributing developers collaborating with project leads Briley Christopher Oxley and Mitchell West on the CiviWiki platform [0, 1, 2, 3, 5, 44].",
+       "segIds": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        44
+       ]
+      },
+      {
+       "text": "Gordon Candler dialed into the sync via telephone with a 30-minute call limit, and his home internet is temporarily down awaiting a Spectrum technician [5, 12].",
+       "segIds": [
+        5,
+        12
+       ]
+      },
+      {
+       "text": "Joe Grassel is developing a CivVie thread-sharing dropdown menu and coordinates tasks on GitHub under the handle DeltaPlus [44, 61, 62].",
+       "segIds": [
+        44,
+        61,
+        62
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Pain points",
+     "bullets": [
+      {
+       "text": "Gordon Candler experienced a git collision and failed rebase after accidentally merging all pending updates into his local branch, forcing him to start over from scratch [7, 8, 10].",
+       "segIds": [
+        7,
+        8,
+        10
+       ]
+      },
+      {
+       "text": "Gordon Candler lost internet connectivity over the weekend due to a damaged modem, preventing him from pushing his ProPublica integration and bug fixes until Spectrum arrives [12, 14, 77].",
+       "segIds": [
+        12,
+        14,
+        77
+       ]
+      },
+      {
+       "text": "Joe Grassel encountered CSS layout glitches and privacy tracking issues caused by third-party iframes from Facebook and Google while building share buttons [45, 47, 48, 53].",
+       "segIds": [
+        45,
+        47,
+        48,
+        53
+       ]
+      },
+      {
+       "text": "Gordon Candler combined multiple unrelated fixes into pull request 193, making the code review process slow and cumbersome [17, 18, 20].",
+       "segIds": [
+        17,
+        18,
+        20
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Budget, authority & timeline",
+     "bullets": [
+      {
+       "text": "Budget, authority, and timeline were not discussed [0].",
+       "segIds": [
+        0
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Objections",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley objected to bundling unrelated fixes into a single pull request, urging Gordon Candler to split his changes into three or four focused pull requests [17, 18, 29].",
+       "segIds": [
+        17,
+        18,
+        29
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley objected to third-party social media sharing scripts from Google and Facebook due to user tracking and styling bugs, directing Joe Grassel to use an independent local JavaScript library instead [45, 47, 49, 51, 54].",
+       "segIds": [
+        45,
+        47,
+        49,
+        51,
+        54
+       ]
+      },
+      {
+       "text": "Mitchell West and Briley Christopher Oxley objected to adding a Google+ button, pointing out that the platform has low adoption and that standard email links are more effective [97, 98, 110, 111].",
+       "segIds": [
+        97,
+        98,
+        110,
+        111
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Gordon Candler will separate his changes into individual pull requests for docstrings, browser apostrophe fixes, and the refactor once Spectrum restores his internet [14, 25, 27, 29].",
+       "segIds": [
+        14,
+        25,
+        27,
+        29
+       ]
+      },
+      {
+       "text": "Gordon Candler will review the Waffle board or filter GitHub issues by Next Up to self-assign one or two new tasks by Tuesday [38, 40].",
+       "segIds": [
+        38,
+        40
+       ]
+      },
+      {
+       "text": "Joe Grassel and Briley Christopher Oxley will research a lightweight, self-hosted JavaScript library that does not load third-party assets for issue 150 [57, 58, 98, 99].",
+       "segIds": [
+        57,
+        58,
+        98,
+        99
+       ]
+      },
+      {
+       "text": "Joe Grassel will complete the CSS adjustments on issue 150 and then tackle the ad ID issues [44, 60].",
+       "segIds": [
+        44,
+        60
+       ]
+      },
+      {
+       "text": "Mitchell West will email Juhi to get an update on the About Us page edits and share any news via Riot [75, 76, 113].",
+       "segIds": [
+        75,
+        76,
+        113
+       ]
+      },
+      {
+       "text": "Contributors wishing to update their profile block on the About Us page will upload a picture to GitHub and send their email to Mitchell West [71, 72].",
+       "segIds": [
+        71,
+        72
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "customer_success": {
+   "sections": [
+    {
+     "heading": "Customer goals",
+     "bullets": [
+      {
+       "text": "Gordon seeks to resolve merge conflicts, clean up local commits, and submit clean pull requests for completed bug fixes and Python 2-to-3 refactoring.",
+       "segIds": [
+        10,
+        15,
+        18
+       ]
+      },
+      {
+       "text": "Joe intends to complete social thread sharing for issue 150 without exposing users to third-party privacy tracking or layout bugs.",
+       "segIds": [
+        44,
+        47,
+        51,
+        53
+       ]
+      },
+      {
+       "text": "Mitchell aims to publish an updated About Us page displaying active and resting contributors with appropriate profile details.",
+       "segIds": [
+        70,
+        71
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Wins & value delivered",
+     "bullets": [
+      {
+       "text": "Gordon resolved the login error, fixed apostrophe rendering across browsers, and completed docstrings across all model files for bug 21.",
+       "segIds": [
+        6,
+        25,
+        28
+       ]
+      },
+      {
+       "text": "Gordon successfully kept his ProPublica integration work isolated and completed, ready for submission once connectivity is restored.",
+       "segIds": [
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Joe built the dropdown sharing menu interface adjacent to the export button for issue 150.",
+       "segIds": [
+        44
+       ]
+      },
+      {
+       "text": "Mitchell and Juhi revised the About Us page markup to correct div element ordering and organize contributor profiles.",
+       "segIds": [
+        70
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Risks & blockers",
+     "bullets": [
+      {
+       "text": "Gordon experienced a home internet outage after modem damage, delaying his ability to push updates until a technician arrives.",
+       "segIds": [
+        12,
+        14
+       ]
+      },
+      {
+       "text": "Gordon encountered a merge conflict collision in pull request 193, necessitating a fresh branch and cherry-picking of commits.",
+       "segIds": [
+        7,
+        10,
+        15
+       ]
+      },
+      {
+       "text": "Third-party social media sharing scripts pose privacy tracking risks and cause rendering glitches with iframes.",
+       "segIds": [
+        47,
+        48,
+        53
+       ]
+      },
+      {
+       "text": "The prospective lightweight sharing library, CarrotShare, was found to be unmaintained and its domain squatted.",
+       "segIds": [
+        54
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Feature requests & feedback",
+     "bullets": [
+      {
+       "text": "Briley requested that pull requests be kept small and focused on single issues rather than bundling multiple unrelated fixes.",
+       "segIds": [
+        17,
+        18
+       ]
+      },
+      {
+       "text": "Briley advised implementing social sharing buttons using self-contained local code or a lightweight library rather than external scripts.",
+       "segIds": [
+        49,
+        51,
+        57
+       ]
+      },
+      {
+       "text": "Mitchell requested that active contributors submit photos to the images repository and supply preferred contact email addresses for their profile blocks.",
+       "segIds": [
+        71,
+        72
+       ]
+      },
+      {
+       "text": "Joe and Mitchell discussed platform options for the sharing feature, debating the relevance of Google+ and evaluating simple email links.",
+       "segIds": [
+        97,
+        108,
+        109,
+        111
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Gordon will split pull request 193 into separate PRs for docstrings, the apostrophe fix, and the 2-to-3 refactor once internet access is restored.",
+       "segIds": [
+        14,
+        25,
+        27,
+        30
+       ]
+      },
+      {
+       "text": "Joe and Briley will research maintained, privacy-respecting JavaScript libraries to handle thread-sharing buttons.",
+       "segIds": [
+        57,
+        98
+       ]
+      },
+      {
+       "text": "Joe will complete issue 150 and subsequently move on to address ad ID issues.",
+       "segIds": [
+        60,
+        63
+       ]
+      },
+      {
+       "text": "Gordon will review the Waffle board's Next Up column to self-assign a new task.",
+       "segIds": [
+        38,
+        41
+       ]
+      },
+      {
+       "text": "Mitchell will push the About Us page updates and contact Juhi for a status update on her work.",
+       "segIds": [
+        68,
+        75,
+        113
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "demo": {
+   "sections": [
+    {
+     "heading": "What was shown",
+     "bullets": [
+      {
+       "text": "Gordon Candler reported completing several bug fixes, including a login error, symbol rendering issues, adding docstrings for model files (bug 21), and ProPublica integration work.",
+       "segIds": [
+        6,
+        7,
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Gordon Candler explained that all pending updates were merged into a single tangled branch, forcing him to copy his changes locally and restart from a clean branch once internet service is restored.",
+       "segIds": [
+        7,
+        8,
+        10,
+        12
+       ]
+      },
+      {
+       "text": "Joe Grassel described his work on issue 150 for sharing Civvie threads, presenting a dropdown menu placed next to the export button that only needs final CSS tweaks.",
+       "segIds": [
+        44
+       ]
+      },
+      {
+       "text": "Mitchell West presented updates to the About Us page separating active and resting contributors, including layout blocks for profile photos and emails.",
+       "segIds": [
+        70,
+        71,
+        72
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Questions asked",
+     "bullets": [
+      {
+       "text": "Joe Grassel asked whether to include a Google+ sharing button, and Briley Christopher Oxley responded that third-party scripts present privacy and tracking concerns and should be avoided.",
+       "segIds": [
+        44,
+        45,
+        47,
+        49
+       ]
+      },
+      {
+       "text": "Mitchell West asked Gordon Candler if his ProPublica integration was included in the large pull request, and Gordon confirmed it was kept separate and is ready to push.",
+       "segIds": [
+        76,
+        77
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley asked if anyone was following the congressional vote on net neutrality, and Joe Grassel and Gordon Candler shared updates on state legislation in Washington, California, and Missouri.",
+       "segIds": [
+        82,
+        83,
+        84,
+        87
+       ]
+      },
+      {
+       "text": "Joe Grassel asked what social media networks beyond Facebook, Twitter, and Reddit should be supported, and Briley Christopher Oxley suggested identifying a suitable library first to see what it natively supports.",
+       "segIds": [
+        97,
+        98
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Reactions & feedback",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley recommended that Gordon Candler split pull request 193 into three or four separate PRs, such as isolating docstrings, apostrophe rendering, and Python 2 to 3 refactoring, to simplify reviews.",
+       "segIds": [
+        17,
+        18,
+        25,
+        27,
+        29,
+        32
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley advised against embedding third-party sharing iframes from Facebook or Google due to tracking concerns, suggesting a small self-hosted JavaScript sharing library instead.",
+       "segIds": [
+        47,
+        49,
+        51
+       ]
+      },
+      {
+       "text": "Mitchell West suggested creating a CiviWiki advocacy post or SolutionCivvy regarding the upcoming net neutrality vote.",
+       "segIds": [
+        93,
+        94
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Follow-ups",
+     "bullets": [
+      {
+       "text": "Gordon Candler will resolve his internet connection, cherry-pick his bug fixes into separate pull requests, and self-assign new tasks from the Waffle board.",
+       "segIds": [
+        14,
+        15,
+        26,
+        38,
+        40
+       ]
+      },
+      {
+       "text": "Joe Grassel and Briley Christopher Oxley will research lightweight JavaScript sharing libraries that do not load third-party assets.",
+       "segIds": [
+        57,
+        58,
+        98
+       ]
+      },
+      {
+       "text": "Joe Grassel will complete the CSS tweaks for issue 150 and then tackle ad ID issues.",
+       "segIds": [
+        44,
+        60
+       ]
+      },
+      {
+       "text": "Mitchell West will email Juhi to check on the status of the About Us page updates and share any findings on Riot.",
+       "segIds": [
+        75,
+        113
+       ]
+      },
+      {
+       "text": "Contributors who want their profile displayed on the About Us page should upload a PNG photo to GitHub and send their preferred email to Mitchell West.",
+       "segIds": [
+        71,
+        72
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "sections": [
+    {
+     "heading": "Questions & answers",
+     "bullets": [
+      {
+       "text": "Q: Briley Christopher Oxley asked Gordon Candler if he could give an update on his progress. — A: Gordon Candler answered that he resolved several bug fixes and docstrings, but had accidentally bundled all changes into one branch and must re-split them once his internet is restored.",
+       "segIds": [
+        5,
+        6,
+        7,
+        10,
+        12
+       ]
+      },
+      {
+       "text": "Q: Joe Grassel asked if the team wanted a Google+ +1 button on the thread sharing menu. — A: Briley Christopher Oxley answered that third-party social buttons cause privacy and tracking issues, advising him instead to use a self-contained local library.",
+       "segIds": [
+        44,
+        45,
+        47,
+        51
+       ]
+      },
+      {
+       "text": "Q: Mitchell West asked Briley Christopher Oxley whether Juhi had pushed up the edits for the About Us page. — A: Briley Christopher Oxley answered that the task was still in the Next Up column without an assignee, prompting Mitchell to take on submitting the draft.",
+       "segIds": [
+        65,
+        67,
+        68
+       ]
+      },
+      {
+       "text": "Q: Mitchell West asked Gordon Candler whether ProPublica integration was part of his combined pull request. — A: Gordon Candler answered that it was kept separate from the rest of the merged code and is ready to push once his internet works.",
+       "segIds": [
+        76,
+        77
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Unanswered questions",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley asked what the latest status of the federal net neutrality Congressional vote was, leaving the exact timeline and outcome unverified during the call.",
+       "segIds": [
+        82,
+        87
+       ]
+      },
+      {
+       "text": "Joe Grassel asked whether a Gmail-specific share button would simply generate an email draft, which was left unresolved pending research into available JavaScript sharing libraries.",
+       "segIds": [
+        109,
+        112
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Notable quotes",
+     "bullets": [
+      {
+       "text": "Gordon Candler: \"don't ever let cats sit on the stupid little modem boxes.\"",
+       "segIds": [
+        12
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley: \"One thing I'd like to encourage is that every pull request should be really focused in doing one kind of thing, and it can close multiple issues if those issues are related...\"",
+       "segIds": [
+        17
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley: \"It's good to align with these other groups because, you know, we don't want to act in a vacuum, basically.\"",
+       "segIds": [
+        95
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "retrospective": {
+   "sections": [
+    {
+     "heading": "What went well",
+     "bullets": [
+      {
+       "text": "Gordon Candler completed several bug fixes, including resolving a login error, fixing symbol rendering issues, adding docstrings across model files, and preparing the ProPublica integration.",
+       "segIds": [
+        6,
+        28,
+        77
+       ]
+      },
+      {
+       "text": "Joe Grassel made significant progress on issue 150 for sharing Civvie threads, successfully constructing the dropdown menu next to the export button.",
+       "segIds": [
+        44
+       ]
+      },
+      {
+       "text": "Mitchell West reported that revisions to the About Us page distinguishing active and resting contributors are drafted and near completion following feedback from Juhi.",
+       "segIds": [
+        70
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "What didn't go well",
+     "bullets": [
+      {
+       "text": "Gordon Candler experienced branch collision issues after merging all pending updates together, necessitating a reset of his local repository to cherry-pick his commits.",
+       "segIds": [
+        7,
+        8,
+        10
+       ]
+      },
+      {
+       "text": "Gordon Candler lost internet connectivity over the weekend due to a damaged modem, preventing him from pushing his completed code updates.",
+       "segIds": [
+        12,
+        14
+       ]
+      },
+      {
+       "text": "Joe Grassel encountered CSS glitches and layout issues caused by third-party social media iframes.",
+       "segIds": [
+        53
+       ]
+      },
+      {
+       "text": "Mitchell West was unable to push his initial draft of the About Us page due to local file conflicts involving uncommitted privacy policy edits.",
+       "segIds": [
+        68
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley discovered that the CarrotShare sharing library is unmaintained and its website domain has been squatted.",
+       "segIds": [
+        54
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Ideas & improvements",
+     "bullets": [
+      {
+       "text": "Briley Christopher Oxley recommended keeping pull requests small and focused on single tasks or tightly related bugs rather than combining multiple unrelated issues.",
+       "segIds": [
+        17,
+        18
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley proposed using a self-hosted, lightweight JavaScript sharing library instead of third-party platform scripts to protect user privacy and avoid tracking.",
+       "segIds": [
+        47,
+        49,
+        51
+       ]
+      },
+      {
+       "text": "Briley Christopher Oxley suggested that contributors self-assign one or two issues from the Next Up column on the Waffleboard after finishing current tasks.",
+       "segIds": [
+        38,
+        41
+       ]
+      },
+      {
+       "text": "Mitchell West suggested writing more content and adding a SolutionCivvy on CiviWiki regarding net neutrality advocacy in response to upcoming congressional actions.",
+       "segIds": [
+        93,
+        94
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Action items",
+     "bullets": [
+      {
+       "text": "Gordon Candler will separate his completed bug fixes into three or four focused pull requests and notify Briley Christopher Oxley on GitHub once his internet is restored.",
+       "segIds": [
+        18,
+        20,
+        26,
+        32
+       ]
+      },
+      {
+       "text": "Gordon Candler will review the Next Up column on the Waffleboard and self-assign new issues.",
+       "segIds": [
+        38,
+        40
+       ]
+      },
+      {
+       "text": "Joe Grassel and Briley Christopher Oxley will research privacy-friendly JavaScript share button libraries that avoid third-party scripts.",
+       "segIds": [
+        57,
+        58,
+        98
+       ]
+      },
+      {
+       "text": "Team members wanting their photo or email included on the updated About Us page will upload an image file to GitHub or send their details to Mitchell West.",
+       "segIds": [
+        71,
+        72
+       ]
+      },
+      {
+       "text": "Mitchell West will email Juhi to request an update on her progress and share any relevant information with the team.",
+       "segIds": [
+        75,
+        113
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

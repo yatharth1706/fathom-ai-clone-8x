@@ -1,0 +1,89 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "analysis": {
+  "title": "CiviWiki Weekly Sync — PRs and Milestone 2 Planning",
+  "speakerNames": [
+   {
+    "label": "A",
+    "name": "Briley Christopher Oxley"
+   },
+   {
+    "label": "B",
+    "name": "Mitchell West"
+   }
+  ],
+  "chapters": [
+   {
+    "title": "Recent Pull Requests Review",
+    "summary": "Briley and Mitchell review recently merged code cleanup pull requests and discuss welcoming first-time contributor Stephen Hitchcock.",
+    "startSegId": 0
+   },
+   {
+    "title": "Automated Testing Framework",
+    "summary": "Mitchell and Briley discuss the newly merged automated testing framework developed by Peter and note the need for better HTML ID annotations.",
+    "startSegId": 11
+   },
+   {
+    "title": "Continuous Integration Next Steps",
+    "summary": "Briley and Mitchell discuss setting up continuous integration using tools like Travis or Jenkins to run automated tests on commits and merges.",
+    "startSegId": 24
+   },
+   {
+    "title": "Milestone 2 and Data Modeling",
+    "summary": "Mitchell outlines priorities for Milestone 2, and both discuss the database schema and visual modeling for linking problems, causes, and solutions.",
+    "startSegId": 35
+   },
+   {
+    "title": "Community Marketing and Wrap-Up",
+    "summary": "Briley emphasizes ongoing open-source community building and issue labeling as they conclude the meeting.",
+    "startSegId": 59
+   }
+  ],
+  "actionItems": [
+   {
+    "text": "Create a GitHub issue for setting up continuous integration.",
+    "ownerLabel": "A",
+    "ownerText": "Briley",
+    "dueText": null,
+    "segId": 25
+   },
+   {
+    "text": "Reach out to Juhi.",
+    "ownerLabel": "B",
+    "ownerText": "Mitchell",
+    "dueText": "on Thursday",
+    "segId": 35
+   },
+   {
+    "text": "Draw up and present a data display and linking model for next week's meeting.",
+    "ownerLabel": "B",
+    "ownerText": "Mitchell",
+    "dueText": "next week",
+    "segId": 58
+   }
+  ],
+  "insights": [
+   {
+    "kind": "decision",
+    "text": "The automated testing framework developed by Peter has been merged into the codebase.",
+    "segId": 11
+   },
+   {
+    "kind": "key_point",
+    "text": "Adding HTML IDs and classes across the frontend provides ideal 'good first issues' for new contributors while improving automated test stability.",
+    "segId": 22
+   },
+   {
+    "kind": "key_point",
+    "text": "Milestone 2 aims to enable simplified issue threads by linking solutions to external bill texts and specifying levels of government action.",
+    "segId": 38
+   },
+   {
+    "kind": "key_point",
+    "text": "Data models for problems, causes, and solutions should reside in separate tables linked by foreign key relationships with defined hierarchical constraints.",
+    "segId": 44
+   }
+  ]
+ }
+}
