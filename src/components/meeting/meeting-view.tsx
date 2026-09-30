@@ -3,6 +3,7 @@ import { ClipComposerProvider } from "@/components/meeting/clip-composer";
 import { MeetingNotes } from "@/components/meeting/meeting-notes";
 import { MeetingPlayer } from "@/components/meeting/meeting-player";
 import { MeetingTimeline } from "@/components/meeting/meeting-timeline";
+import { MobilePanes, Pane, PaneSwitch } from "@/components/meeting/mobile-panes";
 import { SpeakerFilterProvider } from "@/components/meeting/speaker-filter";
 import { PlayerProvider } from "@/components/meeting/player-context";
 import { SpeakerStats } from "@/components/meeting/speaker-stats";
@@ -56,80 +57,95 @@ export function MeetingView({
         </div>
       </header>
 
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
-        <div className="min-h-0 space-y-6 overflow-y-auto p-4 md:p-6">
-          {meeting.error && !readOnly && (
-            <p role="status" className="flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
-              <TriangleAlert className="mt-0.5 size-4 shrink-0" /> {meeting.error}
-            </p>
-          )}
-          <div className="space-y-3">
-            {meeting.mediaUrl ? (
-              <MeetingPlayer src={meeting.mediaUrl} poster={meeting.posterUrl} />
-            ) : (
-              <div className="grid aspect-video place-items-center rounded-xl bg-muted text-sm text-muted-foreground">
-                Recording unavailable
+      {/* Phones: one column with a sticky player and a Notes / Transcript switch. The left column is
+          `display: contents` there, so the player can stick for the whole page, not just its column. */}
+      <MobilePanes>
+        <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
+          <div className="max-lg:contents lg:min-h-0 lg:space-y-6 lg:overflow-y-auto lg:p-6">
+            {meeting.error && !readOnly && (
+              <p role="status" className="mx-4 mt-4 flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-800 lg:m-0 dark:text-amber-300">
+                <TriangleAlert className="mt-0.5 size-4 shrink-0" /> {meeting.error}
+              </p>
+            )}
+            <div className="space-y-3 max-lg:contents">
+              <div className="max-lg:sticky max-lg:top-0 max-lg:z-20 max-lg:bg-background max-lg:px-4 max-lg:pt-3 max-lg:pb-2">
+                {meeting.mediaUrl ? (
+                  <MeetingPlayer src={meeting.mediaUrl} poster={meeting.posterUrl} />
+                ) : (
+                  <div className="grid aspect-video place-items-center rounded-xl bg-muted text-sm text-muted-foreground">
+                    Recording unavailable
+                  </div>
+                )}
               </div>
-            )}
-            {durationMs > 0 && (
-              <MeetingTimeline
-                durationMs={durationMs}
-                chapters={data.chapters}
+              {durationMs > 0 && (
+                <div className="max-lg:px-4">
+                  <MeetingTimeline
+                    durationMs={durationMs}
+                    chapters={data.chapters}
+                    participants={participants}
+                    segments={segments}
+                  />
+                </div>
+              )}
+            </div>
+            <PaneSwitch className="mx-4 mt-4" />
+
+            <Pane id="notes" className="min-w-0 space-y-6 max-lg:px-4 max-lg:py-4">
+              <MeetingNotes
+                meetingId={meeting.id}
+                title={meeting.title}
+                segStartMs={segStartMs}
                 participants={participants}
-                segments={segments}
+                summaries={data.summaries}
+                actionItems={data.actionItems}
+                insights={data.insights}
+                chapters={data.chapters}
+                defaultTemplate={data.defaultTemplate}
+                qa={readOnly ? [] : data.qa}
+                highlights={readOnly ? [] : data.highlights}
+                isProtected={meeting.isProtected}
+                readOnly={readOnly}
               />
-            )}
+
+              <section>
+                <h2 className="mb-3 text-sm font-medium">Speakers</h2>
+                <SpeakerStats
+                  meetingId={meeting.id}
+                  participants={participants}
+                  canMerge={!meeting.isProtected}
+                  readOnly={readOnly}
+                />
+              </section>
+
+              {meeting.attributionUrl && (
+                <p className="border-t pt-4 text-xs text-muted-foreground">
+                  {meeting.attributionText}{" "}
+                  <a
+                    href={meeting.attributionUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-0.5 underline underline-offset-2 hover:text-foreground"
+                  >
+                    Source <ExternalLink className="size-3" />
+                  </a>
+                </p>
+              )}
+            </Pane>
           </div>
 
-          <MeetingNotes
-            meetingId={meeting.id}
-            title={meeting.title}
-            segStartMs={segStartMs}
-            participants={participants}
-            summaries={data.summaries}
-            actionItems={data.actionItems}
-            insights={data.insights}
-            chapters={data.chapters}
-            defaultTemplate={data.defaultTemplate}
-            qa={readOnly ? [] : data.qa}
-            highlights={readOnly ? [] : data.highlights}
-            isProtected={meeting.isProtected}
-            readOnly={readOnly}
-          />
-
-          <section>
-            <h2 className="mb-3 text-sm font-medium">Speakers</h2>
-            <SpeakerStats
-              meetingId={meeting.id}
-              participants={participants}
-              canMerge={!meeting.isProtected}
-              readOnly={readOnly}
-            />
-          </section>
-
-          {meeting.attributionUrl && (
-            <p className="border-t pt-4 text-xs text-muted-foreground">
-              {meeting.attributionText}{" "}
-              <a
-                href={meeting.attributionUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-0.5 underline underline-offset-2 hover:text-foreground"
-              >
-                Source <ExternalLink className="size-3" />
-              </a>
-            </p>
-          )}
+          <Pane
+            id="transcript"
+            as="aside"
+            className="mt-3 flex h-[75dvh] min-h-0 flex-col border-t lg:mt-0 lg:h-auto lg:border-t-0 lg:border-l"
+          >
+            <div className="flex items-center justify-between border-b px-4 py-2.5">
+              <h2 className="text-sm font-medium">Transcript</h2>
+              <span className="text-xs text-muted-foreground">{segments.length} lines</span>
+            </div>
+            <TranscriptPanel segments={segments} participants={participants} />
+          </Pane>
         </div>
-
-        <aside className="flex h-[70vh] min-h-0 flex-col border-t lg:h-auto lg:border-t-0 lg:border-l">
-          <div className="flex items-center justify-between border-b px-4 py-2.5">
-            <h2 className="text-sm font-medium">Transcript</h2>
-            <span className="text-xs text-muted-foreground">{segments.length} lines</span>
-          </div>
-          <TranscriptPanel segments={segments} participants={participants} />
-        </aside>
-      </div>
+      </MobilePanes>
     </div>
   );
 

@@ -5,6 +5,7 @@ import { formatTimestamp } from "@/lib/format";
 import type { Chapter, Participant, Segment } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { usePlayer } from "./player-context";
+import { PlayerShortcuts } from "./player-shortcuts";
 import { useSpeakerFilter } from "./speaker-filter";
 
 /** Gaps shorter than this between one speaker's lines are drawn as one block (fewer DOM nodes, easier to read). */
@@ -59,7 +60,7 @@ export function MeetingTimeline({
 
   return (
     <div className="select-none">
-      <div className="mb-1.5 flex items-baseline justify-between gap-3 text-xs">
+      <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
         <span className="min-w-0 truncate text-muted-foreground">
           {hoverMs != null ? (
             <>
@@ -75,8 +76,11 @@ export function MeetingTimeline({
             "Timeline"
           )}
         </span>
-        <span className="shrink-0 text-muted-foreground tabular-nums">
-          {formatTimestamp(nowMs)} / {formatTimestamp(durationMs)}
+        <span className="flex shrink-0 items-center gap-2">
+          <span className="text-muted-foreground tabular-nums">
+            {formatTimestamp(nowMs)} / {formatTimestamp(durationMs)}
+          </span>
+          <PlayerShortcuts />
         </span>
       </div>
 
@@ -111,7 +115,8 @@ export function MeetingTimeline({
           lanes.map(({ person, blocks }) => {
             const on = isShown(person.id);
             return (
-              <div key={person.id} className="contents">
+              // Lanes are hidden on phones (too many rows); the transcript's speaker chips filter there.
+              <div key={person.id} className="contents max-md:hidden">
                 <button
                   onClick={() => toggle(person.id)}
                   aria-pressed={selected.has(person.id)}

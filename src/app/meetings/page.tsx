@@ -43,7 +43,7 @@ export default async function MeetingsPage() {
               <ul className="divide-y rounded-xl border">
                 {items.map((m) => (
                   <li key={m.id}>
-                    <MeetingRow meeting={m} />
+                    <MeetingRow meeting={m} eager={m.id === meetings[0].id} />
                   </li>
                 ))}
               </ul>
@@ -55,7 +55,7 @@ export default async function MeetingsPage() {
   );
 }
 
-function MeetingRow({ meeting: m }: { meeting: MeetingListItem }) {
+function MeetingRow({ meeting: m, eager }: { meeting: MeetingListItem; eager?: boolean }) {
   return (
     <Link
       href={`/meetings/${m.id}`}
@@ -63,7 +63,7 @@ function MeetingRow({ meeting: m }: { meeting: MeetingListItem }) {
     >
       <div className="relative aspect-video w-32 shrink-0 overflow-hidden rounded-md bg-muted sm:w-40">
         {m.posterUrl ? (
-          <Image src={m.posterUrl} alt="" fill sizes="160px" className="object-cover" />
+          <Image src={m.posterUrl} alt="" fill sizes="160px" loading={eager ? "eager" : "lazy"} className="object-cover" />
         ) : (
           <div className="grid h-full place-items-center text-muted-foreground">
             {m.mediaKind === "audio" ? <AudioLines className="size-6" /> : <Video className="size-6" />}

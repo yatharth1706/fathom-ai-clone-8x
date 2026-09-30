@@ -25,10 +25,10 @@ export default async function HighlightsPage() {
           </p>
         </div>
       ) : (
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-          {clips.map((c) => (
-            <li key={c.id}>
-              <ClipCard clip={c} />
+        <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {clips.map((c, i) => (
+            <li key={c.id} className="min-w-0">
+              <ClipCard clip={c} eager={i < 2} />
             </li>
           ))}
         </ul>
@@ -37,13 +37,13 @@ export default async function HighlightsPage() {
   );
 }
 
-function ClipCard({ clip: c }: { clip: HighlightListItem }) {
+function ClipCard({ clip: c, eager }: { clip: HighlightListItem; eager: boolean }) {
   const href = `/meetings/${c.meetingId}?t=${tParam(c.startMs)}`;
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border">
       <Link href={href} className="relative block aspect-video bg-muted">
         {c.meeting.posterUrl ? (
-          <Image src={c.meeting.posterUrl} alt="" fill sizes="(min-width: 640px) 480px, 100vw" className="object-cover" />
+          <Image src={c.meeting.posterUrl} alt="" fill sizes="(min-width: 640px) 480px, 100vw" loading={eager ? "eager" : "lazy"} className="object-cover" />
         ) : (
           <div className="grid h-full place-items-center text-muted-foreground">
             {c.meeting.mediaKind === "audio" ? <AudioLines className="size-8" /> : <Video className="size-8" />}

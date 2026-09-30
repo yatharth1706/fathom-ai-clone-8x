@@ -16,7 +16,15 @@ type PlayerState = {
   /** Play [startMs, endMs) and pause at the end (clips). Any other seek cancels the stop. */
   playRange: (startMs: number, endMs: number) => void;
   currentMs: () => number;
+  togglePlay: () => void;
+  /** Relative seek (keyboard ←/→), without forcing playback. */
+  skip: (deltaMs: number) => void;
+  rate: number;
+  setRate: (rate: number) => void;
 };
+
+export const RATES = [1, 1.25, 1.5, 1.75, 2] as const;
+const RATE_KEY = "notetaker:playbackRate";
 
 const PlayerContext = createContext<PlayerState | null>(null);
 
@@ -74,6 +82,44 @@ export function PlayerProvider({
   const seekTo = useCallback((ms: number) => seek(ms, null), [seek]);
   const playRange = useCallback((startMs: number, endMs: number) => seek(startMs, { startMs, endMs }), [seek]);
 
+  const togglePlay = useCallback(() => {
+    const el = mediaRef.current;
+    if (!el) return;
+    if (el.paused) void el.play().catch(() => {});
+    else el.pause();
+  }, []);
+  const skip = useCallback((deltaMs: number) => {
+    const el = mediaRef.current;
+    if (!el) return;
+    el.currentTime = Math.min(Math.max(0, el.currentTime + deltaMs / 1000), el.duration || Infinity);
+  }, []);
+
+  // Playback speed is a per-viewer preference, remembered across meetings.
+  const [rate, setRateState] = useState(1);
+  const setRate = useCallback((r: number) => {
+    setRateState(r);
+    try {
+      localStorage.setItem(RATE_KEY, String(r));
+    } catch {}
+  }, []);
+  useEffect(() => {
+    let saved = NaN;
+    try {
+      saved = Number(localStorage.getItem(RATE_KEY));
+    } catch {}
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage only exists after hydration
+    if ((RATES as readonly number[]).includes(saved)) setRateState(saved);
+  }, []);
+  // The <video> resets playbackRate whenever its source loads, so re-apply it then too.
+  useEffect(() => {
+    const el = mediaRef.current;
+    if (!el) return;
+    const apply = () => (el.playbackRate = rate);
+    apply();
+    el.addEventListener("loadedmetadata", apply);
+    return () => el.removeEventListener("loadedmetadata", apply);
+  }, [rate]);
+
   useEffect(() => {
     const el = mediaRef.current;
     if (!el) return;
@@ -126,8 +172,8 @@ export function PlayerProvider({
   }, [sync, initialMs]);
 
   const value = useMemo(
-    () => ({ mediaRef, activeIdx, playing, seekCount, seekTo, playRange, currentMs }),
-    [activeIdx, playing, seekCount, seekTo, playRange, currentMs],
+    () => ({ mediaRef, activeIdx, playing, seekCount, seekTo, playRange, currentMs, togglePlay, skip, rate, setRate }),
+    [activeIdx, playing, seekCount, seekTo, playRange, currentMs, togglePlay, skip, rate, setRate],
   );
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }

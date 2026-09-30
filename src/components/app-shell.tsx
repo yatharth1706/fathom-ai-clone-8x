@@ -44,14 +44,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 items-center gap-4 border-b px-4 md:hidden">
-          <Link href="/meetings" className="font-semibold">
-            Notetaker
+        <header className="flex h-14 items-center gap-3 border-b px-4 md:hidden">
+          <Link href="/meetings" aria-label="Notetaker" className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">
+            N
           </Link>
-          <nav className="flex gap-3 text-sm text-muted-foreground">
-            {NAV.map(({ href, label }) => (
-              <Link key={href} href={href} className={cn(pathname.startsWith(href) && "text-foreground")}>
-                {label.replace("My ", "")}
+          <nav className="flex min-w-0 gap-1 overflow-x-auto text-sm text-muted-foreground [scrollbar-width:none]">
+            {NAV.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5",
+                  pathname.startsWith(href) && "bg-muted font-medium text-foreground",
+                )}
+              >
+                <Icon className="size-4" />
+                {label.replace("My meetings", "Meetings")}
               </Link>
             ))}
           </nav>
