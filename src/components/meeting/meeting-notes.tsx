@@ -11,18 +11,20 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatTimestamp } from "@/lib/format";
+import { formatTimestamp, tParam } from "@/lib/format";
 import type { TemplateId } from "@/lib/providers/types";
 import type { ActionItem, Chapter, Highlight, Insight, Participant, QaMessage, Summary } from "@/lib/queries";
 import { summaryToHtml, summaryToMarkdown } from "@/lib/summary-format";
 import { TEMPLATE_BY_ID, TEMPLATES } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 import { useClipComposer } from "./clip-composer";
+import { MiniPlayer } from "./mini-player";
 import { usePlayer } from "./player-context";
 
 type Props = {
@@ -39,6 +41,7 @@ type Props = {
   qa: QaMessage[];
   highlights: Highlight[];
   isProtected: boolean;
+  durationMs: number;
   /** Public share view: only already-generated templates, no generation. */
   readOnly?: boolean;
 };
@@ -47,34 +50,39 @@ export function MeetingNotes(props: Props) {
   const decisions = props.insights.filter((i) => i.kind === "decision").length;
   return (
     <Tabs defaultValue="summary">
-      <TabsList variant="line" className="w-full justify-start overflow-x-auto border-b pb-1">
-        <TabsTrigger value="summary" className="flex-none px-2">Summary</TabsTrigger>
-        <TabsTrigger value="actions" className="flex-none px-2">
-          Action items <Count n={props.actionItems.length} />
-        </TabsTrigger>
-        <TabsTrigger value="decisions" className="flex-none px-2">
-          Decisions <Count n={decisions} />
-        </TabsTrigger>
-        <TabsTrigger value="chapters" className="flex-none px-2">
-          Chapters <Count n={props.chapters.length} />
-        </TabsTrigger>
-        {!props.readOnly && (
-          <TabsTrigger value="highlights" className="flex-none px-2">
-            Highlights <Count n={props.highlights.length} />
+      {/* Pinned while the notes scroll (desktop), with a mini player once the video is out of view. */}
+      <div className="z-10 bg-background lg:sticky lg:-top-6 lg:pt-3">
+        {props.durationMs > 0 && <MiniPlayer durationMs={props.durationMs} />}
+        <TabsList variant="line" className="w-full justify-start overflow-x-auto border-b pb-1">
+          <TabsTrigger value="summary" className="flex-none px-2">Summary</TabsTrigger>
+          <TabsTrigger value="actions" className="flex-none px-2">
+            Action items <Count n={props.actionItems.length} />
           </TabsTrigger>
-        )}
-        {!props.readOnly && (
-          <TabsTrigger value="ask" className="flex-none px-2">
-            <Sparkles className="size-3.5" /> Ask
+          <TabsTrigger value="decisions" className="flex-none px-2">
+            Decisions <Count n={decisions} />
           </TabsTrigger>
-        )}
-      </TabsList>
+          <TabsTrigger value="chapters" className="flex-none px-2">
+            Chapters <Count n={props.chapters.length} />
+          </TabsTrigger>
+          {!props.readOnly && (
+            <TabsTrigger value="highlights" className="flex-none px-2">
+              Highlights <Count n={props.highlights.length} />
+            </TabsTrigger>
+          )}
+          {!props.readOnly && (
+            <TabsTrigger value="ask" className="flex-none px-2">
+              <Sparkles className="size-3.5" /> Ask
+            </TabsTrigger>
+          )}
+        </TabsList>
+      </div>
       <TabsContent value="summary" className="pt-3">
         <SummaryTab {...props} />
       </TabsContent>
       <TabsContent value="actions" className="pt-3">
         <ActionItemsTab
           meetingId={props.meetingId}
+          title={props.title}
           items={props.actionItems}
           participants={props.participants}
           readOnly={props.readOnly}
@@ -113,11 +121,12 @@ function TimeLink({ ms, className }: { ms: number | null; className?: string }) 
     <button
       onClick={() => seekTo(ms)}
       className={cn(
-        "inline-flex shrink-0 items-center rounded bg-primary/10 px-1.5 py-px align-baseline text-xs font-medium text-primary tabular-nums hover:bg-primary/20",
+        "inline-flex shrink-0 items-center gap-0.5 rounded-sm align-baseline text-xs font-medium whitespace-nowrap text-muted-foreground tabular-nums transition-colors hover:text-link hover:underline hover:underline-offset-2",
         className,
       )}
       title="Play from here"
     >
+      <span aria-hidden className="text-[9px]">▶</span>
       {formatTimestamp(ms)}
     </button>
   );
@@ -243,12 +252,14 @@ const KEEP_TEXT = "__text__";
 
 function ActionItemsTab({
   meetingId,
+  title,
   items,
   participants,
   readOnly,
   isProtected,
 }: {
   meetingId: string;
+  title: string;
   items: ActionItem[];
   participants: Participant[];
   readOnly?: boolean;
@@ -269,6 +280,26 @@ function ActionItemsTab({
       if (!res.ok) toast.error(res.error);
     });
 
+  // Plain-text exports with a link back to each moment; pasting into Slack / Linear / docs needs no integration.
+  async function exportItems(format: "markdown" | "slack") {
+    const link = `${location.origin}${location.pathname}`;
+    const lines = optimistic.map((it) => {
+      const owner = (it.ownerParticipantId && byId.get(it.ownerParticipantId)?.displayName) || it.ownerText;
+      const meta = [owner, it.dueText && `due ${it.dueText}`].filter(Boolean).join(", ");
+      const at = it.startMs != null ? { label: formatTimestamp(it.startMs), href: `${link}?t=${tParam(it.startMs)}` } : null;
+      if (format === "slack")
+        return `${it.done ? "☑" : "☐"} ${it.text}${meta ? ` — _${meta}_` : ""}${at ? ` <${at.href}|${at.label}>` : ""}`;
+      return `- [${it.done ? "x" : " "}] ${it.text}${meta ? ` — ${meta}` : ""}${at ? ` ([${at.label}](${at.href}))` : ""}`;
+    });
+    const text = [format === "slack" ? `*Action items: ${title}*` : `## Action items: ${title}`, "", ...lines].join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(format === "slack" ? "Copied for Slack" : "Copied as Markdown");
+    } catch {
+      toast.error("Couldn't access the clipboard");
+    }
+  }
+
   const addButton = !readOnly && editing !== "new" && (
     <Button variant="ghost" size="sm" onClick={() => setEditing("new")}>
       <Plus /> Add action item
@@ -286,9 +317,20 @@ function ActionItemsTab({
   return (
     <div>
       {optimistic.length > 0 && (
-        <p className="mb-1 text-xs text-muted-foreground tabular-nums">
-          {doneCount} of {optimistic.length} done
-        </p>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <p className="text-xs text-muted-foreground tabular-nums">
+            {doneCount} of {optimistic.length} done
+          </p>
+          <DropdownMenu>
+            <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
+              <Copy /> Export <ChevronDown className="text-muted-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => exportItems("markdown")}>Copy as Markdown checklist</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportItems("slack")}>Copy for Slack</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )}
       <ul className="divide-y">
         {optimistic.map((it) => {

@@ -16,9 +16,21 @@ const SOFT_MS = 20_000;
 const HARD_MS = 40_000;
 const SENTENCE_END = /[.?!]["')\]]?$/;
 
+// One color per speaker, used everywhere (avatars, names, timeline lanes). Neighbours in this order are far apart
+// in hue, and every shade is dark enough for white initials and readable as text on white.
 export const SPEAKER_COLORS = [
-  "#6366f1", "#0ea5e9", "#f59e0b", "#10b981", "#ec4899", "#8b5cf6",
-  "#ef4444", "#14b8a6", "#f97316", "#84cc16", "#06b6d4", "#a855f7",
+  "#2563eb", // blue
+  "#ea580c", // orange
+  "#16a34a", // green
+  "#db2777", // pink
+  "#7c3aed", // violet
+  "#0891b2", // cyan
+  "#dc2626", // red
+  "#a16207", // ochre
+  "#0d9488", // teal
+  "#9333ea", // purple
+  "#4d7c0f", // olive
+  "#475569", // slate
 ];
 
 function joinWords(words: AsrWord[]) {

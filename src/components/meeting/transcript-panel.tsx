@@ -10,6 +10,9 @@ import { useClipComposer, type ClipDraft } from "./clip-composer";
 import { usePlayer } from "./player-context";
 import { useSpeakerFilter } from "./speaker-filter";
 
+/** Speaker chips shown before "+N more". */
+const CHIPS_SHOWN = 4;
+
 export function TranscriptPanel({
   segments,
   participants,
@@ -19,6 +22,7 @@ export function TranscriptPanel({
 }) {
   const { activeIdx, playing, seekCount, seekTo } = usePlayer();
   const { isShown, selected, toggle, clear } = useSpeakerFilter();
+  const [showAllChips, setShowAllChips] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [follow, setFollow] = useState(true);
   const byId = new Map(participants.map((p) => [p.id, p]));
@@ -184,34 +188,46 @@ export function TranscriptPanel({
       </div>
 
       {participants.length > 1 && (
-        <div className="flex gap-1.5 overflow-x-auto border-b px-3 py-2 [scrollbar-width:none]" role="group" aria-label="Filter by speaker">
+        <div className="flex flex-wrap gap-1.5 border-b px-3 py-2" role="group" aria-label="Filter by speaker">
           <button
             onClick={clear}
             aria-pressed={selected.size === 0}
             className={cn(
-              "shrink-0 rounded-full border px-2.5 py-0.5 text-xs",
+              "shrink-0 rounded-full border px-2.5 py-0.5 text-xs transition-colors",
               selected.size === 0 ? "border-foreground bg-foreground text-background" : "hover:bg-muted",
             )}
           >
             Everyone
           </button>
-          {participants.map((p) => (
+          {/* Participants come sorted by talk time; the quieter ones fold behind "+N" (selected ones always show). */}
+          {participants
+            .filter((p, i) => showAllChips || i < CHIPS_SHOWN || selected.has(p.id))
+            .map((p) => (
+              <button
+                key={p.id}
+                onClick={() => {
+                  setFollow(false);
+                  toggle(p.id);
+                }}
+                aria-pressed={selected.has(p.id)}
+                className={cn(
+                  "flex max-w-full items-center gap-1 rounded-full border py-0.5 pr-2.5 pl-0.5 text-xs transition-colors",
+                  selected.has(p.id) ? "border-foreground bg-muted font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                <ParticipantAvatar person={p} className="size-4 text-[8px] ring-0" />
+                <span className="max-w-28 truncate">{p.displayName}</span>
+              </button>
+            ))}
+          {participants.length > CHIPS_SHOWN && (
             <button
-              key={p.id}
-              onClick={() => {
-                setFollow(false);
-                toggle(p.id);
-              }}
-              aria-pressed={selected.has(p.id)}
-              className={cn(
-                "flex shrink-0 items-center gap-1 rounded-full border py-0.5 pr-2.5 pl-0.5 text-xs",
-                selected.has(p.id) ? "border-foreground bg-muted font-medium" : "text-muted-foreground hover:bg-muted",
-              )}
+              onClick={() => setShowAllChips((v) => !v)}
+              aria-expanded={showAllChips}
+              className="rounded-full px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              <ParticipantAvatar person={p} className="size-4 text-[8px] ring-0" />
-              <span className="max-w-28 truncate">{p.displayName}</span>
+              {showAllChips ? "Show less" : `+${participants.length - CHIPS_SHOWN} more`}
             </button>
-          ))}
+          )}
         </div>
       )}
 
@@ -330,35 +346,46 @@ const TranscriptRow = memo(function TranscriptRow({
     onSeek(seg.startMs);
   };
 
+  const time = (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onSeek(seg.startMs);
+      }}
+      className={cn(
+        "rounded-sm text-xs text-muted-foreground tabular-nums transition-colors hover:text-link hover:underline",
+        active && "text-link",
+      )}
+      aria-label={`Play from ${formatTimestamp(seg.startMs)}`}
+    >
+      {formatTimestamp(seg.startMs)}
+    </button>
+  );
+
   return (
     <div data-idx={seg.idx} className={cn(speaker && "mt-4 first:mt-0")}>
       {speaker && (
-        <div className="mb-1 flex items-center gap-2 px-2">
+        <div className="mb-0.5 flex items-center gap-2 px-2">
           <ParticipantAvatar person={speaker} className="size-5 text-[9px] ring-0" />
-          <span className="text-sm font-medium" style={{ color: speaker.color }}>
+          <span className="truncate text-sm font-medium" style={{ color: speaker.color }}>
             {speaker.displayName}
           </span>
+          {time}
         </div>
       )}
       <div
         onClick={onClick}
         className={cn(
-          "group flex cursor-pointer gap-3 rounded-md px-2 py-1.5 transition-colors hover:bg-muted/60",
-          active && "bg-primary/10 hover:bg-primary/15",
+          "group relative cursor-pointer rounded-md border-l-2 border-transparent py-1 pr-2 pl-[calc(0.5rem+1.75rem-2px)] transition-colors hover:bg-muted/60",
+          active && "border-link bg-link/8 hover:bg-link/12",
         )}
       >
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSeek(seg.startMs);
-          }}
-          className={cn(
-            "mt-0.5 w-12 shrink-0 text-left text-xs text-muted-foreground tabular-nums hover:text-foreground hover:underline",
-            active && "font-medium text-primary",
-          )}
-        >
-          {formatTimestamp(seg.startMs)}
-        </button>
+        {/* Continuation paragraphs keep their own seek target, shown on hover / keyboard focus. */}
+        {!speaker && (
+          <span className="absolute top-1 right-1.5 rounded bg-background/90 px-1 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+            {time}
+          </span>
+        )}
         <p className={cn("text-sm leading-relaxed text-foreground/80", active && "text-foreground")}>
           {needle ? <Highlighted text={seg.text} needle={needle} currentHit={currentHit} /> : seg.text}
         </p>

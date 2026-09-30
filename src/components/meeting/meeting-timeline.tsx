@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { formatTimestamp } from "@/lib/format";
 import type { Chapter, Participant, Segment } from "@/lib/queries";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,7 @@ import { useSpeakerFilter } from "./speaker-filter";
 const MERGE_GAP_MS = 1500;
 
 /**
- * Chapter bar and per-speaker lanes under the player. Everything is positioned as a fraction of the meeting,
+ * Chapter bar and a combined speaker lane (expandable to one lane per speaker) under the player. Everything is positioned as a fraction of the meeting,
  * and clicking anywhere seeks there.
  */
 export function MeetingTimeline({
@@ -30,6 +31,7 @@ export function MeetingTimeline({
   const { isShown, toggle, selected } = useSpeakerFilter();
   const nowMs = useCurrentMs(mediaRef);
   const [hoverMs, setHoverMs] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const pct = (ms: number) => `${Math.min(100, Math.max(0, (ms / durationMs) * 100))}%`;
 
   const lanes = useMemo(() => {
@@ -111,11 +113,44 @@ export function MeetingTimeline({
           </>
         )}
 
+        {showLanes && (
+          <>
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="flex items-center gap-0.5 text-left text-[11px] text-muted-foreground hover:text-foreground max-md:pointer-events-none"
+            >
+              <ChevronRight className={cn("size-3 shrink-0 transition-transform max-md:hidden", expanded && "rotate-90")} />
+              {expanded ? "Speakers" : `${participants.length} speakers`}
+            </button>
+            {/* Everyone on one lane, each in their own color; expand for a lane per person. */}
+            <div className="relative h-2.5 cursor-pointer rounded-sm bg-muted/60" {...track} role="presentation">
+              {lanes.flatMap(({ person, blocks }) =>
+                blocks.map((b, i) => (
+                  <div
+                    key={`${person.id}-${i}`}
+                    title={person.displayName}
+                    className="absolute inset-y-0 rounded-[1px]"
+                    style={{
+                      left: pct(b.startMs),
+                      width: `max(1px, ${pct(b.endMs - b.startMs)})`,
+                      backgroundColor: person.color,
+                      opacity: isShown(person.id) ? 0.9 : 0.15,
+                    }}
+                  />
+                )),
+              )}
+              <Playhead left={pct(nowMs)} />
+            </div>
+          </>
+        )}
+
         {showLanes &&
+          expanded &&
           lanes.map(({ person, blocks }) => {
             const on = isShown(person.id);
             return (
-              // Lanes are hidden on phones (too many rows); the transcript's speaker chips filter there.
+              // Per-person lanes are hidden on phones (too many rows); the transcript's speaker chips filter there.
               <div key={person.id} className="contents max-md:hidden">
                 <button
                   onClick={() => toggle(person.id)}
@@ -162,7 +197,7 @@ function Playhead({ left, ghost = false }: { left: string; ghost?: boolean }) {
 }
 
 /** Media time, updated on timeupdate (~4×/s) and seeks; enough for a playhead without a render per frame. */
-function useCurrentMs(mediaRef: React.RefObject<HTMLVideoElement | null>) {
+export function useCurrentMs(mediaRef: React.RefObject<HTMLVideoElement | null>) {
   const [ms, setMs] = useState(0);
   useEffect(() => {
     const el = mediaRef.current;

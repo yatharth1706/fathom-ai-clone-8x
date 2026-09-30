@@ -20,7 +20,7 @@ export function ParticipantAvatar({ person, className }: { person: Person; class
 
 export function ParticipantStack({
   participants,
-  max = 5,
+  max = 3,
   className,
 }: {
   participants: Person[];
@@ -31,7 +31,7 @@ export function ParticipantStack({
   const rest = participants.length - shown.length;
   return (
     <div className={cn("flex items-center", className)}>
-      <div className="flex -space-x-1.5">
+      <div className="flex -space-x-1">
         {shown.map((p, i) => (
           <ParticipantAvatar key={i} person={p} />
         ))}

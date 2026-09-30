@@ -51,7 +51,7 @@ export function MeetingView({
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <ParticipantStack participants={participants} max={6} />
+            <ParticipantStack participants={participants} />
             {actions}
           </div>
         </div>
@@ -60,7 +60,7 @@ export function MeetingView({
       {/* Phones: one column with a sticky player and a Notes / Transcript switch. The left column is
           `display: contents` there, so the player can stick for the whole page, not just its column. */}
       <MobilePanes>
-        <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
+        <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(380px,34%)]">
           <div className="max-lg:contents lg:min-h-0 lg:space-y-6 lg:overflow-y-auto lg:p-6">
             {meeting.error && !readOnly && (
               <p role="status" className="mx-4 mt-4 flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-800 lg:m-0 dark:text-amber-300">
@@ -104,6 +104,7 @@ export function MeetingView({
                 qa={readOnly ? [] : data.qa}
                 highlights={readOnly ? [] : data.highlights}
                 isProtected={meeting.isProtected}
+                durationMs={durationMs}
                 readOnly={readOnly}
               />
 

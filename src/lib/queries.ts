@@ -36,7 +36,39 @@ export async function listMeetings() {
     .where(inArray(schema.participants.meetingId, meetings.map((m) => m.id)))
     .orderBy(desc(schema.participants.talkMs));
 
-  return meetings.map((m) => ({ ...m, participants: people.filter((p) => p.meetingId === m.id) }));
+  const ids = meetings.map((m) => m.id);
+  const [openItems, oneLiners] = await Promise.all([
+    d
+      .select({ meetingId: schema.actionItems.meetingId, n: sql<number>`count(*)::int` })
+      .from(schema.actionItems)
+      .where(and(inArray(schema.actionItems.meetingId, ids), eq(schema.actionItems.done, false)))
+      .groupBy(schema.actionItems.meetingId),
+    // First bullet of the owner's default-template summary: a one-line gist for the list.
+    d
+      .select({
+        meetingId: schema.summaries.meetingId,
+        text: sql<string | null>`${schema.summaries.content}->'sections'->0->'bullets'->0->>'text'`,
+      })
+      .from(schema.summaries)
+      .innerJoin(schema.meetings, eq(schema.meetings.id, schema.summaries.meetingId))
+      .innerJoin(schema.userSettings, eq(schema.userSettings.userId, schema.meetings.ownerId))
+      .where(
+        and(
+          inArray(schema.summaries.meetingId, ids),
+          eq(schema.summaries.status, "ready"),
+          eq(schema.summaries.template, schema.userSettings.defaultTemplate),
+        ),
+      ),
+  ]);
+  const open = new Map(openItems.map((r) => [r.meetingId, r.n]));
+  const gist = new Map(oneLiners.map((r) => [r.meetingId, r.text]));
+
+  return meetings.map((m) => ({
+    ...m,
+    participants: people.filter((p) => p.meetingId === m.id),
+    openActionItems: open.get(m.id) ?? 0,
+    gist: gist.get(m.id) ?? null,
+  }));
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -254,6 +286,7 @@ export async function listHighlights() {
       title: schema.meetings.title,
       startedAt: schema.meetings.startedAt,
       posterUrl: schema.meetings.posterUrl,
+      mediaUrl: schema.meetings.mediaUrl,
       mediaKind: schema.meetings.mediaKind,
     })
     .from(schema.meetings)
@@ -340,7 +373,7 @@ export async function searchTranscripts(q: string, limit = 200) {
       idx: s.idx,
       startMs: s.startMs,
       rank: sql<number>`ts_rank(${s.tsv}, ${tsq})`,
-      snippet: sql<string>`ts_headline('english', ${s.text}, ${tsq}, ${`StartSel=${HIT_START}, StopSel=${HIT_END}, MaxWords=35, MinWords=15, MaxFragments=2, FragmentDelimiter=" … "`})`,
+      snippet: sql<string>`ts_headline('english', ${s.text}, ${tsq}, ${`StartSel=${HIT_START}, StopSel=${HIT_END}, MaxWords=22, MinWords=10, MaxFragments=2, FragmentDelimiter=" … "`})`,
       speaker: schema.participants.displayName,
       color: schema.participants.color,
       title: schema.meetings.title,
