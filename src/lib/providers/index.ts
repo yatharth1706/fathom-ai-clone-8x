@@ -1,9 +1,10 @@
 import { AssemblyAiProvider } from "./assemblyai";
+import { GeminiProvider } from "./gemini";
 import type { AsrProvider, LlmProvider } from "./types";
 
 export * from "./types";
 
-// Implementations land in later slices; selection is by env so providers can be swapped without code changes.
+// Selection is by env so providers can be swapped without code changes.
 
 export function getAsr(): AsrProvider {
   const name = process.env.ASR_PROVIDER ?? "assemblyai";
@@ -21,6 +22,15 @@ export function getAsr(): AsrProvider {
 export function getLlm(): LlmProvider {
   const name = process.env.LLM_PROVIDER ?? "gemini";
   switch (name) {
+    case "gemini": {
+      const key = process.env.GEMINI_API_KEY;
+      if (!key) throw new Error("GEMINI_API_KEY is not set");
+      return new GeminiProvider(
+        key,
+        process.env.GEMINI_MODEL ?? "gemini-flash-latest",
+        process.env.GEMINI_FALLBACK_MODEL || undefined, // opt-in: many listed models 404 for free-tier keys
+      );
+    }
     default:
       throw new Error(`LLM provider "${name}" is not implemented`);
   }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, ExternalLink } from "lucide-react";
+import { MeetingNotes } from "@/components/meeting/meeting-notes";
 import { MeetingPlayer } from "@/components/meeting/meeting-player";
 import { PlayerProvider } from "@/components/meeting/player-context";
 import { SpeakerStats } from "@/components/meeting/speaker-stats";
@@ -20,6 +21,8 @@ export default async function MeetingPage(props: PageProps<"/meetings/[id]">) {
   const data = await getMeeting(id);
   if (!data) notFound();
   const { meeting, participants, segments } = data;
+  const segStartMs: number[] = [];
+  for (const s of segments) segStartMs[s.idx] = s.startMs;
 
   // ?t= accepts seconds ("754") so links stay short and human-readable.
   const t = Number(Array.isArray(searchParams.t) ? searchParams.t[0] : searchParams.t);
@@ -55,6 +58,18 @@ export default async function MeetingPage(props: PageProps<"/meetings/[id]">) {
                 Recording unavailable
               </div>
             )}
+
+            <MeetingNotes
+              meetingId={meeting.id}
+              title={meeting.title}
+              segStartMs={segStartMs}
+              participants={participants}
+              summaries={data.summaries}
+              actionItems={data.actionItems}
+              insights={data.insights}
+              chapters={data.chapters}
+              defaultTemplate={data.defaultTemplate}
+            />
 
             <section>
               <h2 className="mb-3 text-sm font-medium">Speakers</h2>

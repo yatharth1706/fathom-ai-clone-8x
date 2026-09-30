@@ -44,6 +44,10 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export type MeetingDetail = NonNullable<Awaited<ReturnType<typeof getMeeting>>>;
 export type Participant = MeetingDetail["participants"][number];
 export type Segment = MeetingDetail["segments"][number];
+export type ActionItem = MeetingDetail["actionItems"][number];
+export type Insight = MeetingDetail["insights"][number];
+export type Chapter = MeetingDetail["chapters"][number];
+export type Summary = MeetingDetail["summaries"][number];
 
 /** Cached per request: generateMetadata and the page both call it. */
 export const getMeeting = cache(async (id: string) => {
@@ -53,7 +57,7 @@ export const getMeeting = cache(async (id: string) => {
   const [meeting] = await d.select().from(schema.meetings).where(eq(schema.meetings.id, id));
   if (!meeting) return null;
 
-  const [participants, segments] = await Promise.all([
+  const [participants, segments, actionItems, insights, chapters, summaries, [settings]] = await Promise.all([
     d
       .select({
         id: schema.participants.id,
@@ -77,7 +81,63 @@ export const getMeeting = cache(async (id: string) => {
       .from(schema.transcriptSegments)
       .where(eq(schema.transcriptSegments.meetingId, id))
       .orderBy(asc(schema.transcriptSegments.idx)),
+    d
+      .select({
+        id: schema.actionItems.id,
+        text: schema.actionItems.text,
+        ownerParticipantId: schema.actionItems.ownerParticipantId,
+        ownerText: schema.actionItems.ownerText,
+        dueText: schema.actionItems.dueText,
+        startMs: schema.actionItems.startMs,
+        done: schema.actionItems.done,
+      })
+      .from(schema.actionItems)
+      .where(eq(schema.actionItems.meetingId, id))
+      .orderBy(asc(schema.actionItems.startMs)),
+    d
+      .select({
+        id: schema.insights.id,
+        kind: schema.insights.kind,
+        text: schema.insights.text,
+        startMs: schema.insights.startMs,
+      })
+      .from(schema.insights)
+      .where(eq(schema.insights.meetingId, id))
+      .orderBy(asc(schema.insights.startMs)),
+    d
+      .select({
+        idx: schema.chapters.idx,
+        title: schema.chapters.title,
+        summary: schema.chapters.summary,
+        startMs: schema.chapters.startMs,
+        endMs: schema.chapters.endMs,
+      })
+      .from(schema.chapters)
+      .where(eq(schema.chapters.meetingId, id))
+      .orderBy(asc(schema.chapters.idx)),
+    d
+      .select({
+        template: schema.summaries.template,
+        status: schema.summaries.status,
+        content: schema.summaries.content,
+        error: schema.summaries.error,
+      })
+      .from(schema.summaries)
+      .where(eq(schema.summaries.meetingId, id)),
+    d
+      .select({ defaultTemplate: schema.userSettings.defaultTemplate })
+      .from(schema.userSettings)
+      .where(eq(schema.userSettings.userId, meeting.ownerId)),
   ]);
 
-  return { meeting, participants, segments };
+  return {
+    meeting,
+    participants,
+    segments,
+    actionItems,
+    insights,
+    chapters,
+    summaries,
+    defaultTemplate: settings?.defaultTemplate ?? "general",
+  };
 });

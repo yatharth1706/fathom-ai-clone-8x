@@ -1,0 +1,139 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "summaries": {
+  "general": {
+   "sections": [
+    {
+     "heading": "Meeting purpose",
+     "bullets": [
+      {
+       "text": "Review weekly development progress, evaluate frontend componentization and backend architectural restructuring, and coordinate reviews on open pull requests.",
+       "segIds": [
+        0,
+        2
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Key takeaways",
+     "bullets": [
+      {
+       "text": "Juhe expects to finish and submit the frontend code componentization refactoring by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "The Django REST framework pull request is approved, but merging is temporarily held until Juhe resolves incoming merge conflicts.",
+       "segIds": [
+        4,
+        5,
+        52
+       ]
+      },
+      {
+       "text": "Briley and Juhe agreed to explore refactoring the Django backend to modularize domain models into multiple apps instead of maintaining a single monolithic API app.",
+       "segIds": [
+        7,
+        9,
+        14,
+        16,
+        17
+       ]
+      },
+      {
+       "text": "Juhe was assigned to run frontend testing and complete the review for pull request 197 on the template-based thread sharing button.",
+       "segIds": [
+        42,
+        43,
+        44
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Topics discussed",
+     "bullets": [
+      {
+       "text": "Juhe provided an update on frontend componentization and requested approval status on the Django REST framework endpoints pull request.",
+       "segIds": [
+        3,
+        4,
+        5
+       ]
+      },
+      {
+       "text": "Briley proposed transitioning Django from a single API app structure into domain-driven apps, which Juhe supported exploring after clearing housekeeping backlog.",
+       "segIds": [
+        7,
+        9,
+        11,
+        14,
+        16,
+        17
+       ]
+      },
+      {
+       "text": "Briley and Juhe discussed browser developments in Shadow DOM and Web Components, noting that modernizing older code improves onboarding for new contributors.",
+       "segIds": [
+        18,
+        19,
+        21,
+        23,
+        24
+       ]
+      },
+      {
+       "text": "Juhe shared updates on other developers, noting Joe's temporary leave and Gordon's progress addressing milestone 0.2 bugs including vote counters and deprecated APIs.",
+       "segIds": [
+        32,
+        34,
+        35
+       ]
+      },
+      {
+       "text": "Juhe reported a minor capitalization issue on the About Us page, and Briley assigned Juhe to test and review pull request 197.",
+       "segIds": [
+        41,
+        42,
+        44
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "bullets": [
+      {
+       "text": "Juhe will finish and push the frontend componentization changes by tonight or early tomorrow morning.",
+       "segIds": [
+        3
+       ]
+      },
+      {
+       "text": "Juhe will resolve conflicts on the Django REST framework pull request before it is merged.",
+       "segIds": [
+        52
+       ]
+      },
+      {
+       "text": "Juhe will run frontend tests and complete the review for pull request 197.",
+       "segIds": [
+        43,
+        44
+       ]
+      },
+      {
+       "text": "Juhe will address documentation issues associated with the 0.2 milestone.",
+       "segIds": [
+        48
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

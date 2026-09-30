@@ -1,0 +1,101 @@
+{
+ "provider": "gemini",
+ "model": "gemini-flash-latest",
+ "analysis": {
+  "title": "CiviWiki Weekly Sync — May 28, 2018",
+  "speakerNames": [
+   {
+    "label": "A",
+    "name": "Briley Christopher Oxley"
+   },
+   {
+    "label": "B",
+    "name": "Juhe Lee"
+   }
+  ],
+  "chapters": [
+   {
+    "title": "Front-End Componentization and Django PR",
+    "summary": "Juhe Lee provides an update on front-end componentization and checks the status of the Django REST framework endpoints pull request.",
+    "startSegId": 0
+   },
+   {
+    "title": "Backend Architecture Restructuring",
+    "summary": "The team discusses the possibility of restructuring the backend from a single API app into modular domain-specific apps in the future.",
+    "startSegId": 7
+   },
+   {
+    "title": "Web Components Standards and Merging PRs",
+    "summary": "Briley Christopher Oxley and Juhe Lee discuss web standards for components and agree to proceed with merging the Django REST framework PR.",
+    "startSegId": 18
+   },
+   {
+    "title": "Milestone 0.2 and Developer Tasks",
+    "summary": "Juhe Lee provides updates on other contributors' progress on Milestone 0.2 bugs and tasks.",
+    "startSegId": 31
+   },
+   {
+    "title": "PR #197 Review and Wrap-Up",
+    "summary": "Juhe Lee is assigned to run front-end tests on PR #197, and the team outlines plans for documentation in the upcoming week.",
+    "startSegId": 41
+   }
+  ],
+  "actionItems": [
+   {
+    "text": "Finish front-end code componentization and push it up",
+    "ownerLabel": "B",
+    "ownerText": "Juhe Lee",
+    "dueText": "by tonight or early morning tomorrow",
+    "segId": 3
+   },
+   {
+    "text": "Run front-end tests and finalize review on pull request #197",
+    "ownerLabel": "B",
+    "ownerText": "Juhe Lee",
+    "dueText": null,
+    "segId": 43
+   },
+   {
+    "text": "Work on documentation issues associated with Milestone 0.2",
+    "ownerLabel": "B",
+    "ownerText": "Juhe Lee",
+    "dueText": "this following week",
+    "segId": 48
+   },
+   {
+    "text": "Resolve merge conflicts on the Django REST Framework pull request before merging",
+    "ownerLabel": "B",
+    "ownerText": "Juhe Lee",
+    "dueText": null,
+    "segId": 52
+   }
+  ],
+  "insights": [
+   {
+    "kind": "decision",
+    "text": "The approved Django REST Framework pull request will be merged once conflict updates are resolved, which will close issue 120.",
+    "segId": 18
+   },
+   {
+    "kind": "open_question",
+    "text": "Whether refactoring the Django backend to split the single API app into multiple domain-specific apps will require complex data and table migrations in the future.",
+    "segId": 10
+   },
+   {
+    "kind": "key_point",
+    "text": "Maintaining a single API app structure is preferred for now to simplify cleaning up the existing backlog.",
+    "segId": 11
+   },
+   {
+    "kind": "key_point",
+    "text": "The reported psycopg2 bug is considered low-hanging fruit that can be resolved by updating the version number.",
+    "segId": 38
+   },
+   {
+    "kind": "decision",
+    "text": "Juhe Lee will be assigned to conduct the peer review for pull request #197.",
+    "segId": 44
+   }
+  ]
+ }
+}

@@ -3,8 +3,10 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { db, schema } from "@/db";
-import type { AsrResult } from "@/lib/providers/types";
+import { cleanSummary, resolveAnalysis, segmentIndex, type AnalysisFixture, type SummariesFixture } from "@/lib/analysis";
+import type { AsrResult, TemplateId } from "@/lib/providers/types";
 import { publicUrl } from "@/lib/storage";
+import { summaryToMarkdown } from "@/lib/summary-format";
 import { normalizeUtterances, SPEAKER_COLORS, speakerStats } from "@/lib/transcript";
 import { SEED_SOURCES } from "../seed/sources";
 
@@ -13,6 +15,10 @@ import { SEED_SOURCES } from "../seed/sources";
 // Wipes ALL meetings, including reviewer uploads, so run it deliberately (e.g. right before submission).
 
 const FIXTURES = "seed/fixtures";
+
+function readOptional<T>(file: string): T | null {
+  return existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as T) : null;
+}
 export const DEMO_USER = { name: "Demo User", email: "demo@notetaker.local" };
 
 /** Deterministic UUID from a string, so seeded URLs survive a reseed. */
@@ -47,6 +53,9 @@ async function main() {
     const asr = JSON.parse(readFileSync(file, "utf8")) as Extract<AsrResult, { status: "completed" }>;
     const segments = normalizeUtterances(asr.utterances);
     const stats = speakerStats(segments);
+    const segs = segmentIndex(segments);
+    const analysisFx = readOptional<AnalysisFixture>(path.join(FIXTURES, s.slug, "analysis.json"));
+    const summariesFx = readOptional<SummariesFixture>(path.join(FIXTURES, s.slug, "summaries.json"));
 
     const meetingId = stableId(`meeting:${s.slug}`);
     const mediaKey = `seed/${s.slug}/${s.kind === "video" ? "media.mp4" : "media.m4a"}`;
@@ -67,16 +76,17 @@ async function main() {
       attributionUrl: s.sourceUrl,
     });
 
-    const participantIds = new Map<string, string>();
+    const participantIds = new Map(stats.map((st) => [st.speaker, stableId(`participant:${s.slug}:${st.speaker}`)]));
+    const resolved = analysisFx && resolveAnalysis(analysisFx.analysis, segs, asr.durationMs, participantIds);
     await d.insert(schema.participants).values(
       stats.map((st, i) => {
-        const id = stableId(`participant:${s.slug}:${st.speaker}`);
-        participantIds.set(st.speaker, id);
+        const guess = resolved?.speakerNames.get(st.speaker);
         return {
-          id,
+          id: participantIds.get(st.speaker)!,
           meetingId,
           speakerLabel: st.speaker,
-          displayName: `Speaker ${st.speaker}`,
+          displayName: guess ?? `Speaker ${st.speaker}`,
+          isNameGuessed: !!guess,
           color: SPEAKER_COLORS[i % SPEAKER_COLORS.length],
           talkMs: st.talkMs,
           segmentCount: st.segmentCount,
@@ -97,7 +107,32 @@ async function main() {
         })),
       );
     }
-    console.log(`[${s.slug}] ${segments.length} segments, ${stats.length} speakers`);
+
+    if (resolved) {
+      if (resolved.chapters.length) await d.insert(schema.chapters).values(resolved.chapters.map((c) => ({ meetingId, ...c })));
+      if (resolved.actionItems.length)
+        await d.insert(schema.actionItems).values(resolved.actionItems.map((a) => ({ meetingId, ...a })));
+      if (resolved.insights.length) await d.insert(schema.insights).values(resolved.insights.map((x) => ({ meetingId, ...x })));
+    }
+
+    const summaries = Object.entries(summariesFx?.summaries ?? {}).map(([template, raw]) => {
+      const content = cleanSummary(raw, segs);
+      return {
+        meetingId,
+        template: template as TemplateId,
+        status: "ready" as const,
+        content,
+        markdown: summaryToMarkdown(content, { title: s.title, startMs: segs.startMs }),
+        model: summariesFx!.model,
+      };
+    });
+    if (summaries.length) await d.insert(schema.summaries).values(summaries);
+
+    console.log(
+      `[${s.slug}] ${segments.length} segments, ${stats.length} speakers (${resolved?.speakerNames.size ?? 0} named), ` +
+        `${resolved?.chapters.length ?? 0} chapters, ${resolved?.actionItems.length ?? 0} action items, ` +
+        `${resolved?.insights.length ?? 0} insights, ${summaries.length} summaries`,
+    );
   }
 }
 
