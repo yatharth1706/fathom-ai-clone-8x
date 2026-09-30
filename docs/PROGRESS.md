@@ -2,7 +2,7 @@
 
 Status against the build plan in [PLAN.md](PLAN.md). Update at the end of each session.
 
-## Done (hours 0–17: P0 complete, P1 through settings)
+## Done (hours 0–19: P0 + P1 + polish + README)
 
 | Slice | What exists | Key files |
 |---|---|---|
@@ -24,6 +24,8 @@ Status against the build plan in [PLAN.md](PLAN.md). Update at the end of each s
 | Highlights / clips | Select transcript lines → floating "Create clip" (prefills range + title), or "New clip" from current time; dialog with editable mm:ss range, Preview, note. Clips play in-page via `playRange` (pauses at end; scrubbing away cancels). Highlights tab per meeting, `/highlights` page (cards with excerpt), actions: create/copy/disable public link, delete (blocked on protected). `/share/clip/[token]`: plays only the range (custom controls, clamped seeks, replay), clip transcript, noindex, view count. Seed adds one protected clip + link per meeting (first AI decision) | `src/app/highlights/`, `src/app/share/clip/[token]/`, `src/components/{clip-actions,clip-player}.tsx`, `src/components/meeting/clip-composer.tsx` |
 | Global search | `/search?q=`: Postgres FTS over the generated `tsv` (GIN), `websearch_to_tsquery` (quotes, OR, -word), `ts_headline` snippets with control-char markers (rendered as `<mark>`, never HTML), grouped by meeting (5 hits, "Show all"), hits link to `?t=` | `searchTranscripts` in `src/lib/queries.ts`, `src/app/search/page.tsx` |
 | Settings + action items | `/settings`: default template, auto action items, auto-share (pipeline creates a public link on ready), notetaker name (processing page). Action items: optimistic check-off, inline edit (text, owner incl. the AI's free-text owner, due), manual add; delete blocked on protected meetings | `src/app/settings/`, `src/components/settings-form.tsx`, action-item actions in `src/app/meetings/[id]/actions.ts` |
+| Polish | Keyboard: Space/K, ←/→ 5 s, J/L 15 s, `<`/`>` speed (1–2×, remembered in localStorage), `?` help (ignored while typing or when the video has focus). Phones: left column is `display: contents` so the player sticks to the page, Notes/Transcript switch, speaker lanes hidden, compact nav; fixed horizontal overflow (grid min-content). Skeleton `loading.tsx` for list/meeting/highlights/search (not share pages, so revoked links keep a real 404), `error.tsx` (Next 16 `retry` prop) + `global-error.tsx`, not-found pages | `src/components/meeting/{player-shortcuts,mobile-panes}.tsx`, `src/app/**/loading.tsx` |
+| README | Architecture, pipeline, verifiable-AI design, bot plug-in, guardrails, cuts, local setup/reset, testing approach, licenses | `README.md` |
 | Meetings list | Server-rendered, grouped by month, poster/duration/speakers/status | `src/app/meetings/page.tsx` |
 | Meeting page | Player ↔ transcript sync, click-to-seek, auto-scroll with pause + "Jump to current", scrubber seeks re-follow, `?t=<sec>` deep links, speaker talk-time bars, attribution | `src/app/meetings/[id]/page.tsx`, `src/components/meeting/` |
 
@@ -35,9 +37,7 @@ Hours 12–17 (all in headless Chrome with real input events): chapter-bar click
 
 ## Next (in order)
 
-1. **Hour 17–18** — polish: empty/loading/error states (`loading.tsx` / `error.tsx`), keyboard (space, ←/→ 5 s, playback speed 1–2×), mobile (sticky player, Transcript as a tab).
-2. **Hour 18–19** — README: architecture, cuts, how a real bot plugs in, reset instructions, attributions.
-3. **Hour 19–20** — Vercel deploy + the pending prod tests below, demo video, final `pnpm seed`.
+1. **Hour 19–20** — Vercel deploy + the pending prod tests below, live URL into README, demo video, final `pnpm seed`. `pnpm build` passes locally.
 
 ## Blocked on the user
 
