@@ -23,6 +23,7 @@ export default async function MeetingPage(props: PageProps<"/meetings/[id]">) {
     return (
       <ProcessingView
         meeting={meeting}
+        botName={data.botName}
         actions={<MeetingActions meetingId={meeting.id} title={meeting.title} isProtected={meeting.isProtected} />}
       />
     );

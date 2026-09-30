@@ -8,15 +8,17 @@ type Status = "uploaded" | "transcribing" | "analyzing" | "ready" | "failed";
 
 const STEPS = [
   { status: "uploaded", label: "Upload", detail: "Receiving the recording" },
-  { status: "transcribing", label: "Transcribe", detail: "Speech to text and who spoke when. Usually under a minute or two." },
+  { status: "transcribing", label: "Transcribe", detail: "Speech to text and who spoke when. Usually a minute or two." },
   { status: "analyzing", label: "Generate notes", detail: "Summary, action items, decisions and chapters" },
 ] as const;
 
 /** Shown instead of the meeting page while an upload is processing, or when it failed. */
 export function ProcessingView({
   meeting,
+  botName,
   actions,
 }: {
+  botName: string;
   meeting: { id: string; title: string; startedAt: Date; durationMs: number | null; status: Status; error: string | null };
   actions?: React.ReactNode;
 }) {
@@ -80,7 +82,7 @@ export function ProcessingView({
       )}
       {!failed && (
         <p className="mt-4 text-xs text-muted-foreground">
-          You can leave this page; the meeting keeps processing and shows up in My meetings when it&apos;s ready.
+          {botName} is taking notes. You can leave this page; the meeting shows up in My meetings when it&apos;s ready.
         </p>
       )}
     </div>

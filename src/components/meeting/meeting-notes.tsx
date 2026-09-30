@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useOptimistic, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { ArrowUp, Check, ChevronDown, Copy, Globe, Loader2, Play, Scissors, Sparkles } from "lucide-react";
+import { ArrowUp, Check, ChevronDown, Copy, Globe, Loader2, Pencil, Play, Plus, Scissors, Sparkles, Trash2 } from "lucide-react";
+import { addActionItem, deleteActionItem, setActionItemDone, updateActionItem } from "@/app/meetings/[id]/actions";
 import { ClipActions } from "@/components/clip-actions";
 import { ParticipantAvatar } from "@/components/participant-stack";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ type Props = {
   defaultTemplate: TemplateId;
   qa: QaMessage[];
   highlights: Highlight[];
+  isProtected: boolean;
   /** Public share view: only already-generated templates, no generation. */
   readOnly?: boolean;
 };
@@ -71,7 +73,13 @@ export function MeetingNotes(props: Props) {
         <SummaryTab {...props} />
       </TabsContent>
       <TabsContent value="actions" className="pt-3">
-        <ActionItemsTab items={props.actionItems} participants={props.participants} />
+        <ActionItemsTab
+          meetingId={props.meetingId}
+          items={props.actionItems}
+          participants={props.participants}
+          readOnly={props.readOnly}
+          isProtected={props.isProtected}
+        />
       </TabsContent>
       <TabsContent value="decisions" className="pt-3">
         <InsightsTab insights={props.insights} />
@@ -229,34 +237,237 @@ function SummaryTab({ meetingId, title, segStartMs, summaries, defaultTemplate, 
 
 // ---------- Action items ----------
 
-function ActionItemsTab({ items, participants }: { items: ActionItem[]; participants: Participant[] }) {
-  if (items.length === 0) return <Empty>No action items were agreed in this meeting.</Empty>;
+type ItemDraft = { text: string; owner: string; dueText: string };
+/** Owner <select> values: "" = unassigned, a participant id, or KEEP_TEXT for the AI's free-text owner. */
+const KEEP_TEXT = "__text__";
+
+function ActionItemsTab({
+  meetingId,
+  items,
+  participants,
+  readOnly,
+  isProtected,
+}: {
+  meetingId: string;
+  items: ActionItem[];
+  participants: Participant[];
+  readOnly?: boolean;
+  isProtected: boolean;
+}) {
+  const [optimistic, setDone] = useOptimistic(items, (state, { id, done }: { id: string; done: boolean }) =>
+    state.map((it) => (it.id === id ? { ...it, done } : it)),
+  );
+  const [, startTransition] = useTransition();
+  const [editing, setEditing] = useState<string | null>(null); // item id, or "new"
   const byId = new Map(participants.map((p) => [p.id, p]));
+  const doneCount = optimistic.filter((it) => it.done).length;
+
+  const toggle = (id: string, done: boolean) =>
+    startTransition(async () => {
+      setDone({ id, done });
+      const res = await setActionItemDone(meetingId, id, done);
+      if (!res.ok) toast.error(res.error);
+    });
+
+  const addButton = !readOnly && editing !== "new" && (
+    <Button variant="ghost" size="sm" onClick={() => setEditing("new")}>
+      <Plus /> Add action item
+    </Button>
+  );
+
+  if (optimistic.length === 0 && editing !== "new")
+    return (
+      <div className="rounded-lg border border-dashed px-4 py-8 text-center">
+        <p className="text-sm text-muted-foreground">No action items were agreed in this meeting.</p>
+        {addButton && <div className="mt-2">{addButton}</div>}
+      </div>
+    );
+
   return (
-    <ul className="divide-y">
-      {items.map((it) => {
-        const owner = it.ownerParticipantId ? byId.get(it.ownerParticipantId) : undefined;
-        const ownerName = owner?.displayName ?? it.ownerText;
-        return (
-          <li key={it.id} className="flex gap-3 py-2.5">
-            <span className="mt-0.5 size-4 shrink-0 rounded border border-foreground/30" aria-hidden />
-            <div className="min-w-0 flex-1">
-              <p className="text-sm leading-snug">{it.text}</p>
-              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                {ownerName && (
-                  <span className="inline-flex items-center gap-1.5">
-                    {owner && <ParticipantAvatar person={owner} className="size-4 text-[8px] ring-0" />}
-                    {ownerName}
-                  </span>
+    <div>
+      {optimistic.length > 0 && (
+        <p className="mb-1 text-xs text-muted-foreground tabular-nums">
+          {doneCount} of {optimistic.length} done
+        </p>
+      )}
+      <ul className="divide-y">
+        {optimistic.map((it) => {
+          const owner = it.ownerParticipantId ? byId.get(it.ownerParticipantId) : undefined;
+          const ownerName = owner?.displayName ?? it.ownerText;
+          if (editing === it.id)
+            return (
+              <li key={it.id} className="py-2.5">
+                <ActionItemForm
+                  meetingId={meetingId}
+                  item={it}
+                  participants={participants}
+                  canDelete={!isProtected}
+                  onDone={() => setEditing(null)}
+                />
+              </li>
+            );
+          return (
+            <li key={it.id} className="group flex gap-3 py-2.5">
+              <button
+                role="checkbox"
+                aria-checked={it.done}
+                aria-label={it.done ? "Mark as not done" : "Mark as done"}
+                disabled={readOnly}
+                onClick={() => toggle(it.id, !it.done)}
+                className={cn(
+                  "mt-0.5 grid size-4 shrink-0 place-items-center rounded border border-foreground/30 enabled:hover:border-foreground/60",
+                  it.done && "border-primary bg-primary text-primary-foreground",
                 )}
-                {it.dueText && <span>Due {it.dueText}</span>}
-                <TimeLink ms={it.startMs} />
+              >
+                {it.done && <Check className="size-3" />}
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className={cn("text-sm leading-snug", it.done && "text-muted-foreground line-through")}>{it.text}</p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  {ownerName && (
+                    <span className="inline-flex items-center gap-1.5">
+                      {owner && <ParticipantAvatar person={owner} className="size-4 text-[8px] ring-0" />}
+                      {ownerName}
+                    </span>
+                  )}
+                  {it.dueText && <span>Due {it.dueText}</span>}
+                  {it.source === "manual" && <span>Added manually</span>}
+                  <TimeLink ms={it.startMs} />
+                </div>
               </div>
-            </div>
+              {!readOnly && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setEditing(it.id)}
+                  aria-label={`Edit ${it.text}`}
+                  className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+                >
+                  <Pencil />
+                </Button>
+              )}
+            </li>
+          );
+        })}
+        {editing === "new" && (
+          <li className="py-2.5">
+            <ActionItemForm meetingId={meetingId} participants={participants} canDelete={false} onDone={() => setEditing(null)} />
           </li>
-        );
-      })}
-    </ul>
+        )}
+      </ul>
+      {addButton && <div className="mt-2">{addButton}</div>}
+    </div>
+  );
+}
+
+function ActionItemForm({
+  meetingId,
+  item,
+  participants,
+  canDelete,
+  onDone,
+}: {
+  meetingId: string;
+  item?: ActionItem;
+  participants: Participant[];
+  canDelete: boolean;
+  onDone: () => void;
+}) {
+  const [draft, setDraft] = useState<ItemDraft>({
+    text: item?.text ?? "",
+    owner: item?.ownerParticipantId ?? (item?.ownerText ? KEEP_TEXT : ""),
+    dueText: item?.dueText ?? "",
+  });
+  const [pending, startTransition] = useTransition();
+  const input =
+    "h-8 rounded-md border bg-background px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50";
+
+  const save = () =>
+    startTransition(async () => {
+      const fields = {
+        text: draft.text,
+        ownerParticipantId: draft.owner && draft.owner !== KEEP_TEXT ? draft.owner : null,
+        ownerText: draft.owner === KEEP_TEXT ? (item?.ownerText ?? null) : null,
+        dueText: draft.dueText || null,
+      };
+      const res = item ? await updateActionItem(meetingId, item.id, fields) : await addActionItem(meetingId, fields);
+      if (!res.ok) return void toast.error(res.error);
+      onDone();
+    });
+
+  const remove = () =>
+    startTransition(async () => {
+      if (!item) return;
+      const res = await deleteActionItem(meetingId, item.id);
+      if (!res.ok) return void toast.error(res.error);
+      toast.success("Action item deleted");
+      onDone();
+    });
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        save();
+      }}
+      onKeyDown={(e) => e.key === "Escape" && onDone()}
+      className="grid gap-2"
+    >
+      <input
+        autoFocus
+        value={draft.text}
+        maxLength={300}
+        placeholder="What needs to happen?"
+        aria-label="Action item"
+        onChange={(e) => setDraft({ ...draft, text: e.target.value })}
+        className={input}
+      />
+      <div className="flex flex-wrap gap-2">
+        <select
+          value={draft.owner}
+          onChange={(e) => setDraft({ ...draft, owner: e.target.value })}
+          aria-label="Owner"
+          className={cn(input, "min-w-0 flex-1")}
+        >
+          <option value="">No owner</option>
+          {item?.ownerText && !item.ownerParticipantId && <option value={KEEP_TEXT}>{item.ownerText} (as mentioned)</option>}
+          {participants.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.displayName}
+            </option>
+          ))}
+        </select>
+        <input
+          value={draft.dueText}
+          maxLength={60}
+          placeholder="Due (e.g. Friday)"
+          aria-label="Due"
+          onChange={(e) => setDraft({ ...draft, dueText: e.target.value })}
+          className={cn(input, "w-36")}
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Button type="submit" size="sm" disabled={pending || !draft.text.trim()}>
+          {pending && <Loader2 className="animate-spin" />} {item ? "Save" : "Add"}
+        </Button>
+        <Button type="button" size="sm" variant="ghost" onClick={onDone}>
+          Cancel
+        </Button>
+        {item && (
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={remove}
+            disabled={pending || !canDelete}
+            title={canDelete ? undefined : "Items on demo meetings can't be deleted"}
+            className="ml-auto text-destructive hover:text-destructive"
+          >
+            <Trash2 /> Delete
+          </Button>
+        )}
+      </div>
+    </form>
   );
 }
 

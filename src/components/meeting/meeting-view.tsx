@@ -93,6 +93,7 @@ export function MeetingView({
             defaultTemplate={data.defaultTemplate}
             qa={readOnly ? [] : data.qa}
             highlights={readOnly ? [] : data.highlights}
+            isProtected={meeting.isProtected}
             readOnly={readOnly}
           />
 

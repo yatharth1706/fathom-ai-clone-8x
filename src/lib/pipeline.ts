@@ -1,5 +1,5 @@
 import "server-only";
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { and, asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { cleanSummary, resolveAnalysis, segmentIndex, toTranscriptForLlm } from "@/lib/analysis";
@@ -226,7 +226,11 @@ export async function finishMeeting(meetingId: string, asr: CompletedAsr) {
       .from(schema.meetings)
       .where(eq(schema.meetings.id, meetingId));
     const [settings] = await d
-      .select({ defaultTemplate: schema.userSettings.defaultTemplate, autoActionItems: schema.userSettings.autoActionItems })
+      .select({
+        defaultTemplate: schema.userSettings.defaultTemplate,
+        autoActionItems: schema.userSettings.autoActionItems,
+        autoShare: schema.userSettings.autoShare,
+      })
       .from(schema.userSettings)
       .where(eq(schema.userSettings.userId, meeting.ownerId));
 
@@ -266,6 +270,9 @@ export async function finishMeeting(meetingId: string, asr: CompletedAsr) {
         console.error(`summary ${meetingId} failed`, e),
       );
     }
+
+    if (settings?.autoShare)
+      await d.insert(schema.shareLinks).values({ token: randomBytes(12).toString("base64url"), resourceType: "meeting", resourceId: meetingId });
 
     await d.update(schema.meetings).set({ status: "ready", error }).where(eq(schema.meetings.id, meetingId));
   } catch (e) {

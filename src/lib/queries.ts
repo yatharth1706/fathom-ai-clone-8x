@@ -94,6 +94,7 @@ export const getMeeting = cache(async (id: string) => {
         dueText: schema.actionItems.dueText,
         startMs: schema.actionItems.startMs,
         done: schema.actionItems.done,
+        source: schema.actionItems.source,
       })
       .from(schema.actionItems)
       .where(eq(schema.actionItems.meetingId, id))
@@ -129,7 +130,7 @@ export const getMeeting = cache(async (id: string) => {
       .from(schema.summaries)
       .where(eq(schema.summaries.meetingId, id)),
     d
-      .select({ defaultTemplate: schema.userSettings.defaultTemplate })
+      .select({ defaultTemplate: schema.userSettings.defaultTemplate, botName: schema.userSettings.botName })
       .from(schema.userSettings)
       .where(eq(schema.userSettings.userId, meeting.ownerId)),
     d
@@ -165,6 +166,7 @@ export const getMeeting = cache(async (id: string) => {
     chapters,
     summaries,
     defaultTemplate: settings?.defaultTemplate ?? "general",
+    botName: settings?.botName ?? "Notetaker",
     shareLink: shareLink ?? null,
     qa,
     highlights,
@@ -363,4 +365,20 @@ export async function searchTranscripts(q: string, limit = 200) {
     .sort((a, b) => b.score - a.score)
     .map((g) => ({ ...g, hits: g.hits.sort((a, b) => a.startMs - b.startMs) }));
   return { total: rows.length, meetings };
+}
+
+export async function getSettings() {
+  await connection();
+  const [row] = await db()
+    .select({
+      defaultTemplate: schema.userSettings.defaultTemplate,
+      autoActionItems: schema.userSettings.autoActionItems,
+      autoShare: schema.userSettings.autoShare,
+      botName: schema.userSettings.botName,
+    })
+    .from(schema.userSettings)
+    .innerJoin(schema.users, eq(schema.users.id, schema.userSettings.userId))
+    .orderBy(asc(schema.users.createdAt))
+    .limit(1);
+  return row ?? null;
 }

@@ -174,3 +174,87 @@ export async function revokeShareLink(meetingId: string, token: string): Promise
   refresh();
   return { ok: true };
 }
+
+// ---------- action items ----------
+// Check-off and edits are allowed on demo meetings (non-destructive; a reseed restores them). Deleting isn't.
+
+const itemFields = z.object({
+  text: z.string().trim().min(1, "Action item can't be empty").max(300, "Action item is too long"),
+  ownerParticipantId: uuid.nullable(),
+  /** Free-text owner (e.g. the AI heard a name that isn't a speaker); ignored when ownerParticipantId is set. */
+  ownerText: z.string().trim().max(60).nullable().optional(),
+  dueText: z.string().trim().max(60, "Due date is too long").nullable(),
+});
+
+async function ownerBelongs(meetingId: string, participantId: string | null) {
+  if (!participantId) return true;
+  const [p] = await db()
+    .select({ id: schema.participants.id })
+    .from(schema.participants)
+    .where(and(eq(schema.participants.id, participantId), eq(schema.participants.meetingId, meetingId)));
+  return !!p;
+}
+
+export async function setActionItemDone(meetingId: string, itemId: string, done: boolean): Promise<ActionResult> {
+  if (!uuid.safeParse(meetingId).success || !uuid.safeParse(itemId).success) return { ok: false, error: "Action item not found" };
+  const updated = await db()
+    .update(schema.actionItems)
+    .set({ done: done === true })
+    .where(and(eq(schema.actionItems.id, itemId), eq(schema.actionItems.meetingId, meetingId)))
+    .returning({ id: schema.actionItems.id });
+  if (updated.length === 0) return { ok: false, error: "Action item not found" };
+  refresh();
+  return { ok: true };
+}
+
+export async function updateActionItem(
+  meetingId: string,
+  itemId: string,
+  fields: z.input<typeof itemFields>,
+): Promise<ActionResult> {
+  const parsed = itemFields.safeParse(fields);
+  if (!parsed.success || !uuid.safeParse(itemId).success)
+    return { ok: false, error: parsed.error?.issues[0].message ?? "Action item not found" };
+  if (!(await ownerBelongs(meetingId, parsed.data.ownerParticipantId))) return { ok: false, error: "Unknown owner" };
+  const { text, ownerParticipantId, ownerText, dueText } = parsed.data;
+  const updated = await db()
+    .update(schema.actionItems)
+    .set({ text, ownerParticipantId, ownerText: ownerParticipantId ? null : ownerText || null, dueText: dueText || null })
+    .where(and(eq(schema.actionItems.id, itemId), eq(schema.actionItems.meetingId, meetingId)))
+    .returning({ id: schema.actionItems.id });
+  if (updated.length === 0) return { ok: false, error: "Action item not found" };
+  refresh();
+  return { ok: true };
+}
+
+export async function addActionItem(meetingId: string, fields: z.input<typeof itemFields>): Promise<ActionResult> {
+  const parsed = itemFields.safeParse(fields);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message };
+  const meeting = await getMeeting(meetingId);
+  if (!meeting) return { ok: false, error: "Meeting not found" };
+  if (!(await ownerBelongs(meetingId, parsed.data.ownerParticipantId))) return { ok: false, error: "Unknown owner" };
+  await db()
+    .insert(schema.actionItems)
+    .values({
+      meetingId,
+      text: parsed.data.text,
+      ownerParticipantId: parsed.data.ownerParticipantId,
+      dueText: parsed.data.dueText || null,
+      source: "manual",
+    });
+  refresh();
+  return { ok: true };
+}
+
+export async function deleteActionItem(meetingId: string, itemId: string): Promise<ActionResult> {
+  const meeting = await getMeeting(meetingId);
+  if (!meeting || !uuid.safeParse(itemId).success) return { ok: false, error: "Action item not found" };
+  if (meeting.isProtected) return { ok: false, error: PROTECTED };
+  const deleted = await db()
+    .delete(schema.actionItems)
+    .where(and(eq(schema.actionItems.id, itemId), eq(schema.actionItems.meetingId, meetingId)))
+    .returning({ id: schema.actionItems.id });
+  if (deleted.length === 0) return { ok: false, error: "Action item not found" };
+  refresh();
+  return { ok: true };
+}
