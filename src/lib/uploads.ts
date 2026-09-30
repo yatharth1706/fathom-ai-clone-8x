@@ -18,9 +18,16 @@ export function clientIpHash(headers: Headers) {
 }
 
 /** Atomically takes one upload from today's (UTC) allowance. Returns false when it's used up. */
-export async function claimUploadQuota(ipHash: string) {
+export function claimUploadQuota(ipHash: string) {
+  return claimDailyQuota(ipHash, dailyUploadLimit());
+}
+
+/**
+ * Per-key daily counter in `upload_quota`. Other paid features share the table with a prefixed key
+ * (e.g. `ask:<ipHash>`), so each has its own allowance.
+ */
+export async function claimDailyQuota(ipHash: string, limit: number) {
   const day = new Date().toISOString().slice(0, 10);
-  const limit = dailyUploadLimit();
   const rows = await db()
     .insert(schema.uploadQuota)
     .values({ ipHash, day, count: 1 })

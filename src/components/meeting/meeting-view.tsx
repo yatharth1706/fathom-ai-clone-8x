@@ -92,6 +92,7 @@ export function MeetingView({
                 insights={data.insights}
                 chapters={data.chapters}
                 defaultTemplate={data.defaultTemplate}
+                qa={readOnly ? [] : data.qa}
                 readOnly={readOnly}
               />
 

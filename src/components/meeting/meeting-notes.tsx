@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Check, ChevronDown, Copy, Loader2, Sparkles } from "lucide-react";
+import { ArrowUp, Check, ChevronDown, Copy, Loader2, Sparkles } from "lucide-react";
 import { ParticipantAvatar } from "@/components/participant-stack";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatTimestamp } from "@/lib/format";
 import type { TemplateId } from "@/lib/providers/types";
-import type { ActionItem, Chapter, Insight, Participant, Summary } from "@/lib/queries";
+import type { ActionItem, Chapter, Insight, Participant, QaMessage, Summary } from "@/lib/queries";
 import { summaryToHtml, summaryToMarkdown } from "@/lib/summary-format";
 import { TEMPLATE_BY_ID, TEMPLATES } from "@/lib/templates";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,7 @@ type Props = {
   insights: Insight[];
   chapters: Chapter[];
   defaultTemplate: TemplateId;
+  qa: QaMessage[];
   /** Public share view: only already-generated templates, no generation. */
   readOnly?: boolean;
 };
@@ -52,6 +53,11 @@ export function MeetingNotes(props: Props) {
         <TabsTrigger value="chapters" className="flex-none px-2">
           Chapters <Count n={props.chapters.length} />
         </TabsTrigger>
+        {!props.readOnly && (
+          <TabsTrigger value="ask" className="flex-none px-2">
+            <Sparkles className="size-3.5" /> Ask
+          </TabsTrigger>
+        )}
       </TabsList>
       <TabsContent value="summary" className="pt-3">
         <SummaryTab {...props} />
@@ -65,6 +71,11 @@ export function MeetingNotes(props: Props) {
       <TabsContent value="chapters" className="pt-3">
         <ChaptersTab chapters={props.chapters} segStartMs={props.segStartMs} />
       </TabsContent>
+      {!props.readOnly && (
+        <TabsContent value="ask" className="pt-3">
+          <AskTab meetingId={props.meetingId} initial={props.qa} />
+        </TabsContent>
+      )}
     </Tabs>
   );
 }
@@ -302,5 +313,121 @@ function ChaptersTab({ chapters, segStartMs }: { chapters: Chapter[]; segStartMs
         );
       })}
     </ol>
+  );
+}
+
+// ---------- Ask this meeting ----------
+
+const SUGGESTED_QUESTIONS = [
+  "What were the main decisions?",
+  "What are the next steps, and who owns them?",
+  "Were there any disagreements?",
+  "What questions were left unanswered?",
+];
+
+function AskTab({ meetingId, initial }: { meetingId: string; initial: QaMessage[] }) {
+  const [messages, setMessages] = useState(initial);
+  const [draft, setDraft] = useState("");
+  const [asking, setAsking] = useState<string | null>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  async function ask(question: string) {
+    const q = question.trim();
+    if (!q || asking) return;
+    setAsking(q);
+    setDraft("");
+    try {
+      const res = await fetch(`/api/meetings/${meetingId}/ask`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { message?: QaMessage; error?: string };
+      if (!res.ok || !data.message) throw new Error(data.error ?? "Couldn't answer that");
+      setMessages((m) => [...m, { ...data.message!, createdAt: new Date(data.message!.createdAt) }]);
+    } catch (e) {
+      setDraft(q);
+      toast.error(e instanceof Error ? e.message : "Couldn't answer that");
+    } finally {
+      setAsking(null);
+      requestAnimationFrame(() => endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {messages.length === 0 && !asking && (
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Ask anything about this meeting. Answers come only from the transcript and link to the moments they rely on.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {SUGGESTED_QUESTIONS.map((q) => (
+              <button key={q} onClick={() => ask(q)} className="rounded-full border px-3 py-1 text-xs hover:bg-muted">
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {messages.map((m) => (
+        <QaPair key={m.id} question={m.question}>
+          <p className="whitespace-pre-line">{m.answer}</p>
+          {m.citations.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">Sources</span>
+              {m.citations.map((c) => (
+                <TimeLink key={c.segIdx} ms={c.startMs} />
+              ))}
+            </div>
+          )}
+        </QaPair>
+      ))}
+      {asking && (
+        <QaPair question={asking}>
+          <p className="flex items-center gap-2 text-muted-foreground">
+            <Loader2 className="size-3.5 animate-spin" /> Reading the transcript…
+          </p>
+        </QaPair>
+      )}
+      <div ref={endRef} />
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void ask(draft);
+        }}
+        className="flex items-end gap-2 rounded-lg border bg-background p-1.5 focus-within:ring-2 focus-within:ring-ring/50"
+      >
+        <textarea
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              void ask(draft);
+            }
+          }}
+          rows={1}
+          maxLength={500}
+          placeholder="Ask about this meeting…"
+          aria-label="Ask about this meeting"
+          className="max-h-32 min-h-8 flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none field-sizing-content placeholder:text-muted-foreground"
+        />
+        <Button type="submit" size="icon-sm" disabled={!draft.trim() || asking !== null} aria-label="Ask">
+          {asking ? <Loader2 className="animate-spin" /> : <ArrowUp />}
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+function QaPair({ question, children }: { question: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-muted px-3 py-2 text-sm">{question}</p>
+      <div className="text-sm leading-relaxed text-foreground/85">{children}</div>
+    </div>
   );
 }

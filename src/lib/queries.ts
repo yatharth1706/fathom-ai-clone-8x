@@ -48,6 +48,7 @@ export type ActionItem = MeetingDetail["actionItems"][number];
 export type Insight = MeetingDetail["insights"][number];
 export type Chapter = MeetingDetail["chapters"][number];
 export type Summary = MeetingDetail["summaries"][number];
+export type QaMessage = MeetingDetail["qa"][number];
 
 /** Cached per request: generateMetadata and the page both call it. */
 export const getMeeting = cache(async (id: string) => {
@@ -57,7 +58,7 @@ export const getMeeting = cache(async (id: string) => {
   const [meeting] = await d.select().from(schema.meetings).where(eq(schema.meetings.id, id));
   if (!meeting) return null;
 
-  const [participants, segments, actionItems, insights, chapters, summaries, [settings], [shareLink]] = await Promise.all([
+  const [participants, segments, actionItems, insights, chapters, summaries, [settings], [shareLink], qa] = await Promise.all([
     d
       .select({
         id: schema.participants.id,
@@ -139,6 +140,17 @@ export const getMeeting = cache(async (id: string) => {
           isNull(schema.shareLinks.revokedAt),
         ),
       ),
+    d
+      .select({
+        id: schema.qaMessages.id,
+        question: schema.qaMessages.question,
+        answer: schema.qaMessages.answer,
+        citations: schema.qaMessages.citations,
+        createdAt: schema.qaMessages.createdAt,
+      })
+      .from(schema.qaMessages)
+      .where(eq(schema.qaMessages.meetingId, id))
+      .orderBy(asc(schema.qaMessages.createdAt)),
   ]);
 
   return {
@@ -151,6 +163,7 @@ export const getMeeting = cache(async (id: string) => {
     summaries,
     defaultTemplate: settings?.defaultTemplate ?? "general",
     shareLink: shareLink ?? null,
+    qa,
   };
 });
 

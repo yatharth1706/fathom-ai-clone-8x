@@ -46,6 +46,28 @@ async function loadTranscript(meetingId: string) {
   };
 }
 
+/** Answers a question from the transcript and stores it. Citations are validated and mapped to times. */
+export async function askMeeting(meetingId: string, question: string) {
+  const loaded = await loadTranscript(meetingId);
+  if (!loaded) return null;
+  const segs = segmentIndex(loaded.segments);
+  const res = await getLlm().ask(loaded.transcript, question);
+  const citations = [...new Set(res.citations.filter(segs.has))]
+    .sort((a, b) => a - b)
+    .map((segIdx) => ({ segIdx, startMs: segs.startMs(segIdx)! }));
+  const [row] = await db()
+    .insert(schema.qaMessages)
+    .values({ meetingId, question, answer: res.answer, citations })
+    .returning({
+      id: schema.qaMessages.id,
+      question: schema.qaMessages.question,
+      answer: schema.qaMessages.answer,
+      citations: schema.qaMessages.citations,
+      createdAt: schema.qaMessages.createdAt,
+    });
+  return row;
+}
+
 /** Generates (or regenerates) one template's summary and upserts it. Throws on LLM failure after recording it. */
 export async function generateSummary(meetingId: string, template: TemplateId) {
   const loaded = await loadTranscript(meetingId);
