@@ -1,0 +1,32 @@
+/** 3725000 → "1:02:05", 65000 → "1:05" */
+export function formatTimestamp(ms: number) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = String(total % 60).padStart(2, "0");
+  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
+}
+
+/** 3725000 → "1h 2m", 65000 → "1m", 20000 → "<1m" */
+export function formatDuration(ms: number | null | undefined) {
+  if (!ms) return "—";
+  const mins = Math.round(ms / 60000);
+  if (mins < 1) return "<1m";
+  const h = Math.floor(mins / 60);
+  return h > 0 ? `${h}h ${mins % 60}m` : `${mins}m`;
+}
+
+export function formatDate(d: Date) {
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+}
+
+export function initials(name: string) {
+  const speaker = /^Speaker (\w+)$/.exec(name);
+  if (speaker) return speaker[1];
+  return name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}

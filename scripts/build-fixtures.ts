@@ -23,7 +23,6 @@ async function main() {
   const asr = getAsr();
   for (const s of SEED_SOURCES) {
     if (only.length && !only.includes(s.slug)) continue;
-    if (s.asr !== "assemblyai") continue; // AMI meetings are built from human annotations
 
     const out = path.join(FIXTURES, s.slug, "asr.json");
     if (existsSync(out) && !force) {

@@ -131,15 +131,17 @@ Other templates generate on demand (`POST /api/meetings/[id]/summaries/[template
 
 | Slot | Source | Transcript | License |
 |---|---|---|---|
-| Long meeting (51 min, 5+ named speakers, video) | [Community Board seats call for feedback, 2021-02-20](https://commons.wikimedia.org/wiki/File:Call_for_feedback_Community_Board_seats_2021-02-20_-_First_meeting.webm) — open Zoom discussion, clean audio; chosen over two presentation-style CC BY calls | AssemblyAI | CC BY-SA 3.0 — attribution on meeting page; our transcode carries the same license |
-| 4 audio-only meetings | AMI Corpus ES2002a–d (same 4-person team across a project) | **AMI human annotations** (words + speaker segments) parsed into our segment format — no ASR | CC BY 4.0 |
-| 1–2 short meetings | Another CC-BY clip or self-recorded | AssemblyAI | own / CC BY |
+| Long meeting (51 min, 8 speakers, video) | [Community Board seats call for feedback, 2021-02-20](https://commons.wikimedia.org/wiki/File:Call_for_feedback_Community_Board_seats_2021-02-20_-_First_meeting.webm) — open Zoom discussion, clean audio; chosen over two presentation-style CC BY calls | AssemblyAI | CC BY-SA 3.0 — attribution on meeting page; our transcode carries the same license |
+| 3 short team syncs (11–21 min, video) | CiviWiki weekly meetings [2018-05-28](https://archive.org/details/CiviWikiWeeklyMeeting20180528), [2018-05-14](https://archive.org/details/CiviWikiWeeklyMeeting20180514), [2018-02-19](https://archive.org/details/CiviWikiWeeklyMeeting20180219) (Internet Archive) — same open-source team across weeks, screen-shared PRs / sprint board | AssemblyAI | CC0 |
+| 1 in-person roundtable (17 min, video) | [Editor engagement roundtable, 2013-06-22](https://commons.wikimedia.org/wiki/File:Engagement_Roundtable_1_-_Part_1.webm) — many voices, real faces | AssemblyAI | CC BY-SA 3.0 |
 
-**Media processing** (local ffmpeg): `-vf scale=-2:540 -c:v libx264 -crf 28 -c:a aac -b:a 96k -movflags +faststart`; poster frame; 16 kHz mono MP3 for ASR. Upload to R2 under `seed/`.
+**Why not AMI:** originally planned (free human transcripts, recurring team), but the Edinburgh download server was unusable (~3 KB/s, connection resets) and the Hugging Face mirror has no full-meeting audio. CiviWiki gives the recurring-team angle with real video, through the same pipeline, and needs no separate parser.
 
-**AMI:** download Headset-mix audio + `ami_public_manual_1.6.2` annotations from groups.inf.ed.ac.uk/ami/download. Parse `words/*.xml` per speaker (A–D), group words into segments at speaker change or pauses > 1 s, cap ~30 s per segment. Speakers named by AMI role (Project Manager, Marketing Expert, UI Designer, Industrial Designer).
+**Media processing** (`pnpm prepare-media`, local ffmpeg): H.264 ≤540p CRF 28 + AAC 96k, `+faststart`; `loudnorm` (several sources are recorded very quietly); poster frame; 16 kHz mono MP3 for ASR. Upload to R2 under `seed/<slug>/`.
 
-**Long-meeting criteria:** explicit CC BY license on the source page, clean per-person audio (Zoom), little crosstalk, visible speaker names. A clean 6–7 person meeting beats a messy 8-person one.
+**Transcripts** (`pnpm build-fixtures`): AssemblyAI once per source → `seed/fixtures/<slug>/asr.json`, resumable via saved job ids.
+
+**Long-meeting criteria:** explicit CC license on the source page, clean per-person audio (Zoom), little crosstalk, visible speaker names. A clean 6–7 person meeting beats a messy 8-person one.
 
 ## Routes
 
@@ -170,7 +172,7 @@ Other templates generate on demand (`POST /api/meetings/[id]/summaries/[template
 |---|---|---|
 | 0–1 | Scaffold (Next, Tailwind, shadcn, Drizzle, provider interfaces stub), deploy to Vercel. **In parallel:** pick + validate long meeting (license, audio), start downloads | Live in prod; long meeting chosen |
 | 1–2 | Schema + migrations; ffmpeg transcode; R2 bucket + CORS; upload seed media | |
-| 2–3 | AssemblyAI provider; submit long-meeting job; AMI annotation parser | |
+| 2–3 | AssemblyAI provider; fixture builder; transcribe all seed meetings | |
 | 3–4 | Fixture builder + idempotent seed loader; meetings list with real data | |
 | 4–6 | Meeting page: player, transcript, sync, seek, auto-scroll, speakers | **E2E slice in prod** |
 | 6–8 | Gemini provider: analyze + summarize (zod), segment-linked summary, action items, decisions, chapters; all templates in fixtures; switcher + copy | |

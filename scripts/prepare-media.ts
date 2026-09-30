@@ -12,6 +12,9 @@ import { SEED_SOURCES } from "../seed/sources";
 const RAW = "media-work/raw";
 const OUT = "media-work/out";
 
+// Several sources are recorded very quietly; normalize loudness for both playback and ASR.
+const LOUDNORM = "loudnorm=I=-16:TP=-1.5:LRA=11";
+
 function ffmpeg(args: string[]) {
   execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...args], { stdio: "inherit" });
 }
@@ -36,13 +39,13 @@ async function main() {
     console.log(`[${s.slug}] transcoding`);
     if (s.kind === "video") {
       // H.264/AAC plays everywhere; faststart puts the index up front so seeking is instant.
-      ffmpeg(["-i", raw, "-vf", "scale=-2:'min(540,ih)'", "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
+      ffmpeg(["-i", raw, "-vf", "scale=-2:'min(540,ih)'", "-af", LOUDNORM, "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
         "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", media]);
       ffmpeg(["-ss", "60", "-i", raw, "-frames:v", "1", "-vf", "scale=-2:360", "-q:v", "4", poster]);
     } else {
-      ffmpeg(["-i", raw, "-vn", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", media]);
+      ffmpeg(["-i", raw, "-vn", "-af", LOUDNORM, "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", media]);
     }
-    ffmpeg(["-i", raw, "-vn", "-ac", "1", "-ar", "16000", "-b:a", "48k", asrAudio]);
+    ffmpeg(["-i", raw, "-vn", "-af", LOUDNORM, "-ac", "1", "-ar", "16000", "-b:a", "48k", asrAudio]);
 
     const mb = (f: string) => (statSync(f).size / 1e6).toFixed(1) + " MB";
     console.log(`[${s.slug}] media ${mb(media)}, asr ${mb(asrAudio)}; uploading`);
