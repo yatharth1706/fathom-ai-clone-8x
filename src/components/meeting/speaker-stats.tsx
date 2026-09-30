@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Combine, MoreHorizontal, Pencil, Sparkles } from "lucide-react";
+import { Combine, ListFilter, MoreHorizontal, Pencil, Sparkles } from "lucide-react";
 import { mergeSpeakers, renameSpeaker, type ActionResult } from "@/app/meetings/[id]/actions";
 import { ParticipantAvatar } from "@/components/participant-stack";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
 import { formatDuration } from "@/lib/format";
 import type { Participant } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+import { useSpeakerFilter } from "./speaker-filter";
 
 export function SpeakerStats({
   meetingId,
@@ -38,6 +39,7 @@ export function SpeakerStats({
   const total = participants.reduce((sum, p) => sum + p.talkMs, 0) || 1;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const filter = useSpeakerFilter();
 
   const run = (action: () => Promise<ActionResult>, success: string) =>
     startTransition(async () => {
@@ -52,7 +54,10 @@ export function SpeakerStats({
         const pct = Math.round((p.talkMs / total) * 100);
         const others = participants.filter((o) => o.id !== p.id);
         return (
-          <li key={p.id} className="group flex items-center gap-3 rounded-md px-1 py-1.5">
+          <li
+            key={p.id}
+            className={cn("group flex items-center gap-3 rounded-md px-1 py-1.5", !filter.isShown(p.id) && "opacity-50")}
+          >
             <ParticipantAvatar person={p} className="ring-0" />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2 text-sm">
@@ -97,6 +102,19 @@ export function SpeakerStats({
               </div>
             </div>
 
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => filter.toggle(p.id)}
+              aria-pressed={filter.selected.has(p.id)}
+              title={filter.selected.has(p.id) ? "Stop filtering by this speaker" : "Show only this speaker in the transcript"}
+              className={cn(
+                "opacity-60 group-hover:opacity-100",
+                filter.selected.has(p.id) && "bg-muted text-foreground opacity-100",
+              )}
+            >
+              <ListFilter />
+            </Button>
             {!readOnly && (
               <DropdownMenu>
                 <DropdownMenuTrigger

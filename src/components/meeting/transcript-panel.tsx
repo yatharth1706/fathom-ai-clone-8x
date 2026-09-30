@@ -7,6 +7,7 @@ import { formatTimestamp } from "@/lib/format";
 import type { Participant, Segment } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { usePlayer } from "./player-context";
+import { useSpeakerFilter } from "./speaker-filter";
 
 export function TranscriptPanel({
   segments,
@@ -16,14 +17,18 @@ export function TranscriptPanel({
   participants: Participant[];
 }) {
   const { activeIdx, playing, seekCount, seekTo } = usePlayer();
+  const { isShown, selected, toggle, clear } = useSpeakerFilter();
   const containerRef = useRef<HTMLDivElement>(null);
   const [follow, setFollow] = useState(true);
   const byId = new Map(participants.map((p) => [p.id, p]));
 
   const scrollToIdx = useCallback((idx: number, behavior: ScrollBehavior) => {
     const container = containerRef.current;
-    const row = container?.querySelector<HTMLElement>(`[data-idx="${idx}"]`);
-    if (!container || !row) return;
+    if (!container) return;
+    // With a speaker filter the line itself may be hidden; fall back to the closest shown line before it.
+    let row: HTMLElement | null = null;
+    for (let i = idx; i >= 0 && !row; i--) row = container.querySelector<HTMLElement>(`[data-idx="${i}"]`);
+    if (!row) return;
     // Keep the active line about a third of the way down, so upcoming lines stay visible.
     const top = row.offsetTop - container.clientHeight / 3;
     // Animate short moves only; long jumps (e.g. scrubbing across the meeting) would take seconds to animate.
@@ -60,7 +65,10 @@ export function TranscriptPanel({
   const [query, setQuery] = useState("");
   const [matchPos, setMatchPos] = useState(0);
   const needle = query.trim().toLowerCase();
-  const matches = useMemo(() => findMatches(segments, needle), [segments, needle]);
+  const matches = useMemo(
+    () => findMatches(segments, needle, (seg) => isShown(seg.participantId)),
+    [segments, needle, isShown],
+  );
   const current = matches.length ? matches[Math.min(matchPos, matches.length - 1)] : undefined;
   // Rows re-render only if they contain a hit (memo), so typing stays cheap on long transcripts.
   const rowsWithHits = useMemo(() => new Set(matches.map((m) => m.i)), [matches]);
@@ -143,6 +151,38 @@ export function TranscriptPanel({
         )}
       </div>
 
+      {participants.length > 1 && (
+        <div className="flex gap-1.5 overflow-x-auto border-b px-3 py-2 [scrollbar-width:none]" role="group" aria-label="Filter by speaker">
+          <button
+            onClick={clear}
+            aria-pressed={selected.size === 0}
+            className={cn(
+              "shrink-0 rounded-full border px-2.5 py-0.5 text-xs",
+              selected.size === 0 ? "border-foreground bg-foreground text-background" : "hover:bg-muted",
+            )}
+          >
+            Everyone
+          </button>
+          {participants.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => {
+                setFollow(false);
+                toggle(p.id);
+              }}
+              aria-pressed={selected.has(p.id)}
+              className={cn(
+                "flex shrink-0 items-center gap-1 rounded-full border py-0.5 pr-2.5 pl-0.5 text-xs",
+                selected.has(p.id) ? "border-foreground bg-muted font-medium" : "text-muted-foreground hover:bg-muted",
+              )}
+            >
+              <ParticipantAvatar person={p} className="size-4 text-[8px] ring-0" />
+              <span className="max-w-28 truncate">{p.displayName}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div
         ref={containerRef}
         onWheel={stopFollowing}
@@ -151,8 +191,9 @@ export function TranscriptPanel({
         className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-3"
       >
         {segments.map((seg, i) => {
+          if (!isShown(seg.participantId)) return null;
           const speaker = byId.get(seg.participantId);
-          const showSpeaker = i === 0 || segments[i - 1].participantId !== seg.participantId;
+          const showSpeaker = i === 0 || segments[i - 1].participantId !== seg.participantId || !isShown(segments[i - 1].participantId);
           return (
             <TranscriptRow
               key={seg.idx}
@@ -185,11 +226,12 @@ export function TranscriptPanel({
 
 type Match = { i: number; start: number };
 
-/** Every case-insensitive occurrence of `needle`, in transcript order. */
-function findMatches(segments: Segment[], needle: string): Match[] {
+/** Every case-insensitive occurrence of `needle` in the shown lines, in transcript order. */
+function findMatches(segments: Segment[], needle: string, shown: (seg: Segment) => boolean): Match[] {
   if (needle.length < 2) return [];
   const out: Match[] = [];
   segments.forEach((seg, i) => {
+    if (!shown(seg)) return;
     const hay = seg.text.toLowerCase();
     for (let at = hay.indexOf(needle); at !== -1; at = hay.indexOf(needle, at + needle.length)) out.push({ i, start: at });
   });
