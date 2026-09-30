@@ -1,0 +1,7 @@
+# Local-only material; the app never reads these at build or run time.
+media-work/
+.next/
+node_modules/
+.env*
+!.env.example
+*.tsbuildinfo
