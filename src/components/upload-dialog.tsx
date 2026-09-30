@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils";
 
 type Phase =
   | { kind: "idle" }
-  | { kind: "checking"; name: string }
-  | { kind: "uploading"; name: string; pct: number }
-  | { kind: "starting"; name: string }
+  | { kind: "checking"; name: string; size: number }
+  | { kind: "uploading"; name: string; size: number; loaded: number }
+  | { kind: "starting"; name: string; size: number }
   | { kind: "error"; message: string };
 
 /** Duration from the file's own metadata, or null if the browser can't tell (the server re-checks after ASR). */
@@ -34,16 +34,27 @@ function readDurationMs(file: File): Promise<number | null> {
   });
 }
 
-function put(url: string, file: File, headers: Record<string, string>, onProgress: (pct: number) => void) {
+function put(url: string, file: File, headers: Record<string, string>, onProgress: (loaded: number) => void) {
   return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("PUT", url);
     for (const [k, v] of Object.entries(headers)) xhr.setRequestHeader(k, v);
-    xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(Math.round((e.loaded / e.total) * 100));
+    xhr.upload.onprogress = (e) => onProgress(e.loaded);
     xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`Storage returned ${xhr.status}`)));
     xhr.onerror = () => reject(new Error("Network error while uploading"));
     xhr.send(file);
   });
+}
+
+function formatBytes(n: number) {
+  if (n < 1024 * 1024) return `${Math.max(1, Math.round(n / 1024))} KB`;
+  return `${(n / (1024 * 1024)).toFixed(n < 10 * 1024 * 1024 ? 1 : 0)} MB`;
+}
+
+function progressPct(p: Phase) {
+  if (p.kind === "starting") return 100;
+  if (p.kind !== "uploading" || p.size === 0) return 0;
+  return Math.min(100, Math.round((p.loaded / p.size) * 100));
 }
 
 async function postJson<T>(url: string, body?: unknown): Promise<T> {
@@ -65,7 +76,8 @@ export function UploadDialog({ dailyLimit }: { dailyLimit: number }) {
   const busy = phase.kind === "checking" || phase.kind === "uploading" || phase.kind === "starting";
 
   async function upload(file: File) {
-    setPhase({ kind: "checking", name: file.name });
+    const { name, size } = file;
+    setPhase({ kind: "checking", name, size });
     const durationMs = await readDurationMs(file);
     const problem = uploadProblem({ size: file.size, type: file.type, durationMs });
     if (problem) return setPhase({ kind: "error", message: problem });
@@ -78,10 +90,10 @@ export function UploadDialog({ dailyLimit }: { dailyLimit: number }) {
         { filename: file.name, contentType: file.type, size: file.size, durationMs },
       );
       meetingId = signed.meetingId;
-      setPhase({ kind: "uploading", name: file.name, pct: 0 });
-      await put(signed.uploadUrl, file, signed.headers, (pct) => setPhase({ kind: "uploading", name: file.name, pct }));
+      setPhase({ kind: "uploading", name, size, loaded: 0 });
+      await put(signed.uploadUrl, file, signed.headers, (loaded) => setPhase({ kind: "uploading", name, size, loaded }));
       uploaded = true;
-      setPhase({ kind: "starting", name: file.name });
+      setPhase({ kind: "starting", name, size });
       await postJson(`/api/meetings/${meetingId}/process`);
       router.push(`/meetings/${meetingId}`);
       setOpen(false);
@@ -174,22 +186,35 @@ export function UploadDialog({ dailyLimit }: { dailyLimit: number }) {
           </DialogHeader>
 
           {busy ? (
-            <div className="rounded-lg border p-4">
-              <div className="flex items-center gap-3">
-                <FileAudio className="size-5 shrink-0 text-muted-foreground" />
-                <p className="min-w-0 flex-1 truncate text-sm font-medium">{phase.name}</p>
-                <Loader2 className="size-4 animate-spin text-muted-foreground" />
+            // min-w-0: the dialog is a grid, and a long unbroken filename would otherwise widen the whole column.
+            <div className="min-w-0 rounded-lg border p-4">
+              <div className="flex items-start gap-3">
+                <FileAudio className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+                <div className="min-w-0 flex-1">
+                  <p title={phase.name} className="line-clamp-2 text-sm font-medium [overflow-wrap:anywhere]">
+                    {phase.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground tabular-nums">{formatBytes(phase.size)}</p>
+                </div>
+                <Loader2 className="mt-0.5 size-4 shrink-0 animate-spin text-muted-foreground" />
               </div>
               <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full rounded-full bg-primary transition-[width]"
-                  style={{ width: `${phase.kind === "uploading" ? phase.pct : phase.kind === "starting" ? 100 : 0}%` }}
+                  className="h-full rounded-full bg-link transition-[width] duration-300"
+                  style={{ width: `${progressPct(phase)}%` }}
                 />
               </div>
-              <p className="mt-2 text-xs text-muted-foreground" aria-live="polite">
-                {phase.kind === "checking" && "Checking the file…"}
-                {phase.kind === "uploading" && `Uploading… ${phase.pct}%`}
-                {phase.kind === "starting" && "Starting transcription…"}
+              <p className="mt-2 flex justify-between gap-2 text-xs text-muted-foreground tabular-nums" aria-live="polite">
+                <span>
+                  {phase.kind === "checking" && "Checking the file…"}
+                  {phase.kind === "uploading" && (phase.loaded === 0 ? "Starting upload…" : "Uploading…")}
+                  {phase.kind === "starting" && "Uploaded. Starting transcription…"}
+                </span>
+                {phase.kind === "uploading" && phase.loaded > 0 && (
+                  <span>
+                    {formatBytes(phase.loaded)} of {formatBytes(phase.size)} · {progressPct(phase)}%
+                  </span>
+                )}
               </p>
             </div>
           ) : (
