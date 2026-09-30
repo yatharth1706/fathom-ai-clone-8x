@@ -13,6 +13,8 @@ type PlayerState = {
   seekCount: number;
   /** Seek to a time and start playing. Every timestamp link in the app goes through this. */
   seekTo: (ms: number) => void;
+  /** Play [startMs, endMs) and pause at the end (clips). Any other seek cancels the stop. */
+  playRange: (startMs: number, endMs: number) => void;
   currentMs: () => number;
 };
 
@@ -52,21 +54,25 @@ export function PlayerProvider({
   const [activeIdx, setActiveIdx] = useState(() => (initialMs ? findActive(segments, initialMs) : -1));
   const [playing, setPlaying] = useState(false);
   const [seekCount, setSeekCount] = useState(0);
+  const range = useRef<{ startMs: number; endMs: number } | null>(null);
 
   const currentMs = useCallback(() => (mediaRef.current?.currentTime ?? 0) * 1000, []);
   // setState bails out when the value is unchanged, so this only re-renders on segment boundaries.
   const sync = useCallback(() => setActiveIdx(findActive(segments, currentMs())), [segments, currentMs]);
 
-  const seekTo = useCallback(
-    (ms: number) => {
+  const seek = useCallback(
+    (ms: number, clip: { startMs: number; endMs: number } | null) => {
       const el = mediaRef.current;
       if (!el) return;
+      range.current = clip;
       el.currentTime = ms / 1000;
       setActiveIdx(findActive(segments, ms));
       void el.play().catch(() => {}); // autoplay can be blocked; the seek still applies
     },
     [segments],
   );
+  const seekTo = useCallback((ms: number) => seek(ms, null), [seek]);
+  const playRange = useCallback((startMs: number, endMs: number) => seek(startMs, { startMs, endMs }), [seek]);
 
   useEffect(() => {
     const el = mediaRef.current;
@@ -74,6 +80,10 @@ export function PlayerProvider({
     let raf = 0;
     const loop = () => {
       sync();
+      if (range.current && el.currentTime * 1000 >= range.current.endMs) {
+        range.current = null;
+        el.pause();
+      }
       raf = requestAnimationFrame(loop);
     };
     const onPlay = () => {
@@ -87,6 +97,9 @@ export function PlayerProvider({
       sync();
     };
     const onSeeked = () => {
+      // Scrubbing out of a playing clip means the viewer moved on; stop enforcing its end.
+      const t = el.currentTime * 1000;
+      if (range.current && (t < range.current.startMs - 500 || t > range.current.endMs)) range.current = null;
       sync();
       setSeekCount((n) => n + 1);
     };
@@ -100,6 +113,8 @@ export function PlayerProvider({
     el.addEventListener("seeked", onSeeked);
     el.addEventListener("loadedmetadata", onLoaded);
     if (el.readyState >= 1) onLoaded();
+    // This effect re-runs when a refresh brings new props; if the media is already playing, keep the loop alive.
+    if (!el.paused) raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
       el.removeEventListener("play", onPlay);
@@ -111,8 +126,8 @@ export function PlayerProvider({
   }, [sync, initialMs]);
 
   const value = useMemo(
-    () => ({ mediaRef, activeIdx, playing, seekCount, seekTo, currentMs }),
-    [activeIdx, playing, seekCount, seekTo, currentMs],
+    () => ({ mediaRef, activeIdx, playing, seekCount, seekTo, playRange, currentMs }),
+    [activeIdx, playing, seekCount, seekTo, playRange, currentMs],
   );
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }

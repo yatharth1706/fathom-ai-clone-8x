@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { ArrowUp, Check, ChevronDown, Copy, Loader2, Sparkles } from "lucide-react";
+import { ArrowUp, Check, ChevronDown, Copy, Globe, Loader2, Play, Scissors, Sparkles } from "lucide-react";
+import { ClipActions } from "@/components/clip-actions";
 import { ParticipantAvatar } from "@/components/participant-stack";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +17,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatTimestamp } from "@/lib/format";
 import type { TemplateId } from "@/lib/providers/types";
-import type { ActionItem, Chapter, Insight, Participant, QaMessage, Summary } from "@/lib/queries";
+import type { ActionItem, Chapter, Highlight, Insight, Participant, QaMessage, Summary } from "@/lib/queries";
 import { summaryToHtml, summaryToMarkdown } from "@/lib/summary-format";
 import { TEMPLATE_BY_ID, TEMPLATES } from "@/lib/templates";
 import { cn } from "@/lib/utils";
+import { useClipComposer } from "./clip-composer";
 import { usePlayer } from "./player-context";
 
 type Props = {
@@ -34,6 +36,7 @@ type Props = {
   chapters: Chapter[];
   defaultTemplate: TemplateId;
   qa: QaMessage[];
+  highlights: Highlight[];
   /** Public share view: only already-generated templates, no generation. */
   readOnly?: boolean;
 };
@@ -54,6 +57,11 @@ export function MeetingNotes(props: Props) {
           Chapters <Count n={props.chapters.length} />
         </TabsTrigger>
         {!props.readOnly && (
+          <TabsTrigger value="highlights" className="flex-none px-2">
+            Highlights <Count n={props.highlights.length} />
+          </TabsTrigger>
+        )}
+        {!props.readOnly && (
           <TabsTrigger value="ask" className="flex-none px-2">
             <Sparkles className="size-3.5" /> Ask
           </TabsTrigger>
@@ -71,6 +79,11 @@ export function MeetingNotes(props: Props) {
       <TabsContent value="chapters" className="pt-3">
         <ChaptersTab chapters={props.chapters} segStartMs={props.segStartMs} />
       </TabsContent>
+      {!props.readOnly && (
+        <TabsContent value="highlights" className="pt-3">
+          <HighlightsTab highlights={props.highlights} />
+        </TabsContent>
+      )}
       {!props.readOnly && (
         <TabsContent value="ask" className="pt-3">
           <AskTab meetingId={props.meetingId} initial={props.qa} />
@@ -313,6 +326,53 @@ function ChaptersTab({ chapters, segStartMs }: { chapters: Chapter[]; segStartMs
         );
       })}
     </ol>
+  );
+}
+
+// ---------- Highlights ----------
+
+function HighlightsTab({ highlights }: { highlights: Highlight[] }) {
+  const { playRange, currentMs } = usePlayer();
+  const compose = useClipComposer();
+  const newClip = () => {
+    const now = Math.floor(currentMs());
+    compose?.({ startMs: now, endMs: now + 30_000 });
+  };
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <p className="text-sm text-muted-foreground">Select lines in the transcript to clip them, or start from the current time.</p>
+        <Button variant="outline" size="sm" onClick={newClip}>
+          <Scissors /> New clip
+        </Button>
+      </div>
+      {highlights.length === 0 ? (
+        <Empty>No clips yet.</Empty>
+      ) : (
+        <ul className="divide-y">
+          {highlights.map((h) => (
+            <li key={h.id} className="flex items-start gap-3 py-2.5">
+              <Button variant="outline" size="icon-sm" onClick={() => playRange(h.startMs, h.endMs)} aria-label={`Play ${h.title}`}>
+                <Play />
+              </Button>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium leading-snug">{h.title}</p>
+                <p className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground tabular-nums">
+                  {formatTimestamp(h.startMs)}–{formatTimestamp(h.endMs)} · {formatTimestamp(h.endMs - h.startMs)}
+                  {h.shareToken && (
+                    <span className="inline-flex items-center gap-0.5" title="Has a public link">
+                      <Globe className="size-3" /> Public
+                    </span>
+                  )}
+                </p>
+                {h.note && <p className="mt-1 text-sm text-muted-foreground">{h.note}</p>}
+              </div>
+              <ClipActions clip={h} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 

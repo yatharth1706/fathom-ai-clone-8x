@@ -30,3 +30,10 @@ export function initials(name: string) {
     .join("")
     .toUpperCase();
 }
+
+/** "1:05" → 65000, "1:02:05" → 3725000, "90" → 90000; null if unparseable. Inverse of formatTimestamp. */
+export function parseTimestamp(text: string) {
+  const parts = text.trim().split(":");
+  if (parts.length > 3 || parts.some((p) => !/^\d+(\.\d+)?$/.test(p))) return null;
+  return Math.round(parts.reduce((acc, p) => acc * 60 + Number(p), 0) * 1000);
+}

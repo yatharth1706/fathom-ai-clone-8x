@@ -1,11 +1,12 @@
 "use client";
 
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowDown, ChevronDown, ChevronUp, Search, X } from "lucide-react";
+import { ArrowDown, ChevronDown, ChevronUp, Scissors, Search, X } from "lucide-react";
 import { ParticipantAvatar } from "@/components/participant-stack";
 import { formatTimestamp } from "@/lib/format";
 import type { Participant, Segment } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+import { useClipComposer, type ClipDraft } from "./clip-composer";
 import { usePlayer } from "./player-context";
 import { useSpeakerFilter } from "./speaker-filter";
 
@@ -103,6 +104,37 @@ export function TranscriptPanel({
     },
     [seekTo],
   );
+
+  // ---- selection → clip ----
+  const composeClip = useClipComposer();
+  const [selectionClip, setSelectionClip] = useState<{ draft: ClipDraft; top: number; left: number } | null>(null);
+  useEffect(() => {
+    if (!composeClip) return;
+    const segByIdx = new Map(segments.map((s) => [s.idx, s]));
+    const rowOf = (n: Node | null) => (n instanceof Element ? n : n?.parentElement)?.closest<HTMLElement>("[data-idx]");
+    const onChange = () => {
+      const sel = document.getSelection();
+      const container = containerRef.current;
+      const a = rowOf(sel?.anchorNode ?? null);
+      const b = rowOf(sel?.focusNode ?? null);
+      if (!sel || sel.isCollapsed || !container || !a || !b || !container.contains(a) || !container.contains(b))
+        return setSelectionClip(null);
+      const [lo, hi] = [Number(a.dataset.idx), Number(b.dataset.idx)].sort((x, y) => x - y);
+      const first = segByIdx.get(lo);
+      const last = segByIdx.get(hi);
+      if (!first || !last) return setSelectionClip(null);
+      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      const box = container.getBoundingClientRect();
+      const words = sel.toString().replace(/\s+/g, " ").trim().split(" ");
+      setSelectionClip({
+        draft: { startMs: first.startMs, endMs: last.endMs, title: words.slice(0, 10).join(" ") + (words.length > 10 ? "…" : "") },
+        top: rect.bottom - box.top + container.scrollTop + 6,
+        left: Math.min(Math.max(rect.left + rect.width / 2 - box.left, 60), box.width - 60),
+      });
+    };
+    document.addEventListener("selectionchange", onChange);
+    return () => document.removeEventListener("selectionchange", onChange);
+  }, [composeClip, segments]);
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
@@ -206,6 +238,20 @@ export function TranscriptPanel({
             />
           );
         })}
+        {selectionClip && composeClip && (
+          <button
+            // mousedown would clear the selection before the click lands
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              composeClip(selectionClip.draft);
+              document.getSelection()?.removeAllRanges();
+            }}
+            className="absolute z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-foreground px-3 py-1.5 text-xs font-medium text-background shadow-lg hover:opacity-90"
+            style={{ top: selectionClip.top, left: selectionClip.left }}
+          >
+            <Scissors className="size-3.5" /> Create clip
+          </button>
+        )}
       </div>
 
       {!follow && activeIdx >= 0 && (

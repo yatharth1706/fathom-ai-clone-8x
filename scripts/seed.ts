@@ -120,6 +120,27 @@ async function main() {
       if (resolved.insights.length) await d.insert(schema.insights).values(resolved.insights.map((x) => ({ meetingId, ...x })));
     }
 
+    // A protected demo clip per meeting: the first decision (else key point), extended to whole lines (~40 s).
+    const pick = resolved && (resolved.insights.find((x) => x.kind === "decision" && x.startMs != null) ?? resolved.insights.find((x) => x.startMs != null));
+    let clipToken: string | null = null;
+    if (pick?.startMs != null) {
+      const start = pick.startMs;
+      const lines = segments.filter((seg) => seg.startMs >= start && seg.startMs < start + 40_000);
+      const end = Math.min(Math.max(...lines.map((seg) => seg.endMs), start + 15_000), start + 90_000, asr.durationMs);
+      const words = pick.text.split(" ");
+      const highlightId = stableId(`highlight:${s.slug}`);
+      await d.insert(schema.highlights).values({
+        id: highlightId,
+        meetingId,
+        title: words.length > 12 ? `${words.slice(0, 12).join(" ")}…` : pick.text,
+        startMs: start,
+        endMs: end,
+        isProtected: true,
+      });
+      clipToken = stableToken(`clip:${s.slug}`);
+      await d.insert(schema.shareLinks).values({ token: clipToken, resourceType: "highlight", resourceId: highlightId, isProtected: true });
+    }
+
     const summaries = Object.entries(summariesFx?.summaries ?? {}).map(([template, raw]) => {
       const content = cleanSummary(raw, segs);
       return {
@@ -140,7 +161,8 @@ async function main() {
     console.log(
       `[${s.slug}] ${segments.length} segments, ${stats.length} speakers (${resolved?.speakerNames.size ?? 0} named), ` +
         `${resolved?.chapters.length ?? 0} chapters, ${resolved?.actionItems.length ?? 0} action items, ` +
-        `${resolved?.insights.length ?? 0} insights, ${summaries.length} summaries, share /share/m/${shareToken}`,
+        `${resolved?.insights.length ?? 0} insights, ${summaries.length} summaries, share /share/m/${shareToken}` +
+        (clipToken ? `, clip /share/clip/${clipToken}` : ""),
     );
   }
 }

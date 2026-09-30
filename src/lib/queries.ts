@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, inArray, isNull, lt, sql } from "drizzle-orm";
 import { connection } from "next/server";
 import { cache } from "react";
 import { db, schema } from "@/db";
@@ -49,6 +49,7 @@ export type Insight = MeetingDetail["insights"][number];
 export type Chapter = MeetingDetail["chapters"][number];
 export type Summary = MeetingDetail["summaries"][number];
 export type QaMessage = MeetingDetail["qa"][number];
+export type Highlight = MeetingDetail["highlights"][number];
 
 /** Cached per request: generateMetadata and the page both call it. */
 export const getMeeting = cache(async (id: string) => {
@@ -58,7 +59,8 @@ export const getMeeting = cache(async (id: string) => {
   const [meeting] = await d.select().from(schema.meetings).where(eq(schema.meetings.id, id));
   if (!meeting) return null;
 
-  const [participants, segments, actionItems, insights, chapters, summaries, [settings], [shareLink], qa] = await Promise.all([
+  const [participants, segments, actionItems, insights, chapters, summaries, [settings], [shareLink], qa, highlights] =
+    await Promise.all([
     d
       .select({
         id: schema.participants.id,
@@ -151,6 +153,7 @@ export const getMeeting = cache(async (id: string) => {
       .from(schema.qaMessages)
       .where(eq(schema.qaMessages.meetingId, id))
       .orderBy(asc(schema.qaMessages.createdAt)),
+    highlightsQuery().where(eq(schema.highlights.meetingId, id)).orderBy(asc(schema.highlights.startMs)),
   ]);
 
   return {
@@ -164,6 +167,7 @@ export const getMeeting = cache(async (id: string) => {
     defaultTemplate: settings?.defaultTemplate ?? "general",
     shareLink: shareLink ?? null,
     qa,
+    highlights,
   };
 });
 
@@ -186,3 +190,126 @@ export async function recordShareView(token: string) {
     .set({ viewCount: sql`${schema.shareLinks.viewCount} + 1` })
     .where(eq(schema.shareLinks.token, token));
 }
+
+// ---------- highlights ----------
+
+/** Highlights with their active share token (if any). */
+function highlightsQuery() {
+  return db()
+    .select({
+      id: schema.highlights.id,
+      meetingId: schema.highlights.meetingId,
+      title: schema.highlights.title,
+      note: schema.highlights.note,
+      startMs: schema.highlights.startMs,
+      endMs: schema.highlights.endMs,
+      isProtected: schema.highlights.isProtected,
+      createdAt: schema.highlights.createdAt,
+      shareToken: schema.shareLinks.token,
+    })
+    .from(schema.highlights)
+    .leftJoin(
+      schema.shareLinks,
+      and(
+        eq(schema.shareLinks.resourceType, "highlight"),
+        eq(schema.shareLinks.resourceId, schema.highlights.id),
+        isNull(schema.shareLinks.revokedAt),
+      ),
+    );
+}
+
+/** Transcript text inside [startMs, endMs), for clip previews. */
+async function excerpts(ranges: { meetingId: string; startMs: number; endMs: number }[]) {
+  if (ranges.length === 0) return [];
+  const rows = await db()
+    .select({
+      meetingId: schema.transcriptSegments.meetingId,
+      startMs: schema.transcriptSegments.startMs,
+      endMs: schema.transcriptSegments.endMs,
+      text: schema.transcriptSegments.text,
+    })
+    .from(schema.transcriptSegments)
+    .where(inArray(schema.transcriptSegments.meetingId, [...new Set(ranges.map((r) => r.meetingId))]))
+    .orderBy(asc(schema.transcriptSegments.startMs));
+  return ranges.map((r) =>
+    rows
+      .filter((s) => s.meetingId === r.meetingId && s.endMs > r.startMs && s.startMs < r.endMs)
+      .map((s) => s.text)
+      .join(" "),
+  );
+}
+
+export type HighlightListItem = Awaited<ReturnType<typeof listHighlights>>[number];
+
+export async function listHighlights() {
+  await connection();
+  const d = db();
+  const rows = await highlightsQuery().orderBy(desc(schema.highlights.createdAt));
+  if (rows.length === 0) return [];
+  const meetings = await d
+    .select({
+      id: schema.meetings.id,
+      title: schema.meetings.title,
+      startedAt: schema.meetings.startedAt,
+      posterUrl: schema.meetings.posterUrl,
+      mediaKind: schema.meetings.mediaKind,
+    })
+    .from(schema.meetings)
+    .where(inArray(schema.meetings.id, [...new Set(rows.map((r) => r.meetingId))]));
+  const byId = new Map(meetings.map((m) => [m.id, m]));
+  const texts = await excerpts(rows);
+  return rows.map((r, i) => ({ ...r, meeting: byId.get(r.meetingId)!, excerpt: texts[i] }));
+}
+
+/** The clip behind an active public link, with just enough of its meeting to play it. */
+export const getSharedClip = cache(async (token: string) => {
+  await connection();
+  if (!/^[\w-]{8,64}$/.test(token)) return null;
+  const d = db();
+  const [link] = await d
+    .select({ resourceId: schema.shareLinks.resourceId })
+    .from(schema.shareLinks)
+    .where(
+      and(eq(schema.shareLinks.token, token), eq(schema.shareLinks.resourceType, "highlight"), isNull(schema.shareLinks.revokedAt)),
+    );
+  if (!link) return null;
+  const [clip] = await d.select().from(schema.highlights).where(eq(schema.highlights.id, link.resourceId));
+  if (!clip) return null;
+  const [meeting] = await d
+    .select({
+      title: schema.meetings.title,
+      startedAt: schema.meetings.startedAt,
+      mediaUrl: schema.meetings.mediaUrl,
+      posterUrl: schema.meetings.posterUrl,
+      attributionText: schema.meetings.attributionText,
+      attributionUrl: schema.meetings.attributionUrl,
+    })
+    .from(schema.meetings)
+    .where(eq(schema.meetings.id, clip.meetingId));
+  if (!meeting?.mediaUrl) return null;
+
+  const [people, segments] = await Promise.all([
+    d
+      .select({ id: schema.participants.id, displayName: schema.participants.displayName, color: schema.participants.color })
+      .from(schema.participants)
+      .where(eq(schema.participants.meetingId, clip.meetingId)),
+    d
+      .select({
+        idx: schema.transcriptSegments.idx,
+        participantId: schema.transcriptSegments.participantId,
+        startMs: schema.transcriptSegments.startMs,
+        endMs: schema.transcriptSegments.endMs,
+        text: schema.transcriptSegments.text,
+      })
+      .from(schema.transcriptSegments)
+      .where(
+        and(
+          eq(schema.transcriptSegments.meetingId, clip.meetingId),
+          gt(schema.transcriptSegments.endMs, clip.startMs),
+          lt(schema.transcriptSegments.startMs, clip.endMs),
+        ),
+      )
+      .orderBy(asc(schema.transcriptSegments.idx)),
+  ]);
+  return { clip, meeting, participants: people, segments };
+});
