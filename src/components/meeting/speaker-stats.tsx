@@ -26,11 +26,14 @@ export function SpeakerStats({
   meetingId,
   participants,
   canMerge,
+  readOnly = false,
 }: {
   meetingId: string;
   participants: Participant[];
   /** False on protected demo meetings: merging can't be undone without a reseed. */
   canMerge: boolean;
+  /** Public share view: talk time only, no editing. */
+  readOnly?: boolean;
 }) {
   const total = participants.reduce((sum, p) => sum + p.talkMs, 0) || 1;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -64,14 +67,18 @@ export function SpeakerStats({
                   />
                 ) : (
                   <span className="flex min-w-0 items-center gap-1.5">
-                    <button
-                      onClick={() => setEditingId(p.id)}
-                      className="truncate text-left hover:underline"
-                      title="Rename speaker"
-                    >
-                      {p.displayName}
-                    </button>
-                    {p.isNameGuessed && (
+                    {readOnly ? (
+                      <span className="truncate">{p.displayName}</span>
+                    ) : (
+                      <button
+                        onClick={() => setEditingId(p.id)}
+                        className="truncate text-left hover:underline"
+                        title="Rename speaker"
+                      >
+                        {p.displayName}
+                      </button>
+                    )}
+                    {p.isNameGuessed && !readOnly && (
                       <span
                         title="Name suggested by AI from the conversation. Rename to confirm or correct it."
                         className="inline-flex shrink-0 items-center gap-0.5 rounded bg-muted px-1 py-px text-[10px] text-muted-foreground"
@@ -90,57 +97,59 @@ export function SpeakerStats({
               </div>
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="opacity-60 group-hover:opacity-100 aria-expanded:opacity-100"
-                    aria-label={`Actions for ${p.displayName}`}
-                  />
-                }
-              >
-                <MoreHorizontal />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuItem onClick={() => setEditingId(p.id)}>
-                  <Pencil /> Rename
-                </DropdownMenuItem>
-                {others.length > 0 && (
-                  <>
-                    <DropdownMenuSeparator />
-                    {canMerge ? (
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                          <Combine /> Merge into…
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent className="w-52">
-                          <DropdownMenuGroup>
-                            <DropdownMenuLabel>Same person as</DropdownMenuLabel>
-                            {others.map((o) => (
-                              <DropdownMenuItem
-                                key={o.id}
-                                onClick={() =>
-                                  run(() => mergeSpeakers(meetingId, p.id, o.id), `Merged ${p.displayName} into ${o.displayName}`)
-                                }
-                              >
-                                <ParticipantAvatar person={o} className="size-4 text-[8px] ring-0" />
-                                <span className="truncate">{o.displayName}</span>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuGroup>
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    ) : (
-                      <DropdownMenuItem disabled>
-                        <Combine /> Merge (disabled on demo meetings)
-                      </DropdownMenuItem>
-                    )}
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {!readOnly && (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="opacity-60 group-hover:opacity-100 aria-expanded:opacity-100"
+                      aria-label={`Actions for ${p.displayName}`}
+                    />
+                  }
+                >
+                  <MoreHorizontal />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem onClick={() => setEditingId(p.id)}>
+                    <Pencil /> Rename
+                  </DropdownMenuItem>
+                  {others.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      {canMerge ? (
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                            <Combine /> Merge into…
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="w-52">
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel>Same person as</DropdownMenuLabel>
+                              {others.map((o) => (
+                                <DropdownMenuItem
+                                  key={o.id}
+                                  onClick={() =>
+                                    run(() => mergeSpeakers(meetingId, p.id, o.id), `Merged ${p.displayName} into ${o.displayName}`)
+                                  }
+                                >
+                                  <ParticipantAvatar person={o} className="size-4 text-[8px] ring-0" />
+                                  <span className="truncate">{o.displayName}</span>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuGroup>
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                      ) : (
+                        <DropdownMenuItem disabled>
+                          <Combine /> Merge (disabled on demo meetings)
+                        </DropdownMenuItem>
+                      )}
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </li>
         );
       })}

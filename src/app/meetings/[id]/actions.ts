@@ -1,18 +1,29 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { randomBytes } from "node:crypto";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { refresh } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db, schema } from "@/db";
+import { deleteObject } from "@/lib/storage";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
 const uuid = z.uuid();
 const name = z.string().trim().min(1, "Name can't be empty").max(60, "Name is too long");
 
+const PROTECTED = "This is a demo meeting, so it can't be changed. Try it on a meeting you upload.";
+
 async function getMeeting(meetingId: string) {
+  if (!uuid.safeParse(meetingId).success) return undefined;
   const [m] = await db()
-    .select({ id: schema.meetings.id, isProtected: schema.meetings.isProtected })
+    .select({
+      id: schema.meetings.id,
+      isProtected: schema.meetings.isProtected,
+      mediaKey: schema.meetings.mediaKey,
+      source: schema.meetings.source,
+    })
     .from(schema.meetings)
     .where(eq(schema.meetings.id, meetingId));
   return m;
@@ -44,7 +55,7 @@ export async function mergeSpeakers(meetingId: string, fromId: string, intoId: s
 
   const meeting = await getMeeting(meetingId);
   if (!meeting) return { ok: false, error: "Meeting not found" };
-  if (meeting.isProtected) return { ok: false, error: "Demo meetings can't be merged. Try it on a meeting you upload." };
+  if (meeting.isProtected) return { ok: false, error: PROTECTED };
 
   const d = db();
   const people = await d
@@ -72,6 +83,94 @@ export async function mergeSpeakers(meetingId: string, fromId: string, intoId: s
     d.delete(schema.participants).where(eq(schema.participants.id, fromId)),
   ]);
 
+  refresh();
+  return { ok: true };
+}
+
+// ---------- meeting ----------
+
+export async function renameMeeting(meetingId: string, rawTitle: string): Promise<ActionResult> {
+  const title = z.string().trim().min(1, "Title can't be empty").max(120, "Title is too long").safeParse(rawTitle);
+  if (!title.success) return { ok: false, error: title.error.issues[0].message };
+  const meeting = await getMeeting(meetingId);
+  if (!meeting) return { ok: false, error: "Meeting not found" };
+  if (meeting.isProtected) return { ok: false, error: PROTECTED };
+
+  await db().update(schema.meetings).set({ title: title.data }).where(eq(schema.meetings.id, meetingId));
+  refresh();
+  return { ok: true };
+}
+
+/** Deletes the meeting, its share links (no FK, so by hand) and its uploaded media. Redirects to the list on success. */
+export async function deleteMeeting(meetingId: string): Promise<ActionResult> {
+  const meeting = await getMeeting(meetingId);
+  if (!meeting) return { ok: false, error: "Meeting not found" };
+  if (meeting.isProtected) return { ok: false, error: PROTECTED };
+
+  const d = db();
+  const highlightIds = (
+    await d.select({ id: schema.highlights.id }).from(schema.highlights).where(eq(schema.highlights.meetingId, meetingId))
+  ).map((h) => h.id);
+  await d.batch([
+    d
+      .delete(schema.shareLinks)
+      .where(and(eq(schema.shareLinks.resourceType, "meeting"), eq(schema.shareLinks.resourceId, meetingId))),
+    ...(highlightIds.length
+      ? [
+          d
+            .delete(schema.shareLinks)
+            .where(and(eq(schema.shareLinks.resourceType, "highlight"), inArray(schema.shareLinks.resourceId, highlightIds))),
+        ]
+      : []),
+    d.delete(schema.meetings).where(eq(schema.meetings.id, meetingId)), // cascades to everything else
+  ]);
+  // Seed media is shared across reseeds, so only uploads own their object.
+  if (meeting.source === "upload" && meeting.mediaKey) await deleteObject(meeting.mediaKey).catch(() => {});
+
+  redirect("/meetings");
+}
+
+// ---------- share links ----------
+
+/** Returns the meeting's active public link, creating one if needed. */
+export async function createShareLink(meetingId: string): Promise<ActionResult & { token?: string }> {
+  const meeting = await getMeeting(meetingId);
+  if (!meeting) return { ok: false, error: "Meeting not found" };
+
+  const d = db();
+  const active = and(
+    eq(schema.shareLinks.resourceType, "meeting"),
+    eq(schema.shareLinks.resourceId, meetingId),
+    isNull(schema.shareLinks.revokedAt),
+  );
+  const [existing] = await d.select({ token: schema.shareLinks.token }).from(schema.shareLinks).where(active);
+  if (existing) return { ok: true, token: existing.token };
+
+  // 96 random bits: unguessable, and short enough to paste.
+  const token = randomBytes(12).toString("base64url");
+  await d.insert(schema.shareLinks).values({ token, resourceType: "meeting", resourceId: meetingId });
+  refresh();
+  return { ok: true, token };
+}
+
+export async function revokeShareLink(meetingId: string, token: string): Promise<ActionResult> {
+  if (!uuid.safeParse(meetingId).success) return { ok: false, error: "Link not found" };
+  const d = db();
+  const [link] = await d
+    .select({ id: schema.shareLinks.id, isProtected: schema.shareLinks.isProtected })
+    .from(schema.shareLinks)
+    .where(
+      and(
+        eq(schema.shareLinks.token, token),
+        eq(schema.shareLinks.resourceType, "meeting"),
+        eq(schema.shareLinks.resourceId, meetingId),
+        isNull(schema.shareLinks.revokedAt),
+      ),
+    );
+  if (!link) return { ok: false, error: "Link not found" };
+  if (link.isProtected) return { ok: false, error: "Demo share links can't be revoked." };
+
+  await d.update(schema.shareLinks).set({ revokedAt: new Date() }).where(eq(schema.shareLinks.id, link.id));
   refresh();
   return { ok: true };
 }

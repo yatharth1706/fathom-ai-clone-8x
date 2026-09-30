@@ -33,6 +33,8 @@ type Props = {
   insights: Insight[];
   chapters: Chapter[];
   defaultTemplate: TemplateId;
+  /** Public share view: only already-generated templates, no generation. */
+  readOnly?: boolean;
 };
 
 export function MeetingNotes(props: Props) {
@@ -95,9 +97,13 @@ function Empty({ children }: { children: React.ReactNode }) {
 
 // ---------- Summary ----------
 
-function SummaryTab({ meetingId, title, segStartMs, summaries, defaultTemplate }: Props) {
+function SummaryTab({ meetingId, title, segStartMs, summaries, defaultTemplate, readOnly }: Props) {
   const router = useRouter();
-  const [template, setTemplate] = useState<TemplateId>(defaultTemplate);
+  const ready = new Set(summaries.filter((s) => s.status === "ready").map((s) => s.template));
+  const choices = readOnly ? TEMPLATES.filter((t) => ready.has(t.id)) : TEMPLATES;
+  const [template, setTemplate] = useState<TemplateId>(
+    readOnly && !ready.has(defaultTemplate) ? (choices[0]?.id ?? defaultTemplate) : defaultTemplate,
+  );
   const [generating, setGenerating] = useState<TemplateId | null>(null);
   const [copied, setCopied] = useState(false);
   const summary = summaries.find((s) => s.template === template);
@@ -146,7 +152,7 @@ function SummaryTab({ meetingId, title, segStartMs, summaries, defaultTemplate }
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-60">
             <DropdownMenuRadioGroup value={template} onValueChange={(v) => setTemplate(v as TemplateId)}>
-              {TEMPLATES.map((t) => (
+              {choices.map((t) => (
                 <DropdownMenuRadioItem key={t.id} value={t.id} className="flex-col items-start gap-0">
                   <span>{t.name}</span>
                   <span className="text-xs text-muted-foreground">{t.description}</span>
@@ -178,6 +184,8 @@ function SummaryTab({ meetingId, title, segStartMs, summaries, defaultTemplate }
             </section>
           ))}
         </div>
+      ) : readOnly ? (
+        <Empty>No summary is available for this meeting.</Empty>
       ) : (
         <div className="rounded-lg border border-dashed px-4 py-8 text-center">
           <p className="text-sm text-muted-foreground">

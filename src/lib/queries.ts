@@ -1,5 +1,5 @@
 import "server-only";
-import { asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { connection } from "next/server";
 import { cache } from "react";
 import { db, schema } from "@/db";
@@ -57,7 +57,7 @@ export const getMeeting = cache(async (id: string) => {
   const [meeting] = await d.select().from(schema.meetings).where(eq(schema.meetings.id, id));
   if (!meeting) return null;
 
-  const [participants, segments, actionItems, insights, chapters, summaries, [settings]] = await Promise.all([
+  const [participants, segments, actionItems, insights, chapters, summaries, [settings], [shareLink]] = await Promise.all([
     d
       .select({
         id: schema.participants.id,
@@ -129,6 +129,16 @@ export const getMeeting = cache(async (id: string) => {
       .select({ defaultTemplate: schema.userSettings.defaultTemplate })
       .from(schema.userSettings)
       .where(eq(schema.userSettings.userId, meeting.ownerId)),
+    d
+      .select({ token: schema.shareLinks.token, isProtected: schema.shareLinks.isProtected, viewCount: schema.shareLinks.viewCount })
+      .from(schema.shareLinks)
+      .where(
+        and(
+          eq(schema.shareLinks.resourceType, "meeting"),
+          eq(schema.shareLinks.resourceId, id),
+          isNull(schema.shareLinks.revokedAt),
+        ),
+      ),
   ]);
 
   return {
@@ -140,5 +150,26 @@ export const getMeeting = cache(async (id: string) => {
     chapters,
     summaries,
     defaultTemplate: settings?.defaultTemplate ?? "general",
+    shareLink: shareLink ?? null,
   };
 });
+
+/** The meeting behind an active public link, or null if the token is unknown or revoked. */
+export const getSharedMeeting = cache(async (token: string) => {
+  await connection();
+  if (!/^[\w-]{8,64}$/.test(token)) return null;
+  const [link] = await db()
+    .select({ resourceId: schema.shareLinks.resourceId })
+    .from(schema.shareLinks)
+    .where(
+      and(eq(schema.shareLinks.token, token), eq(schema.shareLinks.resourceType, "meeting"), isNull(schema.shareLinks.revokedAt)),
+    );
+  return link ? getMeeting(link.resourceId) : null;
+});
+
+export async function recordShareView(token: string) {
+  await db()
+    .update(schema.shareLinks)
+    .set({ viewCount: sql`${schema.shareLinks.viewCount} + 1` })
+    .where(eq(schema.shareLinks.token, token));
+}

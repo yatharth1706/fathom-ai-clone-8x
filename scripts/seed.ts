@@ -27,6 +27,11 @@ function stableId(key: string) {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-${((parseInt(h[16], 16) & 3) | 8).toString(16)}${h.slice(17, 20)}-${h.slice(20, 32)}`;
 }
 
+/** Stable, URL-safe share token per seed meeting, so demo links survive a reseed. */
+function stableToken(key: string) {
+  return createHash("sha256").update(`fathom-clone:share:${key}`).digest("base64url").slice(0, 16);
+}
+
 function chunks<T>(arr: T[], size: number) {
   const out: T[][] = [];
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
@@ -128,10 +133,14 @@ async function main() {
     });
     if (summaries.length) await d.insert(schema.summaries).values(summaries);
 
+    // A protected public link per demo meeting, so reviewers can open a share page without creating one.
+    const shareToken = stableToken(s.slug);
+    await d.insert(schema.shareLinks).values({ token: shareToken, resourceType: "meeting", resourceId: meetingId, isProtected: true });
+
     console.log(
       `[${s.slug}] ${segments.length} segments, ${stats.length} speakers (${resolved?.speakerNames.size ?? 0} named), ` +
         `${resolved?.chapters.length ?? 0} chapters, ${resolved?.actionItems.length ?? 0} action items, ` +
-        `${resolved?.insights.length ?? 0} insights, ${summaries.length} summaries`,
+        `${resolved?.insights.length ?? 0} insights, ${summaries.length} summaries, share /share/m/${shareToken}`,
     );
   }
 }
