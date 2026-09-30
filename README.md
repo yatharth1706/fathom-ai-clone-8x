@@ -7,7 +7,7 @@ Upload a meeting recording (or open one of the five seeded demos) and get what [
 - timestamp links everywhere, so every AI claim can be checked against the recording
 - Ask this meeting, clips, global search, and public share links for meetings and clips
 
-**Live demo:** _added after deploy_. No sign-in: everything belongs to one demo user.
+**Live demo: [fathom-ai-clone-beryl.vercel.app](https://fathom-ai-clone-beryl.vercel.app)**. No sign-in: everything belongs to one demo user. Good places to start: the [51-minute, 8-speaker meeting](https://fathom-ai-clone-beryl.vercel.app/meetings/402b716e-5246-53c4-a7e1-de300d87f3d4), its [public share page](https://fathom-ai-clone-beryl.vercel.app/share/m/ywt9QODnBC7yegZb), a [shared clip](https://fathom-ai-clone-beryl.vercel.app/share/clip/8hYYCM_lMdD6_3nf), and [search](https://fathom-ai-clone-beryl.vercel.app/search?q=pull%20request).
 
 | Demo meeting | Why it's there |
 |---|---|
@@ -142,6 +142,10 @@ The R2 bucket needs a CORS rule that allows `PUT` from your origin (e.g. `http:/
 ### Environment
 
 See `.env.example`. For production, also set `PUBLIC_BASE_URL` (enables AssemblyAI webhooks), `ASSEMBLYAI_WEBHOOK_SECRET` and `IP_HASH_SALT`.
+
+### Deploying
+
+The live app is a Vercel project deployed with the CLI (`vercel deploy --prod`); `.vercelignore` keeps local seed media out of the upload. Set the env vars above in the project (production), and make sure the R2 CORS rule allows the deployment's origin.
 
 ## Project layout
 

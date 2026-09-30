@@ -2,7 +2,9 @@
 
 Status against the build plan in [PLAN.md](PLAN.md). Update at the end of each session.
 
-## Done (hours 0–19: P0 + P1 + polish + README)
+## Done (hours 0–20: everything in PLAN.md, deployed)
+
+**Live:** https://fathom-ai-clone-beryl.vercel.app (Vercel project `fathom-ai-clone`, team `yatharth-vermas-projects`, deployed with the CLI; no Git integration, so pushes don't deploy).
 
 | Slice | What exists | Key files |
 |---|---|---|
@@ -33,17 +35,19 @@ Verified: DB + R2 round trip; meeting page sync/scroll in headless Chrome and by
 
 Hours 12–17 (all in headless Chrome with real input events): chapter-bar click seeks to the clicked fraction, filter chip 151 → 27 lines with search restricted; Ask answered with 9 valid citations (click seeks), persisted across reload, "not in transcript" answered plainly, < 3 chars → 400; clip from selection prefilled 0:24–1:07, preview, created, played and stopped at 67.0 s, public link copied, protected clip delete disabled, disable link → 404, delete removes clip + link; public clip page starts at clip start, bar click → 0:35/0:39, stops at end, replay restarts; search phrase / OR / -exclude / no-hit / SQL-ish input, hit → meeting at the right line; settings persisted and change the meeting's default template; an upload with settings Sales / no action items / auto-share produced exactly that and showed the custom bot name. Found and fixed: the player's rAF loop died after any `router.refresh()` during playback (transcript follow and clip stops stopped working); `?t=` links floored to whole seconds landed on the previous line (now `tParam`, rounded up to 0.1 s).
 
-**Pending until the Vercel deploy (end of build):** real AssemblyAI webhook delivery, the 5-min upload test in prod, and R2 CORS for the production origin. Locally everything runs through the polling fallback.
+**Production (2026-09-30):** all pages 200, unknown share token 404, `/api/health` DB ok. R2's existing `*.vercel.app` CORS rule already allows the prod origin (preflight 204). A 5-min CC0 clip uploaded through the live UI went ready in 45 s, driven by a real AssemblyAI webhook (`POST /api/webhooks/assemblyai` 200 in Vercel logs; polling is off for the first 10 min when webhooks are configured). Then test media deleted, quota cleared, `pnpm seed` run (local and prod share the Neon DB).
 
-## Next (in order)
+## Next
 
-1. **Hour 19–20** — Vercel deploy + the pending prod tests below, live URL into README, demo video, final `pnpm seed`. `pnpm build` passes locally.
+- Record the demo video (user).
+- Optional: connect the GitHub repo in Vercel for auto-deploys; otherwise redeploy with `npx vercel deploy --prod`.
+- Run `pnpm seed` again right before submitting if the live app has been used since.
 
-## Blocked on the user
+## Production config
 
-- **Vercel deploy** (user decision 2026-09-30: deploy at the end, not per slice): needs a GitHub repo + Vercel project with `DATABASE_URL`, `R2_*` env vars.
-- **Gemini:** billing enabled 2026-09-30 (₹500 credit; the full seed run is ~35 calls, well under $1). The free tier was 20 requests/day, and the other listed models 404 for this key, so keep `gemini-flash-latest`.
-- At deploy: add the production origin to R2 CORS in the Cloudflare dashboard (exact origin; wildcard support unverified; the R2 token here can't read or write bucket CORS). Env: `IP_HASH_SALT`, `PUBLIC_BASE_URL`, `ASSEMBLYAI_WEBHOOK_SECRET` (a random one is in `.env.local` now; reuse it on Vercel).
+- Vercel production env: `DATABASE_URL`, `R2_*` (5), `ASSEMBLYAI_API_KEY`, `ASSEMBLYAI_WEBHOOK_SECRET` (same as `.env.local`), `GEMINI_API_KEY`, `IP_HASH_SALT` (random, prod only), `PUBLIC_BASE_URL=https://fathom-ai-clone-beryl.vercel.app`.
+- `.vercelignore` excludes `media-work/` (672 MB of raw seed media; the first CLI deploy failed on the 100 MB file limit without it).
+- Gemini: billing enabled (₹500 credit); keep `gemini-flash-latest`.
 
 ## Dev notes
 
