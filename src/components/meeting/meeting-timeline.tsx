@@ -205,10 +205,12 @@ export function useCurrentMs(mediaRef: React.RefObject<HTMLVideoElement | null>)
     const update = () => setMs(el.currentTime * 1000);
     update();
     el.addEventListener("timeupdate", update);
+    el.addEventListener("seeking", update); // the target time, as soon as a seek starts (not only once it lands)
     el.addEventListener("seeked", update);
     el.addEventListener("loadedmetadata", update);
     return () => {
       el.removeEventListener("timeupdate", update);
+      el.removeEventListener("seeking", update);
       el.removeEventListener("seeked", update);
       el.removeEventListener("loadedmetadata", update);
     };

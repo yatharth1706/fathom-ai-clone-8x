@@ -15,7 +15,10 @@ export function MiniPlayer({ durationMs }: { durationMs: number }) {
   const { mediaRef, playing, togglePlay, skip } = usePlayer();
   const nowMs = useCurrentMs(mediaRef);
   const [videoVisible, setVideoVisible] = useState(true);
-  const [dragMs, setDragMs] = useState<number | null>(null); // while scrubbing, show the thumb where the pointer is
+  // While scrubbing, and until the media confirms the seek, the thumb shows this instead of the media time;
+  // otherwise it would flick back to the old time for a moment after release.
+  const [dragMs, setDragMs] = useState<number | null>(null);
+  const dragging = useRef(false);
   const [hoverMs, setHoverMs] = useState<number | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -78,19 +81,33 @@ export function MiniPlayer({ durationMs }: { durationMs: number }) {
         aria-valuetext={formatTimestamp(shownMs)}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
+          dragging.current = true;
           setDragMs(msAt(e.clientX));
         }}
         onPointerMove={(e) => {
           const ms = msAt(e.clientX);
           setHoverMs(ms);
-          if (dragMs != null) setDragMs(ms);
+          if (dragging.current) setDragMs(ms);
         }}
         onPointerUp={(e) => {
-          if (dragMs == null) return;
-          seek(msAt(e.clientX));
+          if (!dragging.current) return;
+          dragging.current = false;
+          const ms = msAt(e.clientX);
+          setDragMs(ms);
+          const el = mediaRef.current;
+          if (!el) return setDragMs(null);
+          const release = () => {
+            clearTimeout(fallback);
+            if (!dragging.current) setDragMs(null);
+          };
+          const fallback = setTimeout(release, 3000); // in case "seeked" never fires (e.g. media error)
+          el.addEventListener("seeked", release, { once: true });
+          seek(ms);
+        }}
+        onPointerCancel={() => {
+          dragging.current = false;
           setDragMs(null);
         }}
-        onPointerCancel={() => setDragMs(null)}
         onPointerLeave={() => setHoverMs(null)}
         onKeyDown={(e) => {
           if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -122,7 +139,12 @@ export function MiniPlayer({ durationMs }: { durationMs: number }) {
         )}
       </div>
 
-      <span className="text-xs text-muted-foreground tabular-nums">
+      {/* Fixed width: if "0:05" growing to "36:02" resized the scrubber mid-drag, the same pointer x would map to a
+          different time on release. */}
+      <span
+        className="shrink-0 text-right text-xs text-muted-foreground tabular-nums"
+        style={{ minWidth: `${formatTimestamp(durationMs).length * 2 + 3}ch` }}
+      >
         {formatTimestamp(shownMs)} / {formatTimestamp(durationMs)}
       </span>
       <button
